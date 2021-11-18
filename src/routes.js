@@ -1,5 +1,5 @@
 import Dashboard from './views/Dashboard';
-import ScheduleList from './views/Schedule';
+import { ScheduleList, ScheduleDetail } from './views/Schedule';
 import ChartJS from './views/Report/ChartJS';
 import Flot from './views/Report/Flot';
 import Inline from './views/Report/Inline';

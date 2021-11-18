@@ -1,11 +1,7 @@
-import React from 'react'
+import ScheduleList from './ScheduleList';
+import ScheduleDetail from './ScheduleDetail';
 
-const ScheduleList = () => {
-    return (
-        <div>
-            <h1>ตารางเวร</h1>
-        </div>
-    )
-}
-
-export default ScheduleList
+export {
+    ScheduleList,
+    ScheduleDetail
+};
