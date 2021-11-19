@@ -1,14 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 const ScheduleList = () => {
-    const departs = [];
-    const divisions = [];
-    const scheduling_shifts = [];
+    const [departs, setDeparts] = useState([]);
+    const [divisions, setDivisions] = useState([]);
+    const [schedulings, setSchedules] = useState([]);
     const shifts = [];
     const pager = null;
-    const dataTableOptions = {
-        totalCol: 31
-    };
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -109,37 +107,20 @@ const ScheduleList = () => {
                                 <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
                                     <thead>
                                         <tr>
-                                            <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                            <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
-                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
-                                        </tr>
-                                        <tr>
-                                            {[...Array(dataTableOptions.totalCol)].map((m, i) => {
-                                                return (
-                                                    <td key={i} style={{ width: '2.5%', textAlign: 'center', fontSize: 'small' }}>
-                                                        { i+1 }
-                                                    </td>
-                                                )
-                                            })}
+                                            <td style={{ width: '3%', textAlign: 'center' }}>ลำดับ</td>
+                                            <td style={{ textAlign: 'center' }}>หน่วยงาน</td>
+                                            <td style={{ width: '15%', textAlign: 'center' }}>ประจำเดือน</td>
+                                            <td style={{ width: '8%', textAlign: 'center' }}>จำนวน<br />ผู้ปฏิบัติงาน</td>
+                                            <td style={{ width: '8%', textAlign: 'center' }}>จำนวนเวร</td>
+                                            <td style={{ width: '10%', textAlign: 'center' }}>Actions</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {scheduling_shifts && scheduling_shifts.map(row => {
+                                        {schedulings && schedulings.map(row => {
                                             return (
                                                 <tr>
-                                                    <td>
-                                                        { row.person_name }
-                                                        <p style={{ color: 'grey', margin: '0px' }}>
-                                                            ตำแหน่ง ...
-                                                        </p>
-                                                    </td>
-                                                    {row.shifts.map(shift => {
-                                                        return (
-                                                            <td style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
-                                                                { shift }
-                                                            </td>
-                                                        );
-                                                    })}
+                                                    <td>{ row.person_name }</td>
+                                                    <td style={{ textAlign: 'center' }}></td>
                                                     <td style={{ textAlign: 'center' }}></td>
                                                 </tr>
                                             );
@@ -147,27 +128,12 @@ const ScheduleList = () => {
                                     </tbody>
                                 </table>
 
-                                <div className="row mt-2">
-                                    <div className="col-md-6">
-                                        ผู้ควบคุม
-                                    </div>
-                                    <div className="col-md-6">
-                                        หัวหน้ากลุ่มงาน
-                                    </div>
-                                    <div className="col-md-6">
-                                        หัวหน้ากลุ่มภารกิจ
-                                    </div>
-                                    <div className="col-md-6">
-                                        ผู้อำนวยการ
-                                    </div>
-                                </div>
-
                             </div>{/* <!-- /.card-body --> */}
                             <div className="card-footer clearfix">
                                 <div className="row">
-                                    <div className="col-3 m-0 float-left">
+                                    {/* <div className="col-3 m-0 float-left">
                                         <a href="#" className="btn btn-success btn-sm">Excel</a>
-                                    </div>
+                                    </div> */}
                                     
                                     <div className="col-6 m-0" style={{ textAlign: 'center' }}>
                                         <span>จำนวนทั้งหมด { pager && pager.total } ราย</span>

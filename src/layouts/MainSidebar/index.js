@@ -31,7 +31,7 @@ const MainSidebar = () => {
         <nav className="mt-2">
           <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li className="nav-item has-treeview menu-open">
-              <Link to="/dashboard" className="nav-link">
+              <Link to="/dashboard" className="nav-link active">
                 <i className="nav-icon fas fa-tachometer-alt"></i>
                 <p>
                   Dashboard
@@ -40,7 +40,7 @@ const MainSidebar = () => {
             </li>
             <li className="nav-item has-treeview">
               <a href="#" className="nav-link">
-                <i className="nav-icon fas fa-chart-pie"></i>
+                <i className="nav-icon far fa-calendar-alt"></i>
                 <p>
                   ตารางเวร
                   <i className="right fas fa-angle-left"></i>
