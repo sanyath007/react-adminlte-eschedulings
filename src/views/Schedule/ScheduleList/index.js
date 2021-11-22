@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import api from '../../../api';
+import { getSchedulesSuccess } from '../../../features/schedule';
 
 const ScheduleList = () => {
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
-    const [schedulings, setSchedules] = useState([]);
     const shifts = [];
     const pager = null;
+
+    const dispatch = useDispatch();
+    const schedules = useSelector(state => state.schedule.schedules);
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -16,14 +20,28 @@ const ScheduleList = () => {
         console.log(e);
     };
 
-    const getAll = function (e) {
+    const getSchedules = async function (e) {
         console.log(e);
+        
+        try {
+            const res = await api.get('/api/schedulings');
+            console.log(res);
+
+            dispatch(getSchedulesSuccess(res.data.schedulings));
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const onPaginateLinkClick = function (e, pageUrl) {
         console.log(e, pageUrl);
     };
 
+    useEffect(() => {
+        getSchedules();
+    }, []);
+
+    console.log(schedules);
     return (
         <section className="content">
             <div className="container-fluid">
@@ -90,7 +108,7 @@ const ScheduleList = () => {
                                         />
                                     </div>
 
-                                    <button onClick={ (e) => getAll(e) } className="btn btn-primary">ตกลง</button>
+                                    <button onClick={ (e) => getSchedules(e) } className="btn btn-primary">ตกลง</button>
                                 </form>
 
                             </div>{/* <!-- /.card-body --> */}
@@ -116,12 +134,24 @@ const ScheduleList = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {schedulings && schedulings.map(row => {
+                                        {schedules && schedules.map((row, i) => {
                                             return (
-                                                <tr>
-                                                    <td>{ row.person_name }</td>
-                                                    <td style={{ textAlign: 'center' }}></td>
-                                                    <td style={{ textAlign: 'center' }}></td>
+                                                <tr key={row.id}>
+                                                    <td style={{ textAlign: 'center' }}>{ i+1 }</td>
+                                                    <td>{ row.division.ward_name }</td>
+                                                    <td style={{ textAlign: 'center' }}>{ row.month } / { row.year }</td>
+                                                    <td style={{ textAlign: 'center' }}>{ row.month }</td>
+                                                    <td style={{ textAlign: 'center' }}>{ row.month }</td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                            <a href="" className="btn btn-warning">
+                                                                <i className="fas fa-edit"></i>
+                                                            </a>
+                                                            <a href="" className="btn btn-danger">
+                                                                <i className="far fa-trash-alt"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             );
                                         })}

@@ -19,17 +19,7 @@ const scheduleSlice = createSlice({
 export default scheduleSlice.reducer;
 
 // Actions
-const {
+export const {
   getSchedulesSuccess,
 } = scheduleSlice.actions;
-
-export const getSchedules = (data) => async (dispatch) => {
-  try {
-    const res = await api.get('/schedulings', data);
-
-    dispatch(getSchedulesSuccess(res.data));
-  } catch (error) {
-    console.log(error);
-  }
-};
 
