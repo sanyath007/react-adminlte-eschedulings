@@ -10,6 +10,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
   { path: '/schedules/list', exact: true, name: 'Schedules', component: ScheduleList },
+  { path: '/schedules/:id/detail', exact: true, name: 'Schedules', component: ScheduleDetail },
   { path: '/reports/chartjs', name: 'Charts', component: ChartJS },
   { path: '/reports/flot', exact: true, name: 'Flot', component: Flot },
   { path: '/reports/inline', exact: true, name: 'Inline', component: Inline },

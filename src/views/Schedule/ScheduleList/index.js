@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
 
@@ -144,10 +145,13 @@ const ScheduleList = () => {
                                                     <td style={{ textAlign: 'center' }}>{ row.month }</td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                            <a href="" className="btn btn-warning">
+                                                            <Link to={ `/schedules/${row.id}/detail` } className="btn btn-info">
+                                                                <i className="fas fa-search"></i>
+                                                            </Link>
+                                                            <Link to="/schedules/edit" className="btn btn-warning">
                                                                 <i className="fas fa-edit"></i>
-                                                            </a>
-                                                            <a href="" className="btn btn-danger">
+                                                            </Link>
+                                                            <a href="#" className="btn btn-danger">
                                                                 <i className="far fa-trash-alt"></i>
                                                             </a>
                                                         </div>
