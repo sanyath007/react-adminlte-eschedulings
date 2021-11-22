@@ -47,7 +47,7 @@ const Signin = () => {
         return (
           <div className="login-box">
             <div className="login-logo">
-              <a href="../../index2.html"><b>Covid19 Bed</b>MS</a>
+              <a href="../../index2.html"><b>E-Schedulings</b></a>
             </div>
 
             {/* /.login-logo */}
