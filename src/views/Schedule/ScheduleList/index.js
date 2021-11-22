@@ -119,7 +119,9 @@ const ScheduleList = () => {
                             <div className="card-body">
                                 <div className="row my-2">
                                     <div className="col-md-12">
-                                        <a href="schedulings/add" className="btn btn-primary float-right">เพิ่มตารางเวร</a>
+                                        <Link to="/schedules/add" className="btn btn-primary float-right">
+                                            เพิ่มตารางเวร
+                                        </Link>
                                     </div>
                                 </div>
 
