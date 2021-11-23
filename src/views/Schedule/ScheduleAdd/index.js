@@ -9,55 +9,43 @@ import "react-datepicker/dist/react-datepicker.css";
 import th from 'date-fns/locale/th'
 registerLocale("th", th);
 
-const initFactions = [
-    { faction_id: 1, faction_name: 'กลุ่มภารกิจด้านการพยาบาล' },
-];
-
-const initDeparts = [
-    { depart_id: 1, depart_name: 'สำนักงานกลุ่มการพยาบาล' },
-];
-
-const initDivisions = [
-    { ward_id: 1, ward_name: 'สำนักงานกลุ่มการพยาบาล' },
-];
+let tmpDeparts = [];
+let tmpDivisions = [];
 
 const ScheduleAdd = () => {
-    const [factions, setFactions] = useState(initFactions);
-    const [departs, setDeparts] = useState(initDeparts);
-    const [divisions, setDivisions] = useState(initDivisions);
+    const dispatch = useDispatch();
+    const schedules = useSelector(state => state.schedule.schedules);
+    const [factions, setFactions] = useState([]);
+    const [departs, setDeparts] = useState([]);
+    const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
     const [month, setMonth] = useState(new Date());
     const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
-    const shifts = [];
-    const pager = null;
 
-    const dispatch = useDispatch();
-    const schedules = useSelector(state => state.schedule.schedules);
+    const onFactionChange = function (faction) {
+        setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
+    };
 
-    const onDepartChange = function (e) {
-        console.log(e);
+    const onDepartChange = function (depart) {
+        setDivisions(tmpDivisions.filter(div => div.depart_id === depart));
     };
 
     const onDivisionChange = function (e) {
         console.log(e);
     };
 
-    const getSchedules = async function (e) {
-        console.log(e);
-        
+    const getInitForm = async function (e) {
         try {
-            const res = await api.get('/api/schedulings');
+            const res = await api.get('/api/schedulings/add');
             console.log(res);
 
-            dispatch(getSchedulesSuccess(res.data.schedulings));
-        } catch (error) {
-            console.log(error);
+            setFactions(res.data.factions);
+            tmpDeparts = res.data.departs;
+            tmpDivisions = res.data.divisions;
+        } catch (err) {
+            console.log(err);
         }
-    };
-
-    const onPaginateLinkClick = function (e, pageUrl) {
-        console.log(e, pageUrl);
     };
 
     const setDatesOfMonth = function (date) {
@@ -67,10 +55,9 @@ const ScheduleAdd = () => {
     };
 
     useEffect(() => {
-        getSchedules();
+        getInitForm();
     }, []);
 
-    console.log(schedules);
     return (
         <section className="content">
             <div className="container-fluid">
@@ -95,9 +82,7 @@ const ScheduleAdd = () => {
                                                 className="form-control"
                                                 id="faction"
                                                 name="faction"
-                                                onChange={() => {
-                                                        // onFactionChange(newScheduling.faction)
-                                                }}
+                                                onChange={(e) => onFactionChange(e.target.value)}
                                             >
                                                 <option value="">-- เลือกกลุ่มภารกิจ --</option>
                                                 {factions && factions.map(fac => {
@@ -115,9 +100,7 @@ const ScheduleAdd = () => {
                                                 className="form-control"
                                                 id="depart"
                                                 name="depart"
-                                                onChange={() => {
-                                                    // onDepartChange(newScheduling.depart)
-                                                }}
+                                                onChange={(e) => onDepartChange(e.target.value)}
                                             >
                                                 <option value="">-- เลือกกลุ่มงาน --</option>
                                                 {departs && departs.map(dep => {
