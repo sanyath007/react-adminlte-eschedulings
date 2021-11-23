@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import DatePicker, { registerLocale } from 'react-datepicker';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
+import moment from 'moment';
+import "react-datepicker/dist/react-datepicker.css";
+import th from 'date-fns/locale/th'
+registerLocale("th", th);
 
 const initFactions = [
     { faction_id: 1, faction_name: 'กลุ่มภารกิจด้านการพยาบาล' },
@@ -16,15 +21,14 @@ const initDivisions = [
     { ward_id: 1, ward_name: 'สำนักงานกลุ่มการพยาบาล' },
 ];
 
-const dataTableOptions = {
-    totalCol: 31,
-};
-
 const ScheduleAdd = () => {
     const [factions, setFactions] = useState(initFactions);
     const [departs, setDeparts] = useState(initDeparts);
     const [divisions, setDivisions] = useState(initDivisions);
     const [divisionMembers, setDivisionMembers] = useState([]);
+    const [month, setMonth] = useState(new Date());
+    const [year, setYear] = useState(new Date());
+    const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const shifts = [];
     const pager = null;
 
@@ -54,6 +58,12 @@ const ScheduleAdd = () => {
 
     const onPaginateLinkClick = function (e, pageUrl) {
         console.log(e, pageUrl);
+    };
+
+    const setDatesOfMonth = function (date) {
+        const daysOfMonth = moment(date).endOf('month').date();
+
+        setTableCol(daysOfMonth);
     };
 
     useEffect(() => {
@@ -141,22 +151,27 @@ const ScheduleAdd = () => {
                                         </div>
                                         <div className="form-group col-md-4">
                                             <label>ประจำเดือน :</label>
-                                            <input
-                                                type="text"
-                                                id="month"
-                                                name="month"
+                                            <DatePicker
+                                                selected={month}
+                                                onChange={(date) => {
+                                                    setMonth(date);
+                                                    setDatesOfMonth(date);
+                                                }}
+                                                dateFormat="MM/yyyy"
+                                                locale="th"
+                                                showMonthYearPicker
                                                 className="form-control"
-                                                autocomplete="off"
                                             />
                                         </div>
                                         <div className="form-group col-md-4">
                                             <label>ปีงบประมาณ :</label>
-                                            <input
-                                                type="text"
-                                                id="year"
-                                                name="year"
+                                            <DatePicker
+                                                selected={year}
+                                                onChange={(date) => setYear(date)}
+                                                dateFormat="yyyy"
+                                                locale="th"
+                                                showYearPicker
                                                 className="form-control"
-                                                autocomplete="off"
                                             />
                                         </div>
                                         <div className="form-group col-md-4">
@@ -181,16 +196,21 @@ const ScheduleAdd = () => {
                                         <thead>
                                             <tr>
                                                 <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                                <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>
+                                                <td style={{ textAlign: 'center' }} colSpan={ tableCol }>
                                                     วันที่
                                                 </td>
                                                 <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">รวม</td>
                                                 <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                             </tr>
                                             <tr>
-                                                {[...Array(dataTableOptions.totalCol)].map((m, i) => {
+                                                {[...Array(tableCol)].map((m, i) => {
                                                     return (
-                                                        <td style={{ width: '2.5%', textAlign: 'center', fontSize: 'small' }}>
+                                                        <td
+                                                            key={i}
+                                                            style={
+                                                                { width: '2.5%', textAlign: 'center', fontSize: 'small' }
+                                                            }
+                                                        >
                                                             { i + 1 }
                                                         </td>
                                                     );
@@ -207,9 +227,14 @@ const ScheduleAdd = () => {
                                                                 ตำแหน่ง ...
                                                             </p>
                                                         </td>
-                                                        {[...Array(dataTableOptions.totalCol)].map((m, i) => {
+                                                        {[...Array(tableCol)].map((m, i) => {
                                                             return (
-                                                                <td style={{ width: '2.5%', textAlign: 'center', fontSize: 'small' }}>
+                                                                <td
+                                                                    key={i}
+                                                                    style={
+                                                                        { width: '2.5%', textAlign: 'center', fontSize: 'small' }
+                                                                    }
+                                                                >
                                                                     <input
                                                                         type="hidden"
                                                                         id="{{ person.person_id+ '_1_' +date }}"
