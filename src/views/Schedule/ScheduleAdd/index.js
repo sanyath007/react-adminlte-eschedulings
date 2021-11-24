@@ -87,7 +87,7 @@ const ScheduleAdd = () => {
                                                 <option value="">-- เลือกกลุ่มภารกิจ --</option>
                                                 {factions && factions.map(fac => {
                                                     return (
-                                                        <option value={ fac.faction_id }>
+                                                        <option key={fac.faction_id} value={ fac.faction_id }>
                                                             { fac.faction_name }
                                                         </option>
                                                     );
@@ -105,7 +105,7 @@ const ScheduleAdd = () => {
                                                 <option value="">-- เลือกกลุ่มงาน --</option>
                                                 {departs && departs.map(dep => {
                                                     return (
-                                                        <option value={ dep.depart_id }>
+                                                        <option key={dep.depart_id} value={ dep.depart_id }>
                                                             { dep.depart_name }
                                                         </option>
                                                     );
@@ -125,7 +125,7 @@ const ScheduleAdd = () => {
                                                 <option value="">-- เลือกงาน --</option>
                                                 {divisions && divisions.map(div => {
                                                     return (
-                                                        <option value={ div.ward_id }>
+                                                        <option key={div.ward_id} value={ div.ward_id }>
                                                             { div.ward_name }
                                                         </option>
                                                     );
@@ -202,10 +202,11 @@ const ScheduleAdd = () => {
                                         </thead>
                                         <tbody>
                                             {divisionMembers && divisionMembers.map(person => {
-                                                return (
+                                                return <div></div>;
+                                            })}
                                                     <tr>
                                                         <td>
-                                                            { person.person_firstname+ ' ' +person.person_lastname }
+                                                            {/* { person.person_firstname+ ' ' +person.person_lastname } */}
                                                             <p style={{ color: 'grey', margin: '0px' }}>
                                                                 ตำแหน่ง ...
                                                             </p>
@@ -360,8 +361,7 @@ const ScheduleAdd = () => {
                                                             </a>
                                                         </td>
                                                     </tr>
-                                                );
-                                            })}
+                                                
                                         </tbody>
                                     </table>
 
