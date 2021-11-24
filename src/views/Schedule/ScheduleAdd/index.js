@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
+import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import moment from 'moment';
 import "react-datepicker/dist/react-datepicker.css";
 import th from 'date-fns/locale/th'
@@ -66,7 +67,7 @@ const ScheduleAdd = () => {
                         <td
                             key={i}
                             style={
-                                { width: '2.5%', textAlign: 'center', fontSize: 'small' }
+                                { width: '2%', textAlign: 'center', fontSize: 'small' }
                             }
                         >
                             { i + 1 }
@@ -225,7 +226,7 @@ const ScheduleAdd = () => {
                                                         <td
                                                             key={i}
                                                             style={
-                                                                { width: '2.5%', textAlign: 'center', fontSize: 'small' }
+                                                                { textAlign: 'center', fontSize: 'small', padding: '0' }
                                                             }
                                                         >
                                                             <input
@@ -234,39 +235,7 @@ const ScheduleAdd = () => {
                                                                 name="{{ person.person_id+ '_1_' +date }}"
                                                                 value="-"
                                                             />
-                                                            <div className="btn-group mt-2" role="group">
-                                                                <button
-                                                                    type="button"
-                                                                    id="{{ person.person_id+ '_1_' +date+ '_btnGroupDrop' }}"
-                                                                    className="btn btn-default btn-xs dropdown-toggle"
-                                                                    data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false"
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <div
-                                                                    className="dropdown-menu dropdown-menu-right" 
-                                                                    aria-labelledby="{{ person.person_id+ '_1_' +date+ '_btnGroupDrop' }}"
-                                                                    style={{ minWidth: '4rem' }}
-                                                                >
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, '-', person.person_id+ '_1_' +date)">
-                                                                        -
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ด', person.person_id+ '_1_' +date)">
-                                                                        ด
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ช', person.person_id+ '_1_' +date)">
-                                                                        ช
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'บ', person.person_id+ '_1_' +date)">
-                                                                        บ
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'BD', person.person_id+ '_1_' +date)">
-                                                                        BD
-                                                                    </a>
-                                                                </div>
-                                                            </div>
+                                                            <ShiftInput />
 
                                                             <input
                                                                 type="hidden"
@@ -274,39 +243,7 @@ const ScheduleAdd = () => {
                                                                 name="{{ person.person_id+ '_2_' +date }}"
                                                                 value="-"
                                                             />
-                                                            <div className="btn-group mt-2" role="group">
-                                                                <button
-                                                                    type="button"
-                                                                    id="{{ person.person_id+ '_2_' +date+ '_btnGroupDrop' }}"
-                                                                    className="btn btn-default btn-xs dropdown-toggle"
-                                                                    data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false"
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <div
-                                                                    className="dropdown-menu dropdown-menu-right" 
-                                                                    aria-labelledby="{{ person.person_id+ '_2_' +date+ '_btnGroupDrop' }}"
-                                                                    style={{ minWidth: '4rem' }}
-                                                                >
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, '-', person.person_id+ '_2_' +date)">
-                                                                        -
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ด', person.person_id+ '_2_' +date)">
-                                                                        ด
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ช', person.person_id+ '_2_' +date)">
-                                                                        ช
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'บ', person.person_id+ '_2_' +date)">
-                                                                        บ
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'BD', person.person_id+ '_2_' +date)">
-                                                                        BD
-                                                                    </a>
-                                                                </div>
-                                                            </div>
+                                                            <ShiftInput />
 
                                                             <input
                                                                 type="hidden"
@@ -314,39 +251,7 @@ const ScheduleAdd = () => {
                                                                 name="{{ person.person_id+ '_3_' +date }}"
                                                                 value="-"
                                                             />
-                                                            <div className="btn-group mt-2" role="group">
-                                                                <button
-                                                                    type="button"
-                                                                    id="{{ person.person_id+ '_3_' +date+ '_btnGroupDrop' }}"
-                                                                    className="btn btn-default btn-xs dropdown-toggle"
-                                                                    data-toggle="dropdown"
-                                                                    aria-haspopup="true"
-                                                                    aria-expanded="false"
-                                                                >
-                                                                    -
-                                                                </button>
-                                                                <div
-                                                                    className="dropdown-menu dropdown-menu-right" 
-                                                                    aria-labelledby="{{ person.person_id+ '_3_' +date+ '_btnGroupDrop' }}"
-                                                                    style={{ minWidth: '4rem' }}
-                                                                >
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, '-', person.person_id+ '_3_' +date)">
-                                                                        -
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ด', person.person_id+ '_3_' +date)">
-                                                                        ด
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'ช', person.person_id+ '_3_' +date)">
-                                                                        ช
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'บ', person.person_id+ '_3_' +date)">
-                                                                        บ
-                                                                    </a>
-                                                                    <a href="#" className="dropdown-item" ng-click="onSelectedShift($event, 'BD', person.person_id+ '_3_' +date)">
-                                                                        BD
-                                                                    </a>
-                                                                </div>
-                                                            </div>
+                                                            <ShiftInput />
                                                         </td>
                                                     );
                                                 })}
