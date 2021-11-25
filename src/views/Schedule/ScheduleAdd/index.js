@@ -77,7 +77,7 @@ const ScheduleAdd = () => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
         });
 
-        const newRow = [...personShifts, { person: personSelected.person_id, shifts }];
+        const newRow = [...personShifts, { person: personSelected, shifts }];
         setPersonShifts(newRow);
     };
 

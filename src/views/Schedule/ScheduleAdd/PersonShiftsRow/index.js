@@ -1,10 +1,9 @@
 import React from 'react'
 
 const PersonShiftsRow = ({ row }) => {
-    console.log(row);
     return (
             <tr>
-                <td>{row.person_id}</td>
+                <td>{`${row.person.prefix?.prefix_name}${row.person.person_firstname} ${row.person.person_lastname}`}</td>
                 {row.shifts.map((shift, i) => {
                     return (
                         <td
