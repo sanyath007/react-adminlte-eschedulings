@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import moment from 'moment';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
-import moment from 'moment';
-import "react-datepicker/dist/react-datepicker.css";
+import PersonModal from '../../Modals/PersonModal';
 import th from 'date-fns/locale/th'
+import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
 
 let tmpDeparts = [];
@@ -24,6 +25,7 @@ const ScheduleAdd = () => {
     const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const [personShifts, setPersonShifts] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         getInitForm();
@@ -44,7 +46,6 @@ const ScheduleAdd = () => {
     const getInitForm = async function (e) {
         try {
             const res = await api.get('/api/schedulings/add');
-            console.log(res);
 
             setFactions(res.data.factions);
             tmpDeparts = res.data.departs;
@@ -86,7 +87,7 @@ const ScheduleAdd = () => {
     const renderAddedRow = function () {
         personShifts && personShifts.map(person => {
             return (
-                <tr>
+                <tr key={person?.person_id}>
                     <td></td>
                     {person.shifts.map((shift, i) => {
                         return (
@@ -113,6 +114,15 @@ const ScheduleAdd = () => {
                 {/* <!-- Main row --> */}
                 <div className="row">
                     <section className="col-lg-12 connectedSortable">
+
+                        <PersonModal
+                            isOpen={openModal}
+                            hideModal={() => setOpenModal(false)}
+                            onSelected={(ip) => {
+                                console.log(ip);
+                                // handleModalSelectedData(ip, formik.setFieldValue)
+                            }}
+                        />
 
                         <div className="card">
                             <div className="card-header">
@@ -247,7 +257,13 @@ const ScheduleAdd = () => {
                                                         </p>
                                                         <input type="hidden" id="" name="" />
                                                     </div>
-                                                    <a href="#" className="btn btn-primary btn-sm">เลือกบุคลากร</a>
+                                                    <a
+                                                        href="#"
+                                                        className="btn btn-primary btn-sm"
+                                                        onClick={() => setOpenModal(true)}
+                                                    >
+                                                        เลือกบุคลากร
+                                                    </a>
                                                 </td>
                                                 {[...Array(tableCol)].map((m, i) => {
                                                     return (
