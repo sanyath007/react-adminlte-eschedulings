@@ -18,6 +18,9 @@ const ShiftInput = (props) => {
         } else if (shift === 'BD') {
             setBtnGroupClass('btn-warning');
         }
+
+        /** Pass data to parent */
+        props.onSelected(shift); 
     }
 
     return (

@@ -281,37 +281,47 @@ const ScheduleAdd = () => {
                                                         {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
                                                     </a>
                                                 </td>
-                                                {[...Array(tableCol)].map((m, i) => {
+                                                {[...Array(tableCol)].map((m, date) => {
                                                     return (
                                                         <td
-                                                            key={i}
+                                                            key={date}
                                                             style={
-                                                                { textAlign: 'center', fontSize: 'small', padding: '0' }
+                                                                {
+                                                                    textAlign: 'center', 
+                                                                    fontSize: 'small',
+                                                                    padding: '0'
+                                                                }
                                                             }
                                                         >
                                                             <input
                                                                 type="hidden"
-                                                                id="{{ '_1_' +date }}"
-                                                                name="{{ person.person_id+ '_1_' +date }}"
+                                                                id={ `${date}_1` }
+                                                                name={ `${date}_1` }
                                                                 value="-"
                                                             />
-                                                            <ShiftInput />
+                                                            <ShiftInput onSelected={(shift) => {
+                                                                document.getElementById(`${date}_3`).value = shift;
+                                                            }} />
 
                                                             <input
                                                                 type="hidden"
-                                                                id="{{ person.person_id+ '_2_' +date }}"
-                                                                name="{{ person.person_id+ '_2_' +date }}"
+                                                                id={ `${date}_2` }
+                                                                name={ `${date}_2` }
                                                                 value="-"
                                                             />
-                                                            <ShiftInput />
+                                                            <ShiftInput onSelected={(shift) => {
+                                                                document.getElementById(`${date}_3`).value = shift;
+                                                            }} />
 
                                                             <input
                                                                 type="hidden"
-                                                                id="{{ person.person_id+ '_3_' +date }}"
-                                                                name="{{ person.person_id+ '_3_' +date }}"
+                                                                id={ `${date}_3` }
+                                                                name={ `${date}_3` }
                                                                 value="-"
                                                             />
-                                                            <ShiftInput />
+                                                            <ShiftInput onSelected={(shift) => {
+                                                                document.getElementById(`${date}_3`).value = shift;
+                                                            }} />
                                                         </td>
                                                     );
                                                 })}
