@@ -23,6 +23,11 @@ const ScheduleAdd = () => {
     const [month, setMonth] = useState(new Date());
     const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
+    const [personShifts, setPersonShifts] = useState([]);
+
+    useEffect(() => {
+        getInitForm();
+    }, []);
 
     const onFactionChange = function (faction) {
         setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
@@ -55,9 +60,9 @@ const ScheduleAdd = () => {
         setTableCol(daysOfMonth);
     };
 
-    useEffect(() => {
-        getInitForm();
-    }, []);
+    const onAddPersonShifts = function () {
+
+    };
 
     const renderDailyCols = function () {
         return (
@@ -76,6 +81,30 @@ const ScheduleAdd = () => {
                 })}
             </tr>
         );
+    };
+
+    const renderAddedRow = function () {
+        personShifts && personShifts.map(person => {
+            return (
+                <tr>
+                    <td></td>
+                    {person.shifts.map((shift, i) => {
+                        return (
+                            <td
+                                key={i}
+                                style={
+                                    { width: '2%', textAlign: 'center', fontSize: 'small' }
+                                }
+                            >
+                                { shift }
+                            </td>
+                        );
+                    })}
+                    <td></td>
+                    <td></td>
+                </tr>
+            );
+        });
     };
 
     return (
@@ -210,16 +239,15 @@ const ScheduleAdd = () => {
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {divisionMembers && divisionMembers.map(person => {
-                                                        return (
-                                                            <div>
-                                                                {/* { person.person_firstname+ ' ' +person.person_lastname } */}
-                                                                <p style={{ color: 'grey', margin: '0px' }}>
-                                                                    ตำแหน่ง ...
-                                                                </p>
-                                                            </div>
-                                                        );
-                                                    })}
+                                                    {/* officer info */}
+                                                    <div>
+                                                        <p>{/* { person.person_firstname+ ' ' +person.person_lastname } */}</p>
+                                                        <p style={{ color: 'grey', margin: '0px' }}>
+                                                            ตำแหน่ง ...
+                                                        </p>
+                                                        <input type="hidden" id="" name="" />
+                                                    </div>
+                                                    <a href="#" className="btn btn-primary btn-sm">เลือกบุคลากร</a>
                                                 </td>
                                                 {[...Array(tableCol)].map((m, i) => {
                                                     return (
@@ -275,7 +303,9 @@ const ScheduleAdd = () => {
                                                     </a>
                                                 </td>
                                             </tr>
-                                                
+                                            
+                                            { /** TODO: render new row */ }
+                                            {renderAddedRow()}
                                         </tbody>
                                     </table>
 
