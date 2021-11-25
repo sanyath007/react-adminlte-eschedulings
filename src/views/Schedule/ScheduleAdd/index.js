@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import moment from 'moment';
 import api from '../../../api';
-import { getSchedulesSuccess } from '../../../features/schedule';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import PersonModal from '../../Modals/PersonModal';
+import PersonShiftsRow from './PersonShiftsRow';
 import th from 'date-fns/locale/th'
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
 
 let tmpDeparts = [];
 let tmpDivisions = [];
+let tmpPersonShifts = [];
 
 const ScheduleAdd = () => {
     const dispatch = useDispatch();
-    const schedules = useSelector(state => state.schedule.schedules);
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
@@ -24,12 +24,21 @@ const ScheduleAdd = () => {
     const [month, setMonth] = useState(new Date());
     const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
-    const [personSelected, setPersonSelected] = useState({});
+    const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         getInitForm();
+
+        /** Generate person's shift array */
+        [...Array(tableCol)].forEach((obj, date) => {
+            tmpPersonShifts.push({
+                [`${date}_1`]: '',
+                [`${date}_2`]: '',
+                [`${date}_3`]: '',
+            });
+        });
     }, []);
 
     const onFactionChange = function (faction) {
@@ -63,7 +72,13 @@ const ScheduleAdd = () => {
     };
 
     const onAddPersonShifts = function () {
+        let shifts = [];
+        [...Array(tableCol)].forEach((obj, date) => {
+            shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
+        });
 
+        const newRow = [...personShifts, { person: personSelected.person_id, shifts }];
+        setPersonShifts(newRow);
     };
 
     const renderDailyCols = function () {
@@ -83,30 +98,6 @@ const ScheduleAdd = () => {
                 })}
             </tr>
         );
-    };
-
-    const renderAddedRow = function () {
-        personShifts && personShifts.map(person => {
-            return (
-                <tr key={person?.person_id}>
-                    <td></td>
-                    {person.shifts.map((shift, i) => {
-                        return (
-                            <td
-                                key={i}
-                                style={
-                                    { width: '2%', textAlign: 'center', fontSize: 'small' }
-                                }
-                            >
-                                { shift }
-                            </td>
-                        );
-                    })}
-                    <td></td>
-                    <td></td>
-                </tr>
-            );
-        });
     };
 
     const renderTotalShifts = function () {
@@ -130,11 +121,7 @@ const ScheduleAdd = () => {
                         <PersonModal
                             isOpen={openModal}
                             hideModal={() => setOpenModal(false)}
-                            onSelected={(person) => {
-                                console.log(person);
-                                setPersonSelected(person);
-                                // handleModalSelectedData(person, formik.setFieldValue)
-                            }}
+                            onSelected={(person) => setPersonSelected(person)}
                         />
 
                         <div className="card">
@@ -270,7 +257,6 @@ const ScheduleAdd = () => {
                                                             <p style={{ color: 'grey', margin: '0px' }}>
                                                                 {personSelected.position?.position_name}
                                                             </p>
-                                                            <input type="hidden" id="" name="" />
                                                         </div>
                                                     )}
                                                     <a
@@ -293,34 +279,16 @@ const ScheduleAdd = () => {
                                                                 }
                                                             }
                                                         >
-                                                            <input
-                                                                type="hidden"
-                                                                id={ `${date}_1` }
-                                                                name={ `${date}_1` }
-                                                                value="-"
-                                                            />
                                                             <ShiftInput onSelected={(shift) => {
-                                                                document.getElementById(`${date}_3`).value = shift;
+                                                                tmpPersonShifts[date][`${date}_1`] = shift;
                                                             }} />
 
-                                                            <input
-                                                                type="hidden"
-                                                                id={ `${date}_2` }
-                                                                name={ `${date}_2` }
-                                                                value="-"
-                                                            />
                                                             <ShiftInput onSelected={(shift) => {
-                                                                document.getElementById(`${date}_3`).value = shift;
+                                                                tmpPersonShifts[date][`${date}_2`] = shift;
                                                             }} />
 
-                                                            <input
-                                                                type="hidden"
-                                                                id={ `${date}_3` }
-                                                                name={ `${date}_3` }
-                                                                value="-"
-                                                            />
                                                             <ShiftInput onSelected={(shift) => {
-                                                                document.getElementById(`${date}_3`).value = shift;
+                                                                tmpPersonShifts[date][`${date}_3`] = shift;
                                                             }} />
                                                         </td>
                                                     );
@@ -340,7 +308,10 @@ const ScheduleAdd = () => {
                                             </tr>
                                             
                                             { /** TODO: render new row */ }
-                                            {renderAddedRow()}
+                                            {personShifts && personShifts.map(person => {
+                                                return <PersonShiftsRow row={person} />;
+                                            })}
+                                            
                                         </tbody>
                                     </table>
 
