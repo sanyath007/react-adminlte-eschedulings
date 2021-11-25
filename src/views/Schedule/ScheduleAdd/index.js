@@ -24,6 +24,7 @@ const ScheduleAdd = () => {
     const [month, setMonth] = useState(new Date());
     const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
+    const [personSelected, setPersonSelected] = useState({});
     const [personShifts, setPersonShifts] = useState([]);
     const [openModal, setOpenModal] = useState(false);
 
@@ -108,6 +109,17 @@ const ScheduleAdd = () => {
         });
     };
 
+    const renderTotalShifts = function () {
+        return (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span>ด=</span>
+                <span>ช=</span>
+                <span>บ=</span>
+                <span>BD=</span>
+            </div>
+        );
+    };
+
     return (
         <section className="content">
             <div className="container-fluid">
@@ -118,9 +130,10 @@ const ScheduleAdd = () => {
                         <PersonModal
                             isOpen={openModal}
                             hideModal={() => setOpenModal(false)}
-                            onSelected={(ip) => {
-                                console.log(ip);
-                                // handleModalSelectedData(ip, formik.setFieldValue)
+                            onSelected={(person) => {
+                                console.log(person);
+                                setPersonSelected(person);
+                                // handleModalSelectedData(person, formik.setFieldValue)
                             }}
                         />
 
@@ -249,20 +262,23 @@ const ScheduleAdd = () => {
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    {/* officer info */}
-                                                    <div>
-                                                        <p>{/* { person.person_firstname+ ' ' +person.person_lastname } */}</p>
-                                                        <p style={{ color: 'grey', margin: '0px' }}>
-                                                            ตำแหน่ง ...
-                                                        </p>
-                                                        <input type="hidden" id="" name="" />
-                                                    </div>
+                                                    {personSelected && (
+                                                        <div>
+                                                            <p style={{ margin: '0px' }}>
+                                                                { `${personSelected.prefix?.prefix_name}${personSelected.person_firstname} ${personSelected.person_lastname}` }
+                                                            </p>
+                                                            <p style={{ color: 'grey', margin: '0px' }}>
+                                                                {personSelected.position?.position_name}
+                                                            </p>
+                                                            <input type="hidden" id="" name="" />
+                                                        </div>
+                                                    )}
                                                     <a
                                                         href="#"
-                                                        className="btn btn-primary btn-sm"
+                                                        className={ `btn ${personSelected ? 'btn-warning' : 'btn-primary'} btn-sm` }
                                                         onClick={() => setOpenModal(true)}
                                                     >
-                                                        เลือกบุคลากร
+                                                        {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
                                                     </a>
                                                 </td>
                                                 {[...Array(tableCol)].map((m, i) => {
@@ -275,7 +291,7 @@ const ScheduleAdd = () => {
                                                         >
                                                             <input
                                                                 type="hidden"
-                                                                id="{{ person.person_id+ '_1_' +date }}"
+                                                                id="{{ '_1_' +date }}"
                                                                 name="{{ person.person_id+ '_1_' +date }}"
                                                                 value="-"
                                                             />
@@ -299,20 +315,13 @@ const ScheduleAdd = () => {
                                                         </td>
                                                     );
                                                 })}
-                                                <td>
-                                                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                        <span>ด=</span>
-                                                        <span>ช=</span>
-                                                        <span>บ=</span>
-                                                        <span>BD=</span>
-                                                    </div>
-                                                </td>
+                                                <td>{renderTotalShifts()}</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <a 
                                                         href="#"
                                                         className="btn btn-primary btn-sm" 
                                                         onClick={(e) => {
-                                                            // onAddShift(e, person.person_id)
+                                                            onAddPersonShifts(e);
                                                         }}
                                                     >
                                                         เพิ่ม
