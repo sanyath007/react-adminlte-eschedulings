@@ -18,7 +18,6 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
 
   const fetchPersons = async () => {
     let res = await api.get(`/api/persons`);
-    console.log(res);
 
     setPersons(res.data.items);
     setPager(res.data.pager);
@@ -89,7 +88,7 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
           </thead>
           <tbody>
             {persons && persons.map((person, index) => (
-              <tr key={person.id}>
+              <tr key={person.person_id}>
                 <td style={{ textAlign: 'center' }}>{pager?.from + index}</td>
                 <td style={{ textAlign: 'center' }}>{person.person_id}</td>
                 <td>{`${person.prefix.prefix_name}${person.person_firstname} ${person.person_lastname}`}</td>

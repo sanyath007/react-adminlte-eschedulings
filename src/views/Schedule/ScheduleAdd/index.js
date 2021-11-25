@@ -79,6 +79,9 @@ const ScheduleAdd = () => {
 
         const newRow = [...personShifts, { person: personSelected, shifts }];
         setPersonShifts(newRow);
+
+        /** TODO: Clear all inputs value of action row  */
+        setPersonSelected(null);
     };
 
     const renderDailyCols = function () {
@@ -306,12 +309,12 @@ const ScheduleAdd = () => {
                                                     </a>
                                                 </td>
                                             </tr>
-                                            
-                                            { /** TODO: render new row */ }
+
+                                            { /** Render all added rows */ }
                                             {personShifts && personShifts.map(person => {
-                                                return <PersonShiftsRow row={person} />;
+                                                return <PersonShiftsRow key={person.person_id} row={person} />;
                                             })}
-                                            
+
                                         </tbody>
                                     </table>
 
