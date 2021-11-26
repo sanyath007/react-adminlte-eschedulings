@@ -27,6 +27,7 @@ const ScheduleAdd = () => {
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [toggleShiftVal, setToggleShiftVal] = useState(false);
 
     useEffect(() => {
         getInitForm();
@@ -82,6 +83,7 @@ const ScheduleAdd = () => {
 
         /** TODO: Clear all inputs value of action row  */
         setPersonSelected(null);
+        setToggleShiftVal(true);
     };
 
     const renderDailyCols = function () {
@@ -124,7 +126,10 @@ const ScheduleAdd = () => {
                         <PersonModal
                             isOpen={openModal}
                             hideModal={() => setOpenModal(false)}
-                            onSelected={(person) => setPersonSelected(person)}
+                            onSelected={(person) => {
+                                setPersonSelected(person);
+                                setToggleShiftVal(false);
+                            }}
                         />
 
                         <div className="card">
@@ -282,17 +287,26 @@ const ScheduleAdd = () => {
                                                                 }
                                                             }
                                                         >
-                                                            <ShiftInput onSelected={(shift) => {
-                                                                tmpPersonShifts[date][`${date}_1`] = shift;
-                                                            }} />
+                                                            <ShiftInput
+                                                                onSelected={(shift) => {
+                                                                    tmpPersonShifts[date][`${date}_1`] = shift;
+                                                                }}
+                                                                defaultVal={toggleShiftVal}
+                                                            />
 
-                                                            <ShiftInput onSelected={(shift) => {
-                                                                tmpPersonShifts[date][`${date}_2`] = shift;
-                                                            }} />
+                                                            <ShiftInput
+                                                                onSelected={(shift) => {
+                                                                    tmpPersonShifts[date][`${date}_2`] = shift;
+                                                                }}
+                                                                defaultVal={toggleShiftVal}
+                                                            />
 
-                                                            <ShiftInput onSelected={(shift) => {
-                                                                tmpPersonShifts[date][`${date}_3`] = shift;
-                                                            }} />
+                                                            <ShiftInput
+                                                                onSelected={(shift) => {
+                                                                    tmpPersonShifts[date][`${date}_3`] = shift;
+                                                                }}
+                                                                defaultVal={toggleShiftVal}
+                                                            />
                                                         </td>
                                                     );
                                                 })}

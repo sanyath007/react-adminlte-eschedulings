@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ShiftInput = (props) => {
     const [textSelected, setTextSelected] = useState('-');
@@ -22,6 +22,17 @@ const ShiftInput = (props) => {
         /** Pass data to parent */
         props.onSelected(shift); 
     }
+
+    const setDefault = function () {
+        setTextSelected('-');
+        setBtnGroupClass('btn-default');
+    };
+
+    useEffect(() => {
+        if (props.defaultVal) {
+            setDefault();
+        }
+    }, [props.defaultVal])
 
     return (
         <div className="btn-group mt-2" role="group">
