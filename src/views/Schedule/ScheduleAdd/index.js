@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import moment from 'moment';
+import { Formik, Form, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import api from '../../../api';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import PersonModal from '../../Modals/PersonModal';
@@ -15,14 +17,20 @@ let tmpDeparts = [];
 let tmpDivisions = [];
 let tmpPersonShifts = [];
 
+const scheduleSchema = Yup.object().shape({
+    depart: Yup.string().required('Depart!!!'),
+    division: Yup.string().required('Division!!!'),
+    month: Yup.string().required('Month!!!'),
+    year: Yup.string().required('Year!!!'),
+    controller: Yup.string().required('Controller!!!')
+});
+
 const ScheduleAdd = () => {
     const dispatch = useDispatch();
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
-    const [month, setMonth] = useState(new Date());
-    const [year, setYear] = useState(new Date());
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
@@ -32,15 +40,19 @@ const ScheduleAdd = () => {
     useEffect(() => {
         getInitForm();
 
+        generateShiftDays(tableCol);
+    }, []);
+
+    const generateShiftDays = function (days) {
         /** Generate person's shift array */
-        [...Array(tableCol)].forEach((obj, date) => {
+        [...Array(days)].forEach((obj, date) => {
             tmpPersonShifts.push({
                 [`${date}_1`]: '',
                 [`${date}_2`]: '',
                 [`${date}_3`]: '',
             });
         });
-    }, []);
+    };
 
     const onFactionChange = function (faction) {
         setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
@@ -70,6 +82,7 @@ const ScheduleAdd = () => {
         const daysOfMonth = moment(date).endOf('month').date();
 
         setTableCol(daysOfMonth);
+        generateShiftDays(daysOfMonth);
     };
 
     const onAddPersonShifts = function () {
@@ -84,6 +97,10 @@ const ScheduleAdd = () => {
         /** TODO: Clear all inputs value of action row  */
         setPersonSelected(null);
         setToggleShiftVal(true);
+    };
+
+    const onSubmit = function (values, props) {
+        console.log(values, props);
     };
 
     const renderDailyCols = function () {
@@ -132,214 +149,259 @@ const ScheduleAdd = () => {
                             }}
                         />
 
-                        <div className="card">
-                            <div className="card-header">
-                                <h3 className="card-title">
-                                    <i className="fas fa-hospital-user"></i>
-                                    ตารางเวร
-                                </h3>
-                            </div>{/* <!-- /.card-header --> */}
+                        <Formik
+                            initialValues={{
+                                depart: '',
+                                division: '',
+                                month: '',
+                                year: '',
+                                controller: ''
+                            }}
+                            validationSchema={scheduleSchema}
+                            onSubmit={onSubmit}
+                        >
+                            {(formik) => {
+                                return (
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <h3 className="card-title">
+                                                <i className="fas fa-hospital-user"></i>
+                                                ตารางเวร
+                                            </h3>
+                                        </div>{/* <!-- /.card-header --> */}
 
-                            <form action="" method="POST">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="form-group col-md-4">
-                                            <label>กลุ่มภารกิจ :</label>
-                                            <select
-                                                className="form-control"
-                                                id="faction"
-                                                name="faction"
-                                                onChange={(e) => onFactionChange(e.target.value)}
-                                            >
-                                                <option value="">-- เลือกกลุ่มภารกิจ --</option>
-                                                {factions && factions.map(fac => {
-                                                    return (
-                                                        <option key={fac.faction_id} value={ fac.faction_id }>
-                                                            { fac.faction_name }
-                                                        </option>
-                                                    );
-                                                })}
-                                            </select>
-                                        </div>
-                                        <div className="form-group col-md-4">
-                                            <label>กลุ่มงาน :</label>
-                                            <select
-                                                className="form-control"
-                                                id="depart"
-                                                name="depart"
-                                                onChange={(e) => onDepartChange(e.target.value)}
-                                            >
-                                                <option value="">-- เลือกกลุ่มงาน --</option>
-                                                {departs && departs.map(dep => {
-                                                    return (
-                                                        <option key={dep.depart_id} value={ dep.depart_id }>
-                                                            { dep.depart_name }
-                                                        </option>
-                                                    );
-                                                })}
-                                            </select>
-                                        </div>
-                                        <div className="form-group col-md-4">
-                                            <label>งาน :</label>
-                                            <select
-                                                className="form-control"
-                                                id="division"
-                                                name="division"
-                                                onChange={() => {
-                                                    // onDivisionChange(newScheduling.division)
-                                                }}
-                                            >
-                                                <option value="">-- เลือกงาน --</option>
-                                                {divisions && divisions.map(div => {
-                                                    return (
-                                                        <option key={div.ward_id} value={ div.ward_id }>
-                                                            { div.ward_name }
-                                                        </option>
-                                                    );
-                                                })}
-                                            </select>
-                                        </div>
-                                        <div className="form-group col-md-4">
-                                            <label>ประจำเดือน :</label>
-                                            <DatePicker
-                                                selected={month}
-                                                onChange={(date) => {
-                                                    setMonth(date);
-                                                    setDatesOfMonth(date);
-                                                }}
-                                                dateFormat="MM/yyyy"
-                                                locale="th"
-                                                showMonthYearPicker
-                                                className="form-control"
-                                            />
-                                        </div>
-                                        <div className="form-group col-md-4">
-                                            <label>ปีงบประมาณ :</label>
-                                            <DatePicker
-                                                selected={year}
-                                                onChange={(date) => setYear(date)}
-                                                dateFormat="yyyy"
-                                                locale="th"
-                                                showYearPicker
-                                                className="form-control"
-                                            />
-                                        </div>
-                                        <div className="form-group col-md-4">
-                                            <label>ผู้ควบคุม :</label>
-                                            <select
-                                                id="controller"
-                                                name="controller"
-                                                className="form-control">
-                                                <option value="">-- เลือกผู้ควบคุม --</option>
-                                                {divisionMembers && divisionMembers.map(person => {
-                                                    return (
-                                                        <option value={ person.person_id }>
-                                                            { person.person_firstname+ ' ' +person.person_lastname }
-                                                        </option>
-                                                    );
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
-                                        <thead>
-                                            <tr>
-                                                <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                                <td style={{ textAlign: 'center' }} colSpan={ tableCol }>
-                                                    วันที่
-                                                </td>
-                                                <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
-                                                <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
-                                            </tr>
-                                            { renderDailyCols() }
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    {personSelected && (
-                                                        <div>
-                                                            <p style={{ margin: '0px' }}>
-                                                                { `${personSelected.prefix?.prefix_name}${personSelected.person_firstname} ${personSelected.person_lastname}` }
-                                                            </p>
-                                                            <p style={{ color: 'grey', margin: '0px' }}>
-                                                                {personSelected.position?.position_name}
-                                                            </p>
-                                                        </div>
-                                                    )}
-                                                    <a
-                                                        href="#"
-                                                        className={ `btn ${personSelected ? 'btn-warning' : 'btn-primary'} btn-sm` }
-                                                        onClick={() => setOpenModal(true)}
-                                                    >
-                                                        {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
-                                                    </a>
-                                                </td>
-                                                {[...Array(tableCol)].map((m, date) => {
-                                                    return (
-                                                        <td
-                                                            key={date}
-                                                            style={
-                                                                {
-                                                                    textAlign: 'center', 
-                                                                    fontSize: 'small',
-                                                                    padding: '0'
-                                                                }
+                                        <Form>
+                                            <div className="card-body">
+                                                <div className="row">
+                                                    <div className="form-group col-md-4">
+                                                        <label>กลุ่มภารกิจ :</label>
+                                                        <select
+                                                            className="form-control"
+                                                            id="faction"
+                                                            name="faction"
+                                                            onChange={(e) => onFactionChange(e.target.value)}
+                                                        >
+                                                            <option value="">-- เลือกกลุ่มภารกิจ --</option>
+                                                            {factions && factions.map(fac => {
+                                                                return (
+                                                                    <option key={fac.faction_id} value={ fac.faction_id }>
+                                                                        { fac.faction_name }
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group col-md-4">
+                                                        <label>กลุ่มงาน :</label>
+                                                        <select
+                                                            className="form-control"
+                                                            id="depart"
+                                                            name="depart"
+                                                            value={formik.values.depart}
+                                                            onChange={(e) => {
+                                                                formik.setFieldValue('depart', e.target.value);
+                                                                onDepartChange(e.target.value);
+                                                            }}
+                                                        >
+                                                            <option value="">-- เลือกกลุ่มงาน --</option>
+                                                            {departs && departs.map(dep => {
+                                                                return (
+                                                                    <option key={dep.depart_id} value={ dep.depart_id }>
+                                                                        { dep.depart_name }
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                        {formik.errors.depart && formik.touched.depart 
+                                                            ? (<div>{formik.errors.depart}</div>) 
+                                                            : null
+                                                        }
+                                                    </div>
+                                                    <div className="form-group col-md-4">
+                                                        <label>งาน :</label>
+                                                        <select
+                                                            className="form-control"
+                                                            id="division"
+                                                            name="division"
+                                                            value={formik.values.division}
+                                                            onChange={
+                                                                formik.handleChange
+                                                                // onDivisionChange(newScheduling.division)
                                                             }
                                                         >
-                                                            <ShiftInput
-                                                                onSelected={(shift) => {
-                                                                    tmpPersonShifts[date][`${date}_1`] = shift;
-                                                                }}
-                                                                defaultVal={toggleShiftVal}
-                                                            />
+                                                            <option value="">-- เลือกงาน --</option>
+                                                            {divisions && divisions.map(div => {
+                                                                return (
+                                                                    <option key={div.ward_id} value={ div.ward_id }>
+                                                                        { div.ward_name }
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                        {formik.errors.division && formik.touched.division 
+                                                            ? (<div>{formik.errors.division}</div>) 
+                                                            : null
+                                                        }
+                                                    </div>
+                                                    <div className="form-group col-md-4">
+                                                        <label>ประจำเดือน :</label>
+                                                        <DatePicker
+                                                            selected={formik.values.month}
+                                                            onChange={(date) => {
+                                                                formik.setFieldValue('month', date);
+                                                                setDatesOfMonth(date);
+                                                            }}
+                                                            dateFormat="MM/yyyy"
+                                                            locale="th"
+                                                            showMonthYearPicker
+                                                            className="form-control"
+                                                        />
+                                                        {formik.errors.month && formik.touched.month 
+                                                            ? (<div>{formik.errors.month}</div>) 
+                                                            : null
+                                                        }
+                                                    </div>
+                                                    <div className="form-group col-md-4">
+                                                        <label>ปีงบประมาณ :</label>
+                                                        <DatePicker
+                                                            selected={formik.values.year}
+                                                            onChange={(date) => formik.setFieldValue('year', date)}
+                                                            dateFormat="yyyy"
+                                                            locale="th"
+                                                            showYearPicker
+                                                            className="form-control"
+                                                        />
+                                                        {formik.errors.year && formik.touched.year 
+                                                            ? (<div>{formik.errors.year}</div>) 
+                                                            : null
+                                                        }
+                                                    </div>
+                                                    <div className="form-group col-md-4">
+                                                        <label>ผู้ควบคุม :</label>
+                                                        <select
+                                                            id="controller"
+                                                            name="controller"
+                                                            value={formik.values.controller}
+                                                            className="form-control"
+                                                            onChange={formik.handleChange}
+                                                        >
+                                                            <option value="">-- เลือกผู้ควบคุม --</option>
+                                                            <option value="1">Test</option>
+                                                            {divisionMembers && divisionMembers.map(person => {
+                                                                return (
+                                                                    <option value={ person.person_id }>
+                                                                        { person.person_firstname+ ' ' +person.person_lastname }
+                                                                    </option>
+                                                                );
+                                                            })}
+                                                        </select>
+                                                        {formik.errors.controller && formik.touched.controller 
+                                                            ? (<div>{formik.errors.controller}</div>) 
+                                                            : null
+                                                        }
+                                                    </div>
+                                                </div>
 
-                                                            <ShiftInput
-                                                                onSelected={(shift) => {
-                                                                    tmpPersonShifts[date][`${date}_2`] = shift;
-                                                                }}
-                                                                defaultVal={toggleShiftVal}
-                                                            />
+                                                <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
+                                                    <thead>
+                                                        <tr>
+                                                            <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
+                                                            <td style={{ textAlign: 'center' }} colSpan={ tableCol }>
+                                                                วันที่
+                                                            </td>
+                                                            <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
+                                                            <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                                        </tr>
+                                                        { renderDailyCols() }
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                {personSelected && (
+                                                                    <div>
+                                                                        <p style={{ margin: '0px' }}>
+                                                                            { `${personSelected.prefix?.prefix_name}${personSelected.person_firstname} ${personSelected.person_lastname}` }
+                                                                        </p>
+                                                                        <p style={{ color: 'grey', margin: '0px' }}>
+                                                                            {personSelected.position?.position_name}
+                                                                        </p>
+                                                                    </div>
+                                                                )}
+                                                                <a
+                                                                    href="#"
+                                                                    className={ `btn ${personSelected ? 'btn-warning' : 'btn-primary'} btn-sm` }
+                                                                    onClick={() => setOpenModal(true)}
+                                                                >
+                                                                    {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
+                                                                </a>
+                                                            </td>
+                                                            {[...Array(tableCol)].map((m, date) => {
+                                                                return (
+                                                                    <td
+                                                                        key={date}
+                                                                        style={
+                                                                            {
+                                                                                textAlign: 'center', 
+                                                                                fontSize: 'small',
+                                                                                padding: '0'
+                                                                            }
+                                                                        }
+                                                                    >
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_1`] = shift;
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
 
-                                                            <ShiftInput
-                                                                onSelected={(shift) => {
-                                                                    tmpPersonShifts[date][`${date}_3`] = shift;
-                                                                }}
-                                                                defaultVal={toggleShiftVal}
-                                                            />
-                                                        </td>
-                                                    );
-                                                })}
-                                                <td>{renderTotalShifts()}</td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <a 
-                                                        href="#"
-                                                        className="btn btn-primary btn-sm" 
-                                                        onClick={(e) => {
-                                                            onAddPersonShifts(e);
-                                                        }}
-                                                    >
-                                                        เพิ่ม
-                                                    </a>
-                                                </td>
-                                            </tr>
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_2`] = shift;
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
 
-                                            { /** Render all added rows */ }
-                                            {personShifts && personShifts.map(person => {
-                                                return <PersonShiftsRow key={person.person_id} row={person} />;
-                                            })}
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_3`] = shift;
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                            <td>{renderTotalShifts()}</td>
+                                                            <td style={{ textAlign: 'center' }}>
+                                                                <a 
+                                                                    href="#"
+                                                                    className="btn btn-primary btn-sm" 
+                                                                    onClick={(e) => {
+                                                                        onAddPersonShifts(e);
+                                                                    }}
+                                                                >
+                                                                    เพิ่ม
+                                                                </a>
+                                                            </td>
+                                                        </tr>
 
-                                        </tbody>
-                                    </table>
+                                                        { /** Render all added rows */ }
+                                                        {personShifts && personShifts.map(ps => {
+                                                            return <PersonShiftsRow key={ps.person.person_id} row={ps} />;
+                                                        })}
 
-                                </div>{/* <!-- /.card-body --> */}
-                                <div className="card-footer clearfix">
-                                    <button type="reset" className="btn btn-danger float-right">ยกเลิก</button>
-                                    <button ng-click="store($event)" className="btn btn-primary float-right mr-2">บันทึก</button>
-                                </div>
-                                {/* <!-- /.card-footer --> */}
-                            </form>
-                        </div>{/* <!-- /.card --> */}
+                                                    </tbody>
+                                                </table>
+
+                                            </div>{/* <!-- /.card-body --> */}
+                                            <div className="card-footer clearfix">
+                                                <button type="reset" className="btn btn-danger float-right">ยกเลิก</button>
+                                                <button type="submit" className="btn btn-primary float-right mr-2">บันทึก</button>
+                                            </div>{/* <!-- /.card-footer --> */}
+                                        </Form>
+                                    </div>
+                                );
+                            }}
+                        </Formik>
             
                     </section>
                 </div>

@@ -26,7 +26,6 @@ const ScheduleList = () => {
         
         try {
             const res = await api.get('/api/schedulings');
-            console.log(res);
 
             dispatch(getSchedulesSuccess(res.data.schedulings));
         } catch (error) {
@@ -42,7 +41,6 @@ const ScheduleList = () => {
         getSchedules();
     }, []);
 
-    console.log(schedules);
     return (
         <section className="content">
             <div className="container-fluid">
