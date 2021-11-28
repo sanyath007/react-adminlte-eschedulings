@@ -5,6 +5,7 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import moment from 'moment';
 import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 import api from '../../../api';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import PersonModal from '../../Modals/PersonModal';
@@ -40,18 +41,21 @@ const ScheduleAdd = () => {
     useEffect(() => {
         getInitForm();
 
-        generateShiftDays(tableCol);
+        tmpPersonShifts = generateShiftDays(tableCol);
     }, []);
 
     const generateShiftDays = function (days) {
+        let _personShifts = [];
         /** Generate person's shift array */
         [...Array(days)].forEach((obj, date) => {
-            tmpPersonShifts.push({
+            _personShifts.push({
                 [`${date}_1`]: '',
                 [`${date}_2`]: '',
                 [`${date}_3`]: '',
             });
         });
+
+        return _personShifts;
     };
 
     const onFactionChange = function (faction) {
@@ -82,10 +86,15 @@ const ScheduleAdd = () => {
         const daysOfMonth = moment(date).endOf('month').date();
 
         setTableCol(daysOfMonth);
-        generateShiftDays(daysOfMonth);
+        tmpPersonShifts = generateShiftDays(daysOfMonth);
     };
 
     const onAddPersonShifts = function () {
+        if (!personSelected) {
+            toast.error('กรุณาเลือกบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
+            return;
+        }
+
         let shifts = [];
         [...Array(tableCol)].forEach((obj, date) => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
