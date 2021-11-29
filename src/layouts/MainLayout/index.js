@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import routes from '../../routes';
 import AppHeader from '../MainHeader';
 import AppSidebar from '../MainSidebar';
 import AppFooter from '../MainFooter';
+import { addBodyClass, removeBodyClass } from '../../utils';
 
 const MainLayout = () => {
   /** Get the current route from location */
   const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      removeBodyClass('login-page');
+
+      addBodyClass('sidebar-mini');
+      addBodyClass('layout-fixed');
+    }
+  }, []);
+
   const currentRoute = routes.find(rt => rt.path === location.pathname);
 
   return (

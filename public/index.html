@@ -68,13 +68,6 @@
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
       $.widget.bridge('uibutton', $.ui.button)
-
-      if (window.location.href.endsWith('login') || window.location.href.endsWith('register')) {
-        $('body')
-          .removeClass('sidebar-mini')
-          .removeClass('layout-fixed')
-          .addClass('login-page');
-      }
     </script>
     <!-- Bootstrap 4 -->
     <script src="%PUBLIC_URL%/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
