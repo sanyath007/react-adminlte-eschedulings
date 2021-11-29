@@ -109,7 +109,18 @@ const ScheduleAdd = () => {
     };
 
     const onSubmit = function (values, props) {
-        console.log(values, props);
+        if (personShifts.length === 0) {
+            toast.error('กรุณาเพิ่มรายการเวรของบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
+            return;
+        }
+
+        // TODO: Merge form input's values with personShifts array
+        const { depart, division, month, year, controller } = values;
+        let data = { depart, division, month, year, controller, personShifts };
+
+        // TODO: Store data to db
+
+        // TODO: Reset form input's values
     };
 
     const renderDailyCols = function () {
@@ -146,17 +157,17 @@ const ScheduleAdd = () => {
         <section className="content">
             <div className="container-fluid">
                 {/* <!-- Main row --> */}
+                <PersonModal
+                    isOpen={openModal}
+                    hideModal={() => setOpenModal(false)}
+                    onSelected={(person) => {
+                        setPersonSelected(person);
+                        setToggleShiftVal(false);
+                    }}
+                />
+
                 <div className="row">
                     <section className="col-lg-12 connectedSortable">
-
-                        <PersonModal
-                            isOpen={openModal}
-                            hideModal={() => setOpenModal(false)}
-                            onSelected={(person) => {
-                                setPersonSelected(person);
-                                setToggleShiftVal(false);
-                            }}
-                        />
 
                         <Formik
                             initialValues={{
