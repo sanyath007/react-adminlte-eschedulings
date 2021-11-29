@@ -4,6 +4,7 @@ import routes from '../../routes';
 import AppHeader from '../MainHeader';
 import AppSidebar from '../MainSidebar';
 import AppFooter from '../MainFooter';
+import ContentHeader from '../ContentHeader';
 import { addBodyClass, removeBodyClass } from '../../utils';
 
 const MainLayout = () => {
@@ -19,8 +20,6 @@ const MainLayout = () => {
     }
   }, []);
 
-  const currentRoute = routes.find(rt => rt.path === location.pathname);
-
   return (
     <div className="wrapper">
       <AppHeader />
@@ -31,21 +30,7 @@ const MainLayout = () => {
       <div className="content-wrapper">
 
         {/* Content Header (Page header) */}
-        <div className="content-header">
-          <div className="container-fluid">
-            <div className="row mb-2">
-              <div className="col-sm-6">
-                <h1 className="m-0 text-dark">{currentRoute ? currentRoute?.name : 'Error404'}</h1>
-              </div>
-              <div className="col-sm-6">
-                <ol className="breadcrumb float-sm-right">
-                  <li className="breadcrumb-item"><a href="#">Home</a></li>
-                  <li className="breadcrumb-item active">{currentRoute ? currentRoute?.name : 'Error404'}</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ContentHeader location={location} />
 
         {/* Main content */}
         <section className="content">
