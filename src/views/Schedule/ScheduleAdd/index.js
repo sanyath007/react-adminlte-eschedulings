@@ -103,7 +103,7 @@ const ScheduleAdd = () => {
         const newRow = [...personShifts, { person: personSelected, shifts }];
         setPersonShifts(newRow);
 
-        /** TODO: Clear all inputs value of action row  */
+        /** Clear all inputs value of action row  */
         setPersonSelected(null);
         setToggleShiftVal(true);
     };
@@ -203,7 +203,7 @@ const ScheduleAdd = () => {
                                                     <div className="form-group col-md-4">
                                                         <label>กลุ่มงาน :</label>
                                                         <select
-                                                            className="form-control"
+                                                            className={ `form-control ${formik.errors.depart && formik.touched.depart ? 'is-invalid' : ''}` }
                                                             id="depart"
                                                             name="depart"
                                                             value={formik.values.depart}
@@ -222,14 +222,14 @@ const ScheduleAdd = () => {
                                                             })}
                                                         </select>
                                                         {formik.errors.depart && formik.touched.depart 
-                                                            ? (<div>{formik.errors.depart}</div>) 
+                                                            ? (<div className="invalid-feedback">{formik.errors.depart}</div>) 
                                                             : null
                                                         }
                                                     </div>
                                                     <div className="form-group col-md-4">
                                                         <label>งาน :</label>
                                                         <select
-                                                            className="form-control"
+                                                            className={ `form-control ${formik.errors.division && formik.touched.division ? 'is-invalid' : ''}` }
                                                             id="division"
                                                             name="division"
                                                             value={formik.values.division}
@@ -248,8 +248,8 @@ const ScheduleAdd = () => {
                                                             })}
                                                         </select>
                                                         {formik.errors.division && formik.touched.division 
-                                                            ? (<div>{formik.errors.division}</div>) 
-                                                            : null
+                                                            ? (<div className="invalid-feedback">{formik.errors.division}</div>
+                                                            ) : null
                                                         }
                                                     </div>
                                                     <div className="form-group col-md-4">
@@ -263,10 +263,10 @@ const ScheduleAdd = () => {
                                                             dateFormat="MM/yyyy"
                                                             locale="th"
                                                             showMonthYearPicker
-                                                            className="form-control"
+                                                            className={ `form-control ${formik.errors.month && formik.touched.month ? 'is-invalid' : ''}` }
                                                         />
                                                         {formik.errors.month && formik.touched.month 
-                                                            ? (<div>{formik.errors.month}</div>) 
+                                                            ? (<div className="text-danger text-sm">{formik.errors.month}</div>) 
                                                             : null
                                                         }
                                                     </div>
@@ -278,10 +278,10 @@ const ScheduleAdd = () => {
                                                             dateFormat="yyyy"
                                                             locale="th"
                                                             showYearPicker
-                                                            className="form-control"
+                                                            className={ `form-control ${formik.errors.year && formik.touched.year ? 'is-invalid' : ''}` }
                                                         />
                                                         {formik.errors.year && formik.touched.year 
-                                                            ? (<div>{formik.errors.year}</div>) 
+                                                            ? (<div className="text-danger text-sm">{formik.errors.year}</div>) 
                                                             : null
                                                         }
                                                     </div>
@@ -291,7 +291,7 @@ const ScheduleAdd = () => {
                                                             id="controller"
                                                             name="controller"
                                                             value={formik.values.controller}
-                                                            className="form-control"
+                                                            className={ `form-control ${formik.errors.controller && formik.touched.controller ? 'is-invalid' : ''}` }
                                                             onChange={formik.handleChange}
                                                         >
                                                             <option value="">-- เลือกผู้ควบคุม --</option>
@@ -305,7 +305,7 @@ const ScheduleAdd = () => {
                                                             })}
                                                         </select>
                                                         {formik.errors.controller && formik.touched.controller 
-                                                            ? (<div>{formik.errors.controller}</div>) 
+                                                            ? (<div className="invalid-feedback">{formik.errors.controller}</div>) 
                                                             : null
                                                         }
                                                     </div>
