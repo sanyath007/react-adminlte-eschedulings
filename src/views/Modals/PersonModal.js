@@ -73,7 +73,7 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
           </Col>
         </Row>
 
-        <table className="table table-bordered table-striped table-sm">
+        <table className="table table-bordered table-striped table-sm" style={{ fontSize: '14px'}}>
           <thead>
             <tr>
               <th style={{ width: '3%', textAlign: 'center' }}>#</th>
@@ -82,7 +82,7 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
               <th style={{ width: '8%', textAlign: 'center' }}>วันที่เกิด</th>
               <th style={{ width: '6%', textAlign: 'center' }}>อายุ (ปี)</th>
               <th style={{ width: '20%' }}>ตำแหน่ง</th>
-              <th style={{ width: '20%' }}>สังกัด</th>
+              <th style={{ width: '25%' }}>สังกัด</th>
               <th style={{ width: '6%', textAlign: 'center' }}>Actions</th>
             </tr>
           </thead>
@@ -102,7 +102,7 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
                 <td>{person.member_of.depart?.depart_name}</td>
                 <td style={{ textAlign: 'center' }}>
                   <Button
-                    size="sm"
+                    size="xs"
                     onClick={() => {
                       onSelected(person);
                       hideModal();
