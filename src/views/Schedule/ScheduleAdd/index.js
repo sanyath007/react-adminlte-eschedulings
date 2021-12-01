@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import moment from 'moment';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import api from '../../../api';
@@ -177,7 +177,7 @@ const ScheduleAdd = () => {
                             depart: '',
                             division: '',
                             month: '',
-                            year: '',
+                            year: '2565',
                             controller: ''
                         }}
                         validationSchema={scheduleSchema}
@@ -272,6 +272,7 @@ const ScheduleAdd = () => {
                                                         selected={formik.values.month}
                                                         onChange={(date) => {
                                                             formik.setFieldValue('month', date);
+                                                            formik.setFieldValue('year', date.getFullYear() + 543)
                                                             setDatesOfMonth(date);
                                                         }}
                                                         dateFormat="MM/yyyy"
@@ -286,18 +287,12 @@ const ScheduleAdd = () => {
                                                 </div>
                                                 <div className="form-group col-md-4">
                                                     <label>ปีงบประมาณ :</label>
-                                                    <DatePicker
-                                                        selected={formik.values.year}
-                                                        onChange={(date) => formik.setFieldValue('year', date)}
-                                                        dateFormat="yyyy"
-                                                        locale="th"
-                                                        showYearPicker
-                                                        className={ `form-control ${formik.errors.year && formik.touched.year ? 'is-invalid' : ''}` }
+                                                    <Field
+                                                        name=""
+                                                        value={formik.values.year}
+                                                        className={ `form-control` }
+                                                        readOnly
                                                     />
-                                                    {formik.errors.year && formik.touched.year 
-                                                        ? (<div className="text-danger text-sm">{formik.errors.year}</div>) 
-                                                        : null
-                                                    }
                                                 </div>
                                                 <div className="form-group col-md-4">
                                                     <label>ผู้ควบคุม :</label>
