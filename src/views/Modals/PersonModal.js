@@ -16,8 +16,8 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
   const [persons, setPersons] = useState([]);
   const [pager, setPager] = useState(null);
 
-  const fetchPersons = async () => {
-    let res = await api.get(`/api/persons`);
+  const fetchPersons = async (fname='', depart='', division='') => {
+    let res = await api.get(`/api/persons?fname=${fname}`);
 
     setPersons(res.data.items);
     setPager(res.data.pager);
@@ -52,22 +52,26 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
             <div className="form-group col-md-6 pl-0">
               <div className="input-group">
                 <div className="input-group-prepend">
-                  <span className="input-group-text">กรองข้อมูล</span>
+                  <span className="input-group-text">คันหาชื่อ</span>
                 </div>
                 <BsForm.Control
+                  onChange={(e) => fetchPersons(e.target.value)}
+                ></BsForm.Control>
+
+                {/* <BsForm.Control
                   as="select"
                   name="dch_type"
                   onChange={(e) => {
                     let ward = e.target.value === '' ? '' : `&ward=${e.target.value}`;
 
-                    // fetchIpAll('?dchdate=1', ward);
+                    // fetchPersons('?dchdate=1', ward);
                   }}
                 >
                   <option value="">แสดงทั้งหมด</option>
                   <option value="06">วอร์ดชั้น 1</option>
                   <option value="00">วอร์ดชั้น 10</option>
                   <option value="05">วอร์ดชั้น ICU</option>
-                </BsForm.Control>
+                </BsForm.Control> */}
               </div>
             </div>{/* /.form-group */}
           </Col>
