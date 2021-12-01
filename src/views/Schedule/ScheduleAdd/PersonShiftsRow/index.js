@@ -1,4 +1,5 @@
 import React from 'react'
+import TotalShiftsRow from '../TotalShiftsRow';
 
 const PersonShiftsRow = ({ row }) => {
     return (
@@ -16,7 +17,9 @@ const PersonShiftsRow = ({ row }) => {
                         </td>
                     );
                 })}
-                <td></td>
+                <td>
+                    <TotalShiftsRow shifts={row.shifts} person={row.person.person_id} />
+                </td>
                 <td></td>
             </tr>
     );

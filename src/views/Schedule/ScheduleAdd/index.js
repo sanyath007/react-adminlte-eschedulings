@@ -40,10 +40,10 @@ const ScheduleAdd = () => {
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
     const [shiftOfDay, setShiftOfDay] = useState('');
 
@@ -126,7 +126,7 @@ const ScheduleAdd = () => {
 
         // TODO: Merge form input's values with personShifts array
         const { depart, division, month, year, controller } = values;
-        let data = { depart, division, month: moment(month).format('YYYY-MM'), year: moment(year).format('YYYY'), controller, personShifts };
+        let data = { depart, division, month: moment(month).format('YYYY-MM'), year, controller, personShifts };
         console.log(data);
         // TODO: Store data to db
 
