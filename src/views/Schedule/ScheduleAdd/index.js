@@ -134,7 +134,9 @@ const ScheduleAdd = () => {
     };
 
     const renderDailyCols = function (formik) {
-        const month = moment(formik.values.month).format('YYYY-MM');
+        const month = formik.values.month
+                        ? moment(formik.values.month).format('YYYY-MM')
+                        : moment().format('YYYY-MM');
 
         return (
             <tr>
