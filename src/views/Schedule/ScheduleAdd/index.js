@@ -10,6 +10,7 @@ import api from '../../../api';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import PersonModal from '../../Modals/PersonModal';
 import PersonShiftsRow from './PersonShiftsRow';
+import TotalShifts from './TotalShifts';
 import th from 'date-fns/locale/th'
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
@@ -26,6 +27,13 @@ const scheduleSchema = Yup.object().shape({
     controller: Yup.string().required('Controller!!!')
 });
 
+const initialTotal = {
+    night: 0,
+    morn: 0,
+    even: 0,
+    bd: 0
+};
+
 const ScheduleAdd = () => {
     const dispatch = useDispatch();
     const [factions, setFactions] = useState([]);
@@ -37,6 +45,7 @@ const ScheduleAdd = () => {
     const [personShifts, setPersonShifts] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
+    const [shiftOfDay, setShiftOfDay] = useState('');
 
     useEffect(() => {
         getInitForm();
@@ -139,17 +148,6 @@ const ScheduleAdd = () => {
                     );
                 })}
             </tr>
-        );
-    };
-
-    const renderTotalShifts = function () {
-        return (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>ด=</span>
-                <span>ช=</span>
-                <span>บ=</span>
-                <span>BD=</span>
-            </div>
         );
     };
 
@@ -369,6 +367,7 @@ const ScheduleAdd = () => {
                                                                     <ShiftInput
                                                                         onSelected={(shift) => {
                                                                             tmpPersonShifts[date][`${date}_1`] = shift;
+                                                                            setShiftOfDay(`${date}_1_${shift}`);
                                                                         }}
                                                                         defaultVal={toggleShiftVal}
                                                                     />
@@ -376,6 +375,7 @@ const ScheduleAdd = () => {
                                                                     <ShiftInput
                                                                         onSelected={(shift) => {
                                                                             tmpPersonShifts[date][`${date}_2`] = shift;
+                                                                            setShiftOfDay(`${date}_2_${shift}`);
                                                                         }}
                                                                         defaultVal={toggleShiftVal}
                                                                     />
@@ -383,13 +383,16 @@ const ScheduleAdd = () => {
                                                                     <ShiftInput
                                                                         onSelected={(shift) => {
                                                                             tmpPersonShifts[date][`${date}_3`] = shift;
+                                                                            setShiftOfDay(`${date}_3_${shift}`);
                                                                         }}
                                                                         defaultVal={toggleShiftVal}
                                                                     />
                                                                 </td>
                                                             );
                                                         })}
-                                                        <td>{renderTotalShifts()}</td>
+                                                        <td>
+                                                            <TotalShifts shifts={tmpPersonShifts} shiftOfDay={shiftOfDay} />
+                                                        </td>
                                                         <td style={{ textAlign: 'center' }}>
                                                             <a 
                                                                 href="#"
