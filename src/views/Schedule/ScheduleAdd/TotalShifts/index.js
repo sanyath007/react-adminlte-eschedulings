@@ -21,7 +21,7 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
                     tmpTotal.morn += 1;
                 } else if (shift[`${day}_${i}`] === 'บ' || shift[`${day}_${i}`] === 'บ' || shift[`${day}_${i}`] === 'บ') {
                     tmpTotal.even += 1;
-                } else if (shift[`${day}_${i}`] === 'BD' || shift[`${day}_${i}`] === 'BD' || shift[`${day}_${i}`] === 'BD') {
+                } else if (shift[`${day}_${i}`] === 'B' || shift[`${day}_${i}`] === 'B' || shift[`${day}_${i}`] === 'B') {
                     tmpTotal.bd += 1;
                 }
             }
@@ -34,14 +34,12 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
         calculateTotal();
     }, [shifts, shiftOfDay]);
 
-    console.log(shifts);
-
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
             <span>ด={total.night}</span>
             <span>ช={total.morn}</span>
             <span>บ={total.even}</span>
-            <span>BD={total.bd}</span>
+            <span>B={total.bd}</span>
         </div>
     )
 }

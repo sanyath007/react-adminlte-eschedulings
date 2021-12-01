@@ -62,8 +62,8 @@ const ShiftInput = (props) => {
                 <a href="#" className="dropdown-item" onClick={() => onSelected('บ')}>
                     บ
                 </a>
-                <a href="#" className="dropdown-item" onClick={() => onSelected('BD')}>
-                    BD
+                <a href="#" className="dropdown-item" onClick={() => onSelected('B')}>
+                    B
                 </a>
             </div>
         </div>

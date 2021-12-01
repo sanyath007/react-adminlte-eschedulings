@@ -126,8 +126,8 @@ const ScheduleAdd = () => {
 
         // TODO: Merge form input's values with personShifts array
         const { depart, division, month, year, controller } = values;
-        let data = { depart, division, month, year, controller, personShifts };
-
+        let data = { depart, division, month: moment(month).format('YYYY-MM'), year: moment(year).format('YYYY'), controller, personShifts };
+        console.log(data);
         // TODO: Store data to db
 
         // TODO: Reset form input's values
