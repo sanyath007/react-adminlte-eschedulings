@@ -47,7 +47,8 @@ const MainLayout = () => {
                 />
               ) : (null);
             })}
-            <Redirect from="/" to="/dashboard" />
+            {/* <Redirect from="/" to="/dashboard" /> */}
+            <Redirect to="/404" />
           </Switch>
 
         </section>

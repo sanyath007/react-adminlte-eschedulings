@@ -33,9 +33,7 @@ const MainSidebar = () => {
             <li className="nav-item has-treeview menu-open">
               <Link to="/dashboard" className="nav-link active">
                 <i className="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Dashboard
-                </p>
+                <p>Dashboard</p>
               </Link>
             </li>
             <li className="nav-item has-treeview">
