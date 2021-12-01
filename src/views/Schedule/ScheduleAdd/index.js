@@ -118,7 +118,7 @@ const ScheduleAdd = () => {
         tmpPersonShifts = generateShiftDays(tableCol);
     };
 
-    const onSubmit = function (values, props) {
+    const onSubmit = async function (values, props) {
         if (personShifts.length === 0) {
             toast.error('กรุณาเพิ่มรายการเวรของบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
             return;
@@ -126,10 +126,11 @@ const ScheduleAdd = () => {
 
         // TODO: Merge form input's values with personShifts array
         const { depart, division, month, year, controller } = values;
-        let data = { depart, division, month: moment(month).format('YYYY-MM'), year, controller, personShifts };
+        let data = { depart, division, month: moment(month).format('YYYY-MM'), year, controller, person_shifts: personShifts };
         console.log(data);
         // TODO: Store data to db
-
+        let res = await api.post(`/api/schedulings`, data);
+        console.log(res);
         // TODO: Reset form input's values
     };
 
