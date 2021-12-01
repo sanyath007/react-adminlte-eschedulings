@@ -115,6 +115,7 @@ const ScheduleAdd = () => {
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
         setToggleShiftVal(true);
+        tmpPersonShifts = generateShiftDays(tableCol);
     };
 
     const onSubmit = function (values, props) {

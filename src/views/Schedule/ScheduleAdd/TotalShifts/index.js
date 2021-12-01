@@ -11,12 +11,7 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
     const [total, setTotal] = useState(initialTotal);
 
     const calculateTotal = () => {
-        let tmpTotal = {
-            night: 0,
-            morn: 0,
-            even: 0,
-            bd: 0
-        };
+        let tmpTotal = { ...initialTotal };
 
         shifts.forEach((shift, day) => {
             for (let i = 1; i <= 3; i++) {
@@ -36,7 +31,6 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
     };
 
     useEffect(() => {
-        console.log('555');
         calculateTotal();
     }, [shifts, shiftOfDay]);
 
