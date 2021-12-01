@@ -80,12 +80,11 @@ const Dashboard = () => {
             </div>
             <div className="card-body">
               <div className="tab-content p-0">
-                <div className="chart tab-pane active" id="revenue-chart"
-                      style={{ position: 'relative', height: '300px' }}>
-                    <canvas id="revenue-chart-canvas" height="300" style={{ height: '300px' }}></canvas>                         
-                  </div>
+                <div className="chart tab-pane active" id="revenue-chart" style={{ position: 'relative', height: '300px' }}>
+                  {/* <canvas id="revenue-chart-canvas" height="300" style={{ height: '300px' }}></canvas> */}
+                </div>
                 <div className="chart tab-pane" id="sales-chart" style={{ position: 'relative', height: '300px' }}>
-                  <canvas id="sales-chart-canvas" height="300" style={{ height: '300px' }}></canvas>                         
+                  {/* <canvas id="sales-chart-canvas" height="300" style={{ height: '300px' }}></canvas> */}
                 </div>  
               </div>
             </div>
@@ -101,11 +100,11 @@ const Dashboard = () => {
                 <button type="button" className="btn btn-tool" data-card-widget="collapse">
                   <i className="fas fa-minus"></i>
                 </button>
-                <button type="button" className="btn btn-tool" data-toggle="tooltip" title="Contacts"
-                        data-widget="chat-pane-toggle">
+                <button type="button" className="btn btn-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle">
                   <i className="fas fa-comments"></i>
                 </button>
-                <button type="button" className="btn btn-tool" data-card-widget="remove"><i className="fas fa-times"></i>
+                <button type="button" className="btn btn-tool" data-card-widget="remove">
+                  <i className="fas fa-times"></i>
                 </button>
               </div>
             </div>
@@ -436,26 +435,30 @@ const Dashboard = () => {
                 Visitors
               </h3>
               <div className="card-tools">
-                <button type="button"
-                        className="btn btn-primary btn-sm daterange"
-                        data-toggle="tooltip"
-                        title="Date range">
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm daterange"
+                  data-toggle="tooltip"
+                  title="Date range"
+                >
                   <i className="far fa-calendar-alt"></i>
                 </button>
-                <button type="button"
-                        className="btn btn-primary btn-sm"
-                        data-card-widget="collapse"
-                        data-toggle="tooltip"
-                        title="Collapse">
+                <button 
+                  type="button"
+                  className="btn btn-primary btn-sm"
+                  data-card-widget="collapse"
+                  data-toggle="tooltip"
+                  title="Collapse"
+                >
                   <i className="fas fa-minus"></i>
                 </button>
               </div>
             </div>
             <div className="card-body">
-              <div id="world-map" style={{ height: '250px', width: '100%' }}></div>
+              {/* <div id="world-map" style={{ height: '250px', width: '100%' }}></div> */}
             </div>
             <div className="card-footer bg-transparent">
-              <div className="row">
+              {/* <div className="row">
                 <div className="col-4 text-center">
                   <div id="sparkline-1"></div>
                   <div className="text-white">Visitors</div>
@@ -468,7 +471,7 @@ const Dashboard = () => {
                   <div id="sparkline-3"></div>
                   <div className="text-white">Sales</div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -489,7 +492,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="card-body">
-              <canvas
+              {/* <canvas
                 className="chart"
                 id="line-chart"
                 style={{
@@ -498,11 +501,11 @@ const Dashboard = () => {
                   maxHeight: '250px',
                   maxWidth: '100%'
                 }}
-              ></canvas>
+              ></canvas> */}
             </div>
             <div className="card-footer bg-transparent">
               <div className="row">
-                <div className="col-4 text-center">
+                {/* <div className="col-4 text-center">
                   <input
                     type="text"
                     className="knob"
@@ -543,7 +546,7 @@ const Dashboard = () => {
                   />
 
                   <div className="text-white">In-Store</div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
