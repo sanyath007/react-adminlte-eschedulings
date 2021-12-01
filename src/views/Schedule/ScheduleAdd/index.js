@@ -133,16 +133,19 @@ const ScheduleAdd = () => {
         // TODO: Reset form input's values
     };
 
-    const renderDailyCols = function () {
+    const renderDailyCols = function (formik) {
+        const month = moment(formik.values.month).format('YYYY-MM');
+
         return (
             <tr>
                 {[...Array(tableCol)].map((m, i) => {
+                    const isHoliday = moment(`${month}-${i+1}`).weekday() === 0 || moment(`${month}-${i+1}`).weekday() === 6;
+
                     return (
                         <td
                             key={i}
-                            style={
-                                { width: '2%', textAlign: 'center', fontSize: 'small' }
-                            }
+                            style={{ width: '2%', textAlign: 'center', fontSize: 'small' }}
+                            className={ `${isHoliday ? 'bg-secondary' : ''}` }
                         >
                             { i + 1 }
                         </td>
@@ -330,7 +333,7 @@ const ScheduleAdd = () => {
                                                         <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
                                                         <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                                     </tr>
-                                                    { renderDailyCols() }
+                                                    { renderDailyCols(formik) }
                                                 </thead>
                                                 <tbody>
                                                     <tr>
