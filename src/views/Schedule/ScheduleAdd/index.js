@@ -11,6 +11,7 @@ import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import PersonModal from '../../Modals/PersonModal';
 import PersonShiftsRow from './PersonShiftsRow';
 import TotalShifts from './TotalShifts';
+import DailyColumns from '../../../components/DailyColumns';
 import th from 'date-fns/locale/th'
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
@@ -132,30 +133,6 @@ const ScheduleAdd = () => {
         let res = await api.post(`/api/schedulings`, data);
         console.log(res);
         // TODO: Reset form input's values
-    };
-
-    const renderDailyCols = function (formik) {
-        const month = formik.values.month
-                        ? moment(formik.values.month).format('YYYY-MM')
-                        : moment().format('YYYY-MM');
-
-        return (
-            <tr>
-                {[...Array(tableCol)].map((m, i) => {
-                    const isHoliday = moment(`${month}-${i+1}`).weekday() === 0 || moment(`${month}-${i+1}`).weekday() === 6;
-
-                    return (
-                        <td
-                            key={i}
-                            style={{ width: '2%', textAlign: 'center', fontSize: 'small' }}
-                            className={ `${isHoliday ? 'bg-secondary' : ''}` }
-                        >
-                            { i + 1 }
-                        </td>
-                    );
-                })}
-            </tr>
-        );
     };
 
     return (
@@ -331,7 +308,9 @@ const ScheduleAdd = () => {
                                                         <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
                                                         <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                                     </tr>
-                                                    { renderDailyCols(formik) }
+                                                    <DailyColumns
+                                                        month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
+                                                    />
                                                 </thead>
                                                 <tbody>
                                                     <tr>
