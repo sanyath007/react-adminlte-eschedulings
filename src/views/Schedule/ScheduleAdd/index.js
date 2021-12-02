@@ -119,6 +119,14 @@ const ScheduleAdd = () => {
         tmpPersonShifts = generateShiftDays(tableCol);
     };
 
+    const onDeletePersonShifts = function (person) {
+        const ps = personShifts.filter(ps => {
+            return ps.person.person_id !== person.person_id;
+        });
+
+        setPersonShifts(ps);
+    };
+
     const onSubmit = async function (values, props) {
         if (personShifts.length === 0) {
             toast.error('กรุณาเพิ่มรายการเวรของบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
@@ -166,7 +174,7 @@ const ScheduleAdd = () => {
                                 <div className="card">
                                     <div className="card-header">
                                         <h3 className="card-title">
-                                            <i className="fas fa-hospital-user"></i>
+                                            <i className="fas fa-hospital-user mr-1"></i>
                                             ตารางเวร
                                         </h3>
                                     </div>{/* <!-- /.card-header --> */}
@@ -382,14 +390,19 @@ const ScheduleAdd = () => {
                                                                     onAddPersonShifts(e);
                                                                 }}
                                                             >
-                                                                <i class="fas fa-plus-circle"></i>
+                                                                <i className="fas fa-plus-circle"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
 
                                                     { /** Render all added rows */ }
                                                     {personShifts && personShifts.map(ps => {
-                                                        return <PersonShiftsRow key={ps.person.person_id} row={ps} />;
+                                                        return (
+                                                            <PersonShiftsRow
+                                                                key={ps.person.person_id} row={ps}
+                                                                onDelete={(person) => onDeletePersonShifts(person)}
+                                                            />
+                                                        );
                                                     })}
 
                                                 </tbody>
