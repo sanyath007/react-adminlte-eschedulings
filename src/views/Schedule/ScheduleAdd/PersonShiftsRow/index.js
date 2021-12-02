@@ -1,7 +1,7 @@
 import React from 'react'
 import TotalShiftsRow from '../TotalShiftsRow';
 
-const PersonShiftsRow = ({ row }) => {
+const PersonShiftsRow = ({ row, onDeleted }) => {
     return (
             <tr>
                 <td>{`${row.person.prefix?.prefix_name}${row.person.person_firstname} ${row.person.person_lastname}`}</td>
@@ -20,7 +20,11 @@ const PersonShiftsRow = ({ row }) => {
                 <td>
                     <TotalShiftsRow shifts={row.shifts} person={row.person.person_id} />
                 </td>
-                <td></td>
+                <td style={{ textAlign: 'center' }}>
+                    <a href="#" className="btn btn-danger btn-sm" onClick={onDeleted}>
+                        <i className="far fa-trash-alt"></i>
+                    </a>
+                </td>
             </tr>
     );
 }

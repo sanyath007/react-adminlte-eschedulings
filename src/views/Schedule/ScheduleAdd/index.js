@@ -377,12 +377,12 @@ const ScheduleAdd = () => {
                                                         <td style={{ textAlign: 'center' }}>
                                                             <a 
                                                                 href="#"
-                                                                className="btn btn-primary btn-sm" 
+                                                                className="btn btn-success btn-sm" 
                                                                 onClick={(e) => {
                                                                     onAddPersonShifts(e);
                                                                 }}
                                                             >
-                                                                เพิ่ม
+                                                                <i class="fas fa-plus-circle"></i>
                                                             </a>
                                                         </td>
                                                     </tr>
