@@ -1,14 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import api from '../../../api';
+import { getScheduleSuccess } from '../../../features/schedule';
+import DailyColumns from '../../../components/DailyColumns'
+import moment from 'moment';
 
 const ScheduleDetail = () => {
     const departs = [];
     const divisions = [];
     const scheduling_shifts = [];
     const shifts = [];
-    const pager = null;
     const dataTableOptions = {
         totalCol: 31
     };
+
+    const { id } = useParams();
+    const dispatch = useDispatch();
+    const schedule = useSelector(state => state.schedule.schedule);
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -18,13 +27,21 @@ const ScheduleDetail = () => {
         console.log(e);
     };
 
-    const getAll = function (e) {
-        console.log(e);
+    const getSchedule = async function (e) {        
+        try {
+            const res = await api.get(`/api/schedulings/${id}`);
+            console.log(res);
+            dispatch(getScheduleSuccess(res.data.scheduling));
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    const onPaginateLinkClick = function (e, pageUrl) {
-        console.log(e, pageUrl);
-    };
+    useEffect(() => {
+        getSchedule();
+    }, []);
+
+    console.log(schedule);
 
     return (
         <div className="container-fluid">
@@ -91,7 +108,7 @@ const ScheduleDetail = () => {
                                     />
                                 </div>
 
-                                <button onClick={ (e) => getAll(e) } className="btn btn-primary">ตกลง</button>
+                                {/* <button onClick={ (e) => getAll(e) } className="btn btn-primary">ตกลง</button> */}
                             </form>
 
                         </div>{/* <!-- /.card-body --> */}
@@ -100,51 +117,51 @@ const ScheduleDetail = () => {
                     <div className="card">
                         <div className="card-body">
                             <div className="row my-2">
-                                <div className="col-md-12">
-                                    <a href="schedulings/add" className="btn btn-primary float-right">เพิ่มตารางเวร</a>
+                                <div className="col-md-12 text-center">
+                                    <h2>ตารางปฏิบัติงานนอกเวลาราชการ</h2>
+                                </div>
+                                <div className="col-md-3">
+                                    หน่วยงาน : {schedule && schedule.division.ward_name}
+                                </div>
+                                <div className="col-md-3">
+                                    ประจำเดือน : {schedule && schedule.month}
                                 </div>
                             </div>
-
-                            <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
-                                <thead>
-                                    <tr>
-                                        <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                        <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
-                                        <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
-                                    </tr>
-                                    <tr>
-                                        {[...Array(dataTableOptions.totalCol)].map((m, i) => {
+                            
+                            <div class="table-responsive">
+                                <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
+                                    <thead>
+                                        <tr>
+                                            <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
+                                            <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
+                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                        </tr>
+                                        <DailyColumns month={schedule ? schedule.month : moment().format('YYYY-MM')} />
+                                    </thead>
+                                    <tbody>
+                                        {schedule && schedule.shifts.map(row => {
                                             return (
-                                                <td key={i} style={{ width: '2.5%', textAlign: 'center', fontSize: 'small' }}>
-                                                    { i+1 }
-                                                </td>
-                                            )
+                                                <tr key={row.id}>
+                                                    <td>
+                                                        { row.person_id }
+                                                        <p style={{ color: 'grey', margin: '0px' }}>
+                                                            ตำแหน่ง ...
+                                                        </p>
+                                                    </td>
+                                                    {row.shifts.split(',').map(shift => {
+                                                        return (
+                                                            <td style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
+                                                                { shift }
+                                                            </td>
+                                                        );
+                                                    })}
+                                                    <td style={{ textAlign: 'center' }}></td>
+                                                </tr>
+                                            );
                                         })}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {scheduling_shifts && scheduling_shifts.map(row => {
-                                        return (
-                                            <tr>
-                                                <td>
-                                                    { row.person_name }
-                                                    <p style={{ color: 'grey', margin: '0px' }}>
-                                                        ตำแหน่ง ...
-                                                    </p>
-                                                </td>
-                                                {row.shifts.map(shift => {
-                                                    return (
-                                                        <td style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
-                                                            { shift }
-                                                        </td>
-                                                    );
-                                                })}
-                                                <td style={{ textAlign: 'center' }}></td>
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
 
                             <div className="row mt-2">
                                 <div className="col-md-6">
@@ -163,50 +180,12 @@ const ScheduleDetail = () => {
 
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix">
-                            <div className="row">
-                                <div className="col-3 m-0 float-left">
-                                    <a href="#" className="btn btn-success btn-sm">Excel</a>
-                                </div>
-                                
-                                <div className="col-6 m-0" style={{ textAlign: 'center' }}>
-                                    <span>จำนวนทั้งหมด { pager && pager.total } ราย</span>
-                                </div>
-                                
-                                <div className="col-3 m-0">
-                                    {pager && (
-                                        <ul className="pagination pagination-md m-0 float-right">
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==1}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.first_page_url) }>
-                                                    First
-                                                </a>
-                                            </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==1}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.prev_page_url) }>
-                                                    Prev
-                                                </a>
-                                            </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==pager.last_page}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.next_page_url) }>
-                                                    Next
-                                                </a>
-                                            </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==pager.last_page}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.last_page_url) }>
-                                                    Last
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        {/* <!-- /.card-footer --> */}
-                    </div>
-                    {/* <!-- /.card --> */}
+                            
+                        </div>{/* <!-- /.card-footer --> */}
+                    </div>{/* <!-- /.card --> */}
         
                 </section>
-            </div>
-            {/* <!-- Main row --> */}
+            </div>{/* <!-- Main row --> */}
         </div>
     );
 }
