@@ -38,10 +38,11 @@ const TotalShiftsRow = ({ shifts, person }) => {
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <span>ด={total.night}</span>
+            {total.night + total.morn + total.even + total.bd}
+            {/* <span>ด={total.night}</span>
             <span>ช={total.morn}</span>
             <span>บ={total.even}</span>
-            <span>B={total.bd}</span>
+            <span>B={total.bd}</span> */}
         </div>
     )
 }

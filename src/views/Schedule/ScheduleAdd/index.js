@@ -314,7 +314,7 @@ const ScheduleAdd = () => {
                                                             วันที่
                                                         </td>
                                                         <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
-                                                        <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                                        <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                                     </tr>
                                                     <DailyColumns
                                                         month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
