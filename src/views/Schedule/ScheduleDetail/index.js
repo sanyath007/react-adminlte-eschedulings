@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import api from '../../../api';
 import { getScheduleSuccess } from '../../../features/schedule';
 import DailyColumns from '../../../components/DailyColumns'
+import ShiftsOfDay from '../../../components/ShiftsOfDay'
 import moment from 'moment';
 
 const ScheduleDetail = () => {
@@ -148,10 +149,10 @@ const ScheduleDetail = () => {
                                                             ตำแหน่ง ...
                                                         </p>
                                                     </td>
-                                                    {row.shifts.split(',').map(shift => {
+                                                    {row.shifts.split(',').map((shift, index) => {
                                                         return (
-                                                            <td style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
-                                                                { shift }
+                                                            <td key={index} style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
+                                                                <ShiftsOfDay shifts={ shift } />
                                                             </td>
                                                         );
                                                     })}
@@ -165,16 +166,10 @@ const ScheduleDetail = () => {
 
                             <div className="row mt-2">
                                 <div className="col-md-6">
-                                    ผู้ควบคุม
-                                </div>
-                                <div className="col-md-6">
                                     หัวหน้ากลุ่มงาน
                                 </div>
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มภารกิจ
-                                </div>
-                                <div className="col-md-6">
-                                    ผู้อำนวยการ
                                 </div>
                             </div>
 
