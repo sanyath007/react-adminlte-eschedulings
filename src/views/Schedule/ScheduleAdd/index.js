@@ -99,7 +99,7 @@ const ScheduleAdd = () => {
         tmpPersonShifts = generateShiftDays(daysOfMonth);
     };
 
-    const onAddPersonShifts = function () {
+    const onAddPersonShifts = function (e, formik) {
         if (!personSelected) {
             toast.error('กรุณาเลือกบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
             return;
@@ -113,18 +113,28 @@ const ScheduleAdd = () => {
         const newRow = [...personShifts, { person: personSelected, shifts }];
         setPersonShifts(newRow);
 
+        /** Calculate total person */
+        formik.setFieldValue('total_persons', personShifts.length + 1);
+
+        // TODO: Calculate total shifts
+
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
         setToggleShiftVal(true);
         tmpPersonShifts = generateShiftDays(tableCol);
     };
 
-    const onDeletePersonShifts = function (person) {
+    const onDeletePersonShifts = function (person, formik) {
         const ps = personShifts.filter(ps => {
             return ps.person.person_id !== person.person_id;
         });
 
         setPersonShifts(ps);
+
+        /** Calculate total person */
+        formik.setFieldValue('total_persons', ps.length);
+
+        // TODO: Calculate total shifts
     };
 
     const onSubmit = async function (values, props) {
@@ -164,7 +174,9 @@ const ScheduleAdd = () => {
                             division: '',
                             month: '',
                             year: '2565',
-                            controller: ''
+                            controller: '',
+                            total_persons: 0,
+                            total_shifts: 0
                         }}
                         validationSchema={scheduleSchema}
                         onSubmit={onSubmit}
@@ -386,9 +398,7 @@ const ScheduleAdd = () => {
                                                             <a 
                                                                 href="#"
                                                                 className="btn btn-success btn-sm" 
-                                                                onClick={(e) => {
-                                                                    onAddPersonShifts(e);
-                                                                }}
+                                                                onClick={(e) => onAddPersonShifts(e, formik)}
                                                             >
                                                                 <i className="fas fa-plus-circle"></i>
                                                             </a>
@@ -400,13 +410,42 @@ const ScheduleAdd = () => {
                                                         return (
                                                             <PersonShiftsRow
                                                                 key={ps.person.person_id} row={ps}
-                                                                onDelete={(person) => onDeletePersonShifts(person)}
+                                                                onDelete={(person) => onDeletePersonShifts(person, formik)}
                                                             />
                                                         );
                                                     })}
 
                                                 </tbody>
                                             </table>
+                                            
+                                            {/* Summary */}
+                                            <div className="row">
+                                                <div className="col-md-8"></div>
+                                                <div className="col-md-4 pt-3">
+                                                    <div className="form-group row">
+                                                        <label for="inputEmail3" className="col-sm-4 col-form-label">บุคลากรทั้งหมด</label>
+                                                        <div className="col-sm-8">
+                                                            <Field
+                                                                name="total_persons"
+                                                                value={formik.values.total_persons}
+                                                                className={ `form-control text-center` }
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="form-group row">
+                                                        <label for="inputEmail3" className="col-sm-4 col-form-label">เวรทั้งหมด</label>
+                                                        <div className="col-sm-8">
+                                                            <Field
+                                                                name="total_shifts"
+                                                                value={formik.values.total_shifts}
+                                                                className={ `form-control text-center` }
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 
                                         </div>{/* <!-- /.card-body --> */}
                                         <div className="card-footer clearfix">
