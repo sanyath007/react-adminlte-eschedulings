@@ -451,11 +451,11 @@ const ScheduleAdd = () => {
                                             
                                             {/* Summary */}
                                             <div className="row">
-                                                <div className="col-md-8"></div>
-                                                <div className="col-md-4 pt-3">
+                                                <div className="col-md-9"></div>
+                                                <div className="col-md-3 pt-3">
                                                     <div className="form-group row">
-                                                        <label for="inputEmail3" className="col-sm-4 col-form-label">บุคลากรทั้งหมด</label>
-                                                        <div className="col-sm-8">
+                                                        <label for="inputEmail3" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
+                                                        <div className="col-sm-6">
                                                             <Field
                                                                 name="total_persons"
                                                                 value={formik.values.total_persons}
@@ -465,8 +465,8 @@ const ScheduleAdd = () => {
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
-                                                        <label for="inputEmail3" className="col-sm-4 col-form-label">เวรทั้งหมด</label>
-                                                        <div className="col-sm-8">
+                                                        <label for="inputEmail3" className="col-sm-6 col-form-label">เวรทั้งหมด</label>
+                                                        <div className="col-sm-6">
                                                             <Field
                                                                 name="total_shifts"
                                                                 value={formik.values.total_shifts}
