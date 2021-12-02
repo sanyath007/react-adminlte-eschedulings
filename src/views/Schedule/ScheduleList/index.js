@@ -140,8 +140,8 @@ const ScheduleList = () => {
                                                 <td style={{ textAlign: 'center' }}>{ i+1 }</td>
                                                 <td>{ row.division.ward_name }</td>
                                                 <td style={{ textAlign: 'center' }}>{ row.month } / { row.year }</td>
-                                                <td style={{ textAlign: 'center' }}>{ row.month }</td>
-                                                <td style={{ textAlign: 'center' }}>{ row.month }</td>
+                                                <td style={{ textAlign: 'center' }}>{ row.total_persons }</td>
+                                                <td style={{ textAlign: 'center' }}>{ row.total_shifts }</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="btn-group btn-group-sm" role="group" aria-label="...">
                                                         <Link to={ `/schedules/${row.id}/detail` } className="btn btn-info">
