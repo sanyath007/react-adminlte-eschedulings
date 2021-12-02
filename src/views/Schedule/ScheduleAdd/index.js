@@ -99,6 +99,35 @@ const ScheduleAdd = () => {
         tmpPersonShifts = generateShiftDays(daysOfMonth);
     };
 
+    const calculateTotal = (personShifts) => {
+        let total = {
+            night: 0,
+            morn: 0,
+            even: 0,
+            bd: 0
+        };
+
+        personShifts.forEach(ps => {
+            ps.shifts.forEach((shift, day) => {
+                let arrShift = shift.split('|');
+    
+                arrShift.forEach(el => {
+                    if (el === 'ด') {
+                        total.night += 1;
+                    } else if (el === 'ช') {
+                        total.morn += 1;
+                    } else if (el === 'บ') {
+                        total.even += 1;
+                    } else if (el === 'B') {
+                        total.bd += 1;
+                    }
+                });
+            });
+        });
+
+        return total.night + total.morn + total.even + total.bd;
+    };
+
     const onAddPersonShifts = function (e, formik) {
         if (!personSelected) {
             toast.error('กรุณาเลือกบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
@@ -117,6 +146,7 @@ const ScheduleAdd = () => {
         formik.setFieldValue('total_persons', personShifts.length + 1);
 
         // TODO: Calculate total shifts
+        formik.setFieldValue('total_shifts', calculateTotal(newRow));
 
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
@@ -135,6 +165,7 @@ const ScheduleAdd = () => {
         formik.setFieldValue('total_persons', ps.length);
 
         // TODO: Calculate total shifts
+        formik.setFieldValue('total_shifts', calculateTotal(ps));
     };
 
     const onSubmit = async function (values, props) {
