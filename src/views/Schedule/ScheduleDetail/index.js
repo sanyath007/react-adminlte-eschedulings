@@ -53,8 +53,8 @@ const ScheduleDetail = () => {
                     <div className="card">
                         <div className="card-header">
                             <h3 className="card-title">
-                                <i className="fas fa-hospital-user"></i>
-                                ตารางเวร
+                                <i className="fas fa-hospital-user mr-1"></i>
+                                รายละเอียดตารางเวร
                             </h3>
                         </div>{/* <!-- /.card-header --> */}
                         <div className="card-body">
@@ -144,9 +144,9 @@ const ScheduleDetail = () => {
                                             return (
                                                 <tr key={row.id}>
                                                     <td>
-                                                        { row.person_id }
+                                                        { row.person.prefix.prefix_name+row.person.person_firstname+ ' ' +row.person.person_lastname }
                                                         <p style={{ color: 'grey', margin: '0px' }}>
-                                                            ตำแหน่ง ...
+                                                            {row.person.position.position_name}
                                                         </p>
                                                     </td>
                                                     {row.shifts.split(',').map((shift, index) => {
