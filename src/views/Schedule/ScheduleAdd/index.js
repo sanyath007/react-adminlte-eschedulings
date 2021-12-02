@@ -174,13 +174,27 @@ const ScheduleAdd = () => {
             return;
         }
 
-        // TODO: Merge form input's values with personShifts array
-        const { depart, division, month, year, controller } = values;
-        let data = { depart, division, month: moment(month).format('YYYY-MM'), year, controller, person_shifts: personShifts };
-        console.log(data);
-        // TODO: Store data to db
+        // Merge form input's values with personShifts array
+        const { depart, division, month, year, controller, total_persons, total_shifts } = values;
+        let data = {
+            depart,
+            division,
+            month: moment(month).format('YYYY-MM'),
+            year,
+            controller,
+            person_shifts: personShifts,
+            total_persons,
+            total_shifts
+        };
+
+        // Store data to db
         let res = await api.post(`/api/schedulings`, data);
-        console.log(res);
+        if (res.data.status === 1) {
+            toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+        } else {
+            toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
+        }
+
         // TODO: Reset form input's values
     };
 
@@ -349,7 +363,7 @@ const ScheduleAdd = () => {
                                                 </div>
                                             </div>
                                             
-                                            <div class="table-responsive">
+                                            <div className="table-responsive">
                                                 <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
                                                     <thead>
                                                         <tr>
