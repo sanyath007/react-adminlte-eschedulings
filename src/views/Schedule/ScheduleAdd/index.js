@@ -348,106 +348,108 @@ const ScheduleAdd = () => {
                                                     }
                                                 </div>
                                             </div>
-
-                                            <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
-                                                <thead>
-                                                    <tr>
-                                                        <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                                        <td style={{ textAlign: 'center' }} colSpan={ tableCol }>
-                                                            วันที่
-                                                        </td>
-                                                        <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
-                                                        <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
-                                                    </tr>
-                                                    <DailyColumns
-                                                        month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
-                                                    />
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>
-                                                            {personSelected && (
-                                                                <div>
-                                                                    <p style={{ margin: '0px' }}>
-                                                                        { `${personSelected.prefix?.prefix_name}${personSelected.person_firstname} ${personSelected.person_lastname}` }
-                                                                    </p>
-                                                                    <p style={{ color: 'grey', margin: '0px' }}>
-                                                                        {personSelected.position?.position_name}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-                                                            <a
-                                                                href="#"
-                                                                className={ `btn ${personSelected ? 'btn-warning' : 'btn-primary'} btn-sm` }
-                                                                onClick={() => setOpenModal(true)}
-                                                            >
-                                                                {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
-                                                            </a>
-                                                        </td>
-                                                        {[...Array(tableCol)].map((m, date) => {
-                                                            return (
-                                                                <td
-                                                                    key={date}
-                                                                    style={
-                                                                        {
-                                                                            textAlign: 'center', 
-                                                                            fontSize: 'small',
-                                                                            padding: '0'
-                                                                        }
-                                                                    }
+                                            
+                                            <div class="table-responsive">
+                                                <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
+                                                    <thead>
+                                                        <tr>
+                                                            <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
+                                                            <td style={{ textAlign: 'center' }} colSpan={ tableCol }>
+                                                                วันที่
+                                                            </td>
+                                                            <td style={{ width: '2.5%', textAlign: 'center' }} rowSpan="2">รวม</td>
+                                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                                        </tr>
+                                                        <DailyColumns
+                                                            month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
+                                                        />
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                {personSelected && (
+                                                                    <div>
+                                                                        <p style={{ margin: '0px' }}>
+                                                                            { `${personSelected.prefix?.prefix_name}${personSelected.person_firstname} ${personSelected.person_lastname}` }
+                                                                        </p>
+                                                                        <p style={{ color: 'grey', margin: '0px' }}>
+                                                                            {personSelected.position?.position_name}
+                                                                        </p>
+                                                                    </div>
+                                                                )}
+                                                                <a
+                                                                    href="#"
+                                                                    className={ `btn ${personSelected ? 'btn-warning' : 'btn-primary'} btn-sm` }
+                                                                    onClick={() => setOpenModal(true)}
                                                                 >
-                                                                    <ShiftInput
-                                                                        onSelected={(shift) => {
-                                                                            tmpPersonShifts[date][`${date}_1`] = shift;
-                                                                            setShiftOfDay(`${date}_1_${shift}`);
-                                                                        }}
-                                                                        defaultVal={toggleShiftVal}
-                                                                    />
+                                                                    {personSelected ? 'เปลี่ยนบุคลากร' : 'เลือกบุคลากร'}
+                                                                </a>
+                                                            </td>
+                                                            {[...Array(tableCol)].map((m, date) => {
+                                                                return (
+                                                                    <td
+                                                                        key={date}
+                                                                        style={
+                                                                            {
+                                                                                textAlign: 'center', 
+                                                                                fontSize: 'small',
+                                                                                padding: '0'
+                                                                            }
+                                                                        }
+                                                                    >
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_1`] = shift;
+                                                                                setShiftOfDay(`${date}_1_${shift}`);
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
 
-                                                                    <ShiftInput
-                                                                        onSelected={(shift) => {
-                                                                            tmpPersonShifts[date][`${date}_2`] = shift;
-                                                                            setShiftOfDay(`${date}_2_${shift}`);
-                                                                        }}
-                                                                        defaultVal={toggleShiftVal}
-                                                                    />
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_2`] = shift;
+                                                                                setShiftOfDay(`${date}_2_${shift}`);
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
 
-                                                                    <ShiftInput
-                                                                        onSelected={(shift) => {
-                                                                            tmpPersonShifts[date][`${date}_3`] = shift;
-                                                                            setShiftOfDay(`${date}_3_${shift}`);
-                                                                        }}
-                                                                        defaultVal={toggleShiftVal}
-                                                                    />
-                                                                </td>
+                                                                        <ShiftInput
+                                                                            onSelected={(shift) => {
+                                                                                tmpPersonShifts[date][`${date}_3`] = shift;
+                                                                                setShiftOfDay(`${date}_3_${shift}`);
+                                                                            }}
+                                                                            defaultVal={toggleShiftVal}
+                                                                        />
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                            <td>
+                                                                <TotalShifts shifts={tmpPersonShifts} shiftOfDay={shiftOfDay} />
+                                                            </td>
+                                                            <td style={{ textAlign: 'center' }}>
+                                                                <a 
+                                                                    href="#"
+                                                                    className="btn btn-success btn-sm" 
+                                                                    onClick={(e) => onAddPersonShifts(e, formik)}
+                                                                >
+                                                                    <i className="fas fa-plus-circle"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                        { /** Render all added rows */ }
+                                                        {personShifts && personShifts.map(ps => {
+                                                            return (
+                                                                <PersonShiftsRow
+                                                                    key={ps.person.person_id} row={ps}
+                                                                    onDelete={(person) => onDeletePersonShifts(person, formik)}
+                                                                />
                                                             );
                                                         })}
-                                                        <td>
-                                                            <TotalShifts shifts={tmpPersonShifts} shiftOfDay={shiftOfDay} />
-                                                        </td>
-                                                        <td style={{ textAlign: 'center' }}>
-                                                            <a 
-                                                                href="#"
-                                                                className="btn btn-success btn-sm" 
-                                                                onClick={(e) => onAddPersonShifts(e, formik)}
-                                                            >
-                                                                <i className="fas fa-plus-circle"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
 
-                                                    { /** Render all added rows */ }
-                                                    {personShifts && personShifts.map(ps => {
-                                                        return (
-                                                            <PersonShiftsRow
-                                                                key={ps.person.person_id} row={ps}
-                                                                onDelete={(person) => onDeletePersonShifts(person, formik)}
-                                                            />
-                                                        );
-                                                    })}
-
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                             
                                             {/* Summary */}
                                             <div className="row">
