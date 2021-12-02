@@ -15,7 +15,7 @@ const ShiftInput = (props) => {
             setBtnGroupClass('btn-success');
         } else if (shift === 'บ') {
             setBtnGroupClass('btn-danger');
-        } else if (shift === 'BD') {
+        } else if (shift === 'B') {
             setBtnGroupClass('btn-warning');
         }
 
