@@ -195,7 +195,9 @@ const ScheduleAdd = () => {
             toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
         }
 
-        // TODO: Reset form input's values
+        // TODO: Clear form input's values
+        props.resetForm();
+        setPersonShifts([]);
     };
 
     return (
