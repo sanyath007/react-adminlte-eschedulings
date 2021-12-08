@@ -1,19 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 
-const DailyColumns = ({ month }) => {
+const DailyColumns = ({ month, holidays }) => {
     const [cols, setCols] = useState([]);
+    const [holiday, setHoliday] = useState([]);
 
     useEffect(() => {
+        console.log('Test effect !!');
         const daysOfMonth = Array(moment(month).endOf('month').date());
 
+        /** Filter only holiday that be in month props */
+        setHoliday(holidays.filter(holiday => moment(holiday.holiday_date).format('YYYY-MM') == moment(month).format('YYYY-MM')));
+
         setCols([...daysOfMonth]);
-    }, [month]);
+    }, [month, holidays]);
 
     return (
         <tr>
             {cols && cols.map((obj, i) => {
-                const isHoliday = moment(`${month}-${i+1}`).weekday() === 0 || moment(`${month}-${i+1}`).weekday() === 6;
+                /** Check is day in holiday */
+                const isHoliday = holiday.some(hd => moment(hd.holiday_date).format('YYYY-MM-DD') == moment(`${month}-${i+1}`).format('YYYY-MM-DD'));
 
                 return (
                     <td

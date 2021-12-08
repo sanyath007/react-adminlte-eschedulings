@@ -40,6 +40,7 @@ const ScheduleAdd = () => {
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [shifts, setShifts] = useState([]);
+    const [holidays, setHolidays] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
@@ -89,6 +90,7 @@ const ScheduleAdd = () => {
             tmpDeparts = res.data.departs;
             tmpDivisions = res.data.divisions;
             setShifts(res.data.shifts);
+            setHolidays(res.data.holidays);
         } catch (err) {
             console.log(err);
         }
@@ -380,6 +382,7 @@ const ScheduleAdd = () => {
                                                         </tr>
                                                         <DailyColumns
                                                             month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
+                                                            holidays={holidays}
                                                         />
                                                     </thead>
                                                     <tbody>
