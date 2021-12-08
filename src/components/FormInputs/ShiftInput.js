@@ -39,11 +39,17 @@ const ShiftInput = (props) => {
             <div
                 className="dropdown-menu dropdown-menu-right" 
                 aria-labelledby={ `${props.id}_btnGroupDrop` }
-                style={{ minWidth: '4rem' }}
+                style={{ minWidth: '4rem', fontSize: '14px' }}
             >
                 {props.shifts && props.shifts.map(shift => {
                     return (
-                        <a key={shift.id} href="#" className="dropdown-item" onClick={() => onSelected(shift.id)}>
+                        <a
+                            href="#"
+                            key={shift.id}
+                            className="dropdown-item text-center"
+                            onClick={() => onSelected(shift.id)}
+                            style={{ padding: '2px auto' }}
+                        >
                             {shift.name}
                         </a>
                     );
