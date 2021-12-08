@@ -139,6 +139,12 @@ const ScheduleAdd = () => {
             return;
         }
 
+        /** Check duplicated person */
+        if (personShifts.some(ps => ps.person.person_id === personSelected)) {
+            toast.error('คุณเลือกบุคลากรซ้ำ !!!', { autoClose: 1000, hideProgressBar: true });
+            return;
+        }
+
         let shifts = [];
         [...Array(tableCol)].forEach((obj, date) => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
