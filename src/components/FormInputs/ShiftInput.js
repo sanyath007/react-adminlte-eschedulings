@@ -11,7 +11,7 @@ const ShiftInput = (props) => {
         setBtnGroupClass(tmpShift.color);
 
         /** Pass data to parent */
-        props.onSelected(shift); 
+        props.onSelected(tmpShift.name); 
     }
 
     const setDefault = function () {

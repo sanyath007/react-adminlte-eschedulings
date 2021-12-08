@@ -227,7 +227,8 @@ const ScheduleAdd = () => {
                             year: '2565',
                             controller: '',
                             total_persons: 0,
-                            total_shifts: 0
+                            total_shifts: 0,
+                            remark: ''
                         }}
                         validationSchema={scheduleSchema}
                         onSubmit={onSubmit}
@@ -344,7 +345,7 @@ const ScheduleAdd = () => {
                                                     />
                                                 </div>
                                                 <div className="form-group col-md-4">
-                                                    <label>ผู้ควบคุม :</label>
+                                                    <label>ผู้ควบคุม/หน.กลุ่มงาน/หน.งาน :</label>
                                                     <select
                                                         id="controller"
                                                         name="controller"
@@ -476,8 +477,19 @@ const ScheduleAdd = () => {
                                             </div>
                                             
                                             {/* Summary */}
-                                            <div className="row">
-                                                <div className="col-md-9"></div>
+                                            <div className="row" style={{ border: '1px solid red' }}>
+                                                <div className="col-md-6">
+                                                    <div className="form-group">
+                                                        <label htmlFor="inputEmail3" className="col-form-label">หมายเหตุ</label>
+                                                        <Field
+                                                            as="textarea"
+                                                            name="remark"
+                                                            value={formik.values.remark}
+                                                            className={ `form-control text-center` }
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-3"></div>
                                                 <div className="col-md-3 pt-3">
                                                     <div className="form-group row">
                                                         <label htmlFor="inputEmail3" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
