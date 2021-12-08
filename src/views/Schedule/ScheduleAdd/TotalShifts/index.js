@@ -15,13 +15,13 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
 
         shifts.forEach((shift, day) => {
             for (let i = 1; i <= 3; i++) {
-                if (shift[`${day}_${i}`] === 'ด' || shift[`${day}_${i}`] === 'ด' || shift[`${day}_${i}`] === 'ด') {
+                if (['ด','ด*','ด**','ด^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.night += 1;
-                } else if (shift[`${day}_${i}`] === 'ช' || shift[`${day}_${i}`] === 'ช' || shift[`${day}_${i}`] === 'ช') {
+                } else if (['ช','ช*','ช**','ช^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.morn += 1;
-                } else if (shift[`${day}_${i}`] === 'บ' || shift[`${day}_${i}`] === 'บ' || shift[`${day}_${i}`] === 'บ') {
+                } else if (['บ','บ*','บ**','บ^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.even += 1;
-                } else if (shift[`${day}_${i}`] === 'B' || shift[`${day}_${i}`] === 'B' || shift[`${day}_${i}`] === 'B') {
+                } else if (['B','B*','B**','B^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.bd += 1;
                 }
             }
