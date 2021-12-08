@@ -39,6 +39,7 @@ const ScheduleAdd = () => {
     const dispatch = useDispatch();
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
+    const [shifts, setShifts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
@@ -87,6 +88,7 @@ const ScheduleAdd = () => {
             setFactions(res.data.factions);
             tmpDeparts = res.data.departs;
             tmpDivisions = res.data.divisions;
+            setShifts(res.data.shifts);
         } catch (err) {
             console.log(err);
         }
@@ -365,7 +367,7 @@ const ScheduleAdd = () => {
                                                 </div>
                                             </div>
                                             
-                                            <div className="table-responsive">
+                                            <div style={{ overflowY: 'visible' }}>
                                                 <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
                                                     <thead>
                                                         <tr>
@@ -414,6 +416,7 @@ const ScheduleAdd = () => {
                                                                         }
                                                                     >
                                                                         <ShiftInput
+                                                                            shifts={shifts}
                                                                             onSelected={(shift) => {
                                                                                 tmpPersonShifts[date][`${date}_1`] = shift;
                                                                                 setShiftOfDay(`${date}_1_${shift}`);
@@ -422,6 +425,7 @@ const ScheduleAdd = () => {
                                                                         />
 
                                                                         <ShiftInput
+                                                                            shifts={shifts}
                                                                             onSelected={(shift) => {
                                                                                 tmpPersonShifts[date][`${date}_2`] = shift;
                                                                                 setShiftOfDay(`${date}_2_${shift}`);
@@ -430,6 +434,7 @@ const ScheduleAdd = () => {
                                                                         />
 
                                                                         <ShiftInput
+                                                                            shifts={shifts}
                                                                             onSelected={(shift) => {
                                                                                 tmpPersonShifts[date][`${date}_3`] = shift;
                                                                                 setShiftOfDay(`${date}_3_${shift}`);

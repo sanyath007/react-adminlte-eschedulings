@@ -5,19 +5,10 @@ const ShiftInput = (props) => {
     const [btnGroupClass, setBtnGroupClass] = useState('btn-default');
 
     const onSelected = function (shift) {
-        setTextSelected(shift);
+        const tmpShift = props.shifts.find(sh => sh.id===shift);
 
-        if (shift === '-') {
-            setBtnGroupClass('btn-default');
-        } else if (shift === 'ด') {
-            setBtnGroupClass('btn-info');
-        } else if (shift === 'ช') {
-            setBtnGroupClass('btn-success');
-        } else if (shift === 'บ') {
-            setBtnGroupClass('btn-danger');
-        } else if (shift === 'B') {
-            setBtnGroupClass('btn-warning');
-        }
+        setTextSelected(tmpShift.name);
+        setBtnGroupClass(tmpShift.color);
 
         /** Pass data to parent */
         props.onSelected(shift); 
@@ -32,7 +23,7 @@ const ShiftInput = (props) => {
         if (props.defaultVal) {
             setDefault();
         }
-    }, [props.defaultVal])
+    }, [props.defaultVal]);
 
     return (
         <div className="btn-group mt-2" role="group">
@@ -50,21 +41,13 @@ const ShiftInput = (props) => {
                 aria-labelledby={ `${props.id}_btnGroupDrop` }
                 style={{ minWidth: '4rem' }}
             >
-                <a href="#" className="dropdown-item" onClick={() => onSelected('-')}>
-                    -
-                </a>
-                <a href="#" className="dropdown-item" onClick={() => onSelected('ด')}>
-                    ด
-                </a>
-                <a href="#" className="dropdown-item" onClick={() => onSelected('ช')}>
-                    ช
-                </a>
-                <a href="#" className="dropdown-item" onClick={() => onSelected('บ')}>
-                    บ
-                </a>
-                <a href="#" className="dropdown-item" onClick={() => onSelected('B')}>
-                    B
-                </a>
+                {props.shifts && props.shifts.map(shift => {
+                    return (
+                        <a key={shift.id} href="#" className="dropdown-item" onClick={() => onSelected(shift.id)}>
+                            {shift.name}
+                        </a>
+                    );
+                })}
             </div>
         </div>
     );
