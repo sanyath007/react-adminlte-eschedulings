@@ -208,14 +208,6 @@ const ScheduleAdd = () => {
     return (
         <div className="container-fluid">
             {/* <!-- Main row --> */}
-            <PersonModal
-                isOpen={openModal}
-                hideModal={() => setOpenModal(false)}
-                onSelected={(person) => {
-                    setPersonSelected(person);
-                    setToggleShiftVal(false);
-                }}
-            />
 
             <div className="row">
                 <section className="col-lg-12 connectedSortable">
@@ -243,6 +235,17 @@ const ScheduleAdd = () => {
                                             ตารางเวร
                                         </h3>
                                     </div>{/* <!-- /.card-header --> */}
+
+                                    <PersonModal
+                                        isOpen={openModal}
+                                        hideModal={() => setOpenModal(false)}
+                                        onSelected={(person) => {
+                                            setPersonSelected(person);
+                                            setToggleShiftVal(false);
+                                        }}
+                                        faction={formik.values.faction}
+                                        depart={formik.values.depart}
+                                    />
 
                                     <Form>
                                         <div className="card-body">
@@ -274,6 +277,7 @@ const ScheduleAdd = () => {
                                                         value={formik.values.depart}
                                                         onChange={(e) => {
                                                             formik.setFieldValue('depart', e.target.value);
+                                                            formik.setFieldValue('division', '');
                                                             onDepartChange(e.target.value);
                                                         }}
                                                     >
@@ -298,10 +302,7 @@ const ScheduleAdd = () => {
                                                         id="division"
                                                         name="division"
                                                         value={formik.values.division}
-                                                        onChange={
-                                                            formik.handleChange
-                                                            // onDivisionChange(newScheduling.division)
-                                                        }
+                                                        onChange={formik.handleChange}
                                                     >
                                                         <option value="">-- เลือกงาน --</option>
                                                         {divisions && divisions.map(div => {
@@ -357,7 +358,7 @@ const ScheduleAdd = () => {
                                                         <option value="">-- เลือกผู้ควบคุม --</option>
                                                         {divisionMembers && divisionMembers.map(person => {
                                                             return (
-                                                                <option value={ person.person_id }>
+                                                                <option key={person.person_id} value={ person.person_id }>
                                                                     { person.prefix.prefix_name+person.person_firstname+ ' ' +person.person_lastname }
                                                                 </option>
                                                             );
@@ -426,7 +427,7 @@ const ScheduleAdd = () => {
                                                                                 setShiftOfDay(`${date}_1_${shift}`);
                                                                             }}
                                                                             defaultVal={toggleShiftVal}
-                                                                        />
+                                                                        /><br />
 
                                                                         <ShiftInput
                                                                             shifts={shifts}
@@ -435,7 +436,7 @@ const ScheduleAdd = () => {
                                                                                 setShiftOfDay(`${date}_2_${shift}`);
                                                                             }}
                                                                             defaultVal={toggleShiftVal}
-                                                                        />
+                                                                        /><br />
 
                                                                         <ShiftInput
                                                                             shifts={shifts}
@@ -477,7 +478,7 @@ const ScheduleAdd = () => {
                                             </div>
                                             
                                             {/* Summary */}
-                                            <div className="row" style={{ border: '1px solid red' }}>
+                                            <div className="row">
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label htmlFor="inputEmail3" className="col-form-label">หมายเหตุ</label>
@@ -485,7 +486,8 @@ const ScheduleAdd = () => {
                                                             as="textarea"
                                                             name="remark"
                                                             value={formik.values.remark}
-                                                            className={ `form-control text-center` }
+                                                            className={ `form-control` }
+                                                            rows={5}
                                                         />
                                                     </div>
                                                 </div>

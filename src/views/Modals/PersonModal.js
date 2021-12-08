@@ -12,12 +12,16 @@ import moment from 'moment';
 import api from '../../api';
 import { calcAge } from '../../utils';
 
-function PersonModal({ isOpen, hideModal, onSelected }) {
+function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
   const [persons, setPersons] = useState([]);
   const [pager, setPager] = useState(null);
 
-  const fetchPersons = async (fname='', depart='', division='') => {
-    let res = await api.get(`/api/persons?fname=${fname}`);
+  const fetchPersons = async (fname='', faction='', depart='', division='') => {
+    faction = props.faction ? props.faction : '5';
+    depart = props.depart ? props.depart : '';
+    division = props.division ? props.division : '';
+
+    let res = await api.get(`/api/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
 
     setPersons(res.data.items);
     setPager(res.data.pager);
@@ -36,7 +40,7 @@ function PersonModal({ isOpen, hideModal, onSelected }) {
 
   useEffect(() => {
     fetchPersons();
-  }, []);
+  }, [props.faction, props.depart]);
 
   return (
     <Modal
