@@ -180,7 +180,7 @@ const ScheduleAdd = () => {
         }
 
         // Merge form input's values with personShifts array
-        const { depart, division, month, year, controller, total_persons, total_shifts } = values;
+        const { depart, division, month, year, controller, total_persons, total_shifts, remark } = values;
         let data = {
             depart,
             division,
@@ -189,7 +189,8 @@ const ScheduleAdd = () => {
             controller,
             person_shifts: personShifts,
             total_persons,
-            total_shifts
+            total_shifts,
+            remark
         };
 
         // Store data to db
