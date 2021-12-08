@@ -28,13 +28,6 @@ const scheduleSchema = Yup.object().shape({
     controller: Yup.string().required('Controller!!!')
 });
 
-const initialTotal = {
-    night: 0,
-    morn: 0,
-    even: 0,
-    bd: 0
-};
-
 const ScheduleAdd = () => {
     const dispatch = useDispatch();
     const [factions, setFactions] = useState([]);
@@ -76,11 +69,19 @@ const ScheduleAdd = () => {
 
     const onDepartChange = function (depart) {
         setDivisions(tmpDivisions.filter(div => div.depart_id === depart));
+
+        getMemberOfDepart(depart);
     };
 
-    const onDivisionChange = function (e) {
-        console.log(e);
-    };
+    const getMemberOfDepart = async function (depart) {
+        try {
+            const res = await api.get(`/api/schedulings/member-of/depart/${depart}`);
+
+            setDivisionMembers(res.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const getInitForm = async function (e) {
         try {
@@ -354,11 +355,10 @@ const ScheduleAdd = () => {
                                                         onChange={formik.handleChange}
                                                     >
                                                         <option value="">-- เลือกผู้ควบคุม --</option>
-                                                        <option value="1">Test</option>
                                                         {divisionMembers && divisionMembers.map(person => {
                                                             return (
                                                                 <option value={ person.person_id }>
-                                                                    { person.person_firstname+ ' ' +person.person_lastname }
+                                                                    { person.prefix.prefix_name+person.person_firstname+ ' ' +person.person_lastname }
                                                                 </option>
                                                             );
                                                         })}
