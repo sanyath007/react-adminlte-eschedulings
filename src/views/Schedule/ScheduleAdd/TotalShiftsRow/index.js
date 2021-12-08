@@ -17,13 +17,13 @@ const TotalShiftsRow = ({ shifts, person }) => {
             let arrShift = shift.split('|');
 
             arrShift.forEach(el => {
-                if (el === 'ด') {
+                if (['ด','ด*','ด**','ด^'].includes(el)) {
                     tmpTotal.night += 1;
-                } else if (el === 'ช') {
+                } else if (['ช','ช*','ช**','ช^'].includes(el)) {
                     tmpTotal.morn += 1;
-                } else if (el === 'บ') {
+                } else if (['บ','บ*','บ**','บ^'].includes(el)) {
                     tmpTotal.even += 1;
-                } else if (el === 'B') {
+                } else if (['B','B*','B**','B^'].includes(el)) {
                     tmpTotal.bd += 1;
                 }
             });
