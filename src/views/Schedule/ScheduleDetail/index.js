@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import api from '../../../api';
@@ -15,6 +15,7 @@ const ScheduleDetail = () => {
     const dataTableOptions = {
         totalCol: 31
     };
+    const [holidays, setHolidays] = useState([]);
 
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -33,8 +34,8 @@ const ScheduleDetail = () => {
             const res = await api.get(`/api/schedulings/${id}`);
             console.log(res);
             dispatch(getScheduleSuccess(res.data.scheduling));
-        } catch (error) {
-            console.log(error);
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -129,7 +130,7 @@ const ScheduleDetail = () => {
                                 </div>
                             </div>
                             
-                            <div class="table-responsive">
+                            <div className="table-responsive">
                                 <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
                                     <thead>
                                         <tr>
@@ -137,7 +138,10 @@ const ScheduleDetail = () => {
                                             <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                         </tr>
-                                        <DailyColumns month={schedule ? schedule.month : moment().format('YYYY-MM')} />
+                                        <DailyColumns
+                                            month={schedule ? schedule.month : moment().format('YYYY-MM')}
+                                            holidays={holidays}
+                                        />
                                     </thead>
                                     <tbody>
                                         {schedule && schedule.shifts.map(row => {
@@ -162,6 +166,12 @@ const ScheduleDetail = () => {
                                         })}
                                     </tbody>
                                 </table>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-md-12" style={{ fontSize: '14px', color: 'red' }}>
+                                    { schedule && schedule.remark }
+                                </div>
                             </div>
 
                             <div className="row mt-2">
