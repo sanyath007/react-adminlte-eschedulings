@@ -117,13 +117,13 @@ const ScheduleAdd = () => {
                 let arrShift = shift.split('|');
     
                 arrShift.forEach(el => {
-                    if (el === 'ด') {
+                    if (['ด','ด*','ด**','ด^'].includes(el)) {
                         total.night += 1;
-                    } else if (el === 'ช') {
+                    } else if (['ช','ช*','ช**','ช^'].includes(el)) {
                         total.morn += 1;
-                    } else if (el === 'บ') {
+                    } else if (['บ','บ*','บ**','บ^'].includes(el)) {
                         total.even += 1;
-                    } else if (el === 'B') {
+                    } else if (['B','B*','B**','B^'].includes(el)) {
                         total.bd += 1;
                     }
                 });

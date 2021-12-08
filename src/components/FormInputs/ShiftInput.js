@@ -48,7 +48,7 @@ const ShiftInput = (props) => {
                             key={shift.id}
                             className="dropdown-item text-center"
                             onClick={() => onSelected(shift.id)}
-                            style={{ padding: '2px auto' }}
+                            style={{ padding: '2px' }}
                         >
                             {shift.name}
                         </a>
