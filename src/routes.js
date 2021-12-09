@@ -2,7 +2,8 @@ import Dashboard from './views/Dashboard';
 import {
   ScheduleList,
   ScheduleDetail,
-  ScheduleAdd
+  ScheduleAdd,
+  ScheduleEdit
 } from './views/Schedule';
 import ChartJS from './views/Report/ChartJS';
 import Flot from './views/Report/Flot';
@@ -15,6 +16,7 @@ const routes = [
   { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
   { path: '/schedules/list', exact: true, name: 'Schedules', component: ScheduleList },
   { path: '/schedules/:id/detail', exact: true, name: 'Schedules', component: ScheduleDetail },
+  { path: '/schedules/:id/edit', exact: true, name: 'Schedules', component: ScheduleEdit },
   { path: '/schedules/add', exact: true, name: 'Schedules', component: ScheduleAdd },
   { path: '/reports/chartjs', name: 'Charts', component: ChartJS },
   { path: '/reports/flot', exact: true, name: 'Flot', component: Flot },
