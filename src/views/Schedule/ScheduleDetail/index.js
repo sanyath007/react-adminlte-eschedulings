@@ -189,6 +189,9 @@ const ScheduleDetail = () => {
                             <div className="row mt-2">
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มงาน
+                                    <p style={{ fontSize: '14px', color: 'grey' }}>
+                                        {schedule && schedule.controller.person_firstname+ ' ' +schedule.controller.person_lastname}
+                                    </p>
                                 </div>
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มภารกิจ
