@@ -70,9 +70,9 @@ const ScheduleDetail = () => {
                                 รายละเอียดตารางเวร
                             </h3>
                         </div>{/* <!-- /.card-header --> */}
-                        <div className="card-body">
+                        {/* <div className="card-body">
 
-                            <form action="" method="POST" className="form-inline">
+                            <form action="" method="POST" className="form-inline"> */}
                                 {/* <div className="form-group">
                                     <label>กลุ่มงาน :</label>
                                     <select
@@ -110,7 +110,7 @@ const ScheduleDetail = () => {
                                         })}
                                     </select>
                                 </div> */}
-                                <div className="form-group">
+                                {/* <div className="form-group">
                                     <label>ประจำเดือน :</label>
                                     <input
                                         type="text"
@@ -120,12 +120,12 @@ const ScheduleDetail = () => {
                                         style={{ margin: '0 10px' }}
                                         autoComplete="off"
                                     />
-                                </div>
+                                </div> */}
 
                                 {/* <button onClick={ (e) => getAll(e) } className="btn btn-primary">ตกลง</button> */}
-                            </form>
+                            {/* </form>
 
-                        </div>{/* <!-- /.card-body --> */}
+                        </div><!-- /.card-body --> */}
                     </div>{/* <!-- /.card --> */}
 
                     <div className="card">
