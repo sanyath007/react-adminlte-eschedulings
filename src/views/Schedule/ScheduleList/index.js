@@ -154,10 +154,10 @@ const ScheduleList = () => {
                                                 <td style={{ textAlign: 'center' }}>{ row.total_shifts }</td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                        <Link to={ `/schedules/${row.id}/detail` } className="btn btn-info">
+                                                        <Link to={`/schedules/${row.id}/detail`} className="btn btn-info">
                                                             <i className="fas fa-search"></i>
                                                         </Link>
-                                                        <Link to="/schedules/edit" className="btn btn-warning">
+                                                        <Link to={`/schedules/${row.id}/edit`} className="btn btn-warning">
                                                             <i className="fas fa-edit"></i>
                                                         </Link>
                                                         <a href="#" className="btn btn-danger">
