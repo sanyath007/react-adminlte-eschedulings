@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import DatePicker, { registerLocale } from 'react-datepicker';
+import moment from 'moment';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
 import MonthlyText from '../../../components/MonthlyText';
+import th from 'date-fns/locale/th'
+registerLocale("th", th);
 
 const ScheduleList = () => {
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
+    const [month, setMonth] = useState(new Date());
     const shifts = [];
     const pager = null;
 
@@ -22,11 +27,11 @@ const ScheduleList = () => {
         console.log(e);
     };
 
-    const getSchedules = async function (e) {
-        console.log(e);
-        
+    const getSchedules = async function (date) {
+        const month = date ? moment(date).format('YYYY-MM') : '';
+
         try {
-            const res = await api.get('/api/schedulings');
+            const res = await api.get(`/api/schedulings?month=${month}`);
 
             dispatch(getSchedulesSuccess(res.data.schedulings));
         } catch (error) {
@@ -95,19 +100,21 @@ const ScheduleList = () => {
                                         })}
                                     </select>
                                 </div> */}
+
                                 <div className="form-group">
                                     <label>ประจำเดือน :</label>
-                                    <input
-                                        type="text"
-                                        id="cboMonth"
-                                        name="cboMonth"
-                                        className="form-control"
-                                        style={{ margin: '0 10px' }}
-                                        autoComplete="off"
+                                    <DatePicker
+                                        selected={month}
+                                        onChange={(date) => {
+                                            setMonth(date);
+                                            getSchedules(date);
+                                        }}
+                                        dateFormat="MM/yyyy"
+                                        locale="th"
+                                        showMonthYearPicker
+                                        className={ `form-control` }
                                     />
                                 </div>
-
-                                <button onClick={ (e) => getSchedules(e) } className="btn btn-primary">ตกลง</button>
                             </form>
 
                         </div>{/* <!-- /.card-body --> */}
