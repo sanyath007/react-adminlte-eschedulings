@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
+import MonthlyText from '../../../components/MonthlyText';
 
 const ScheduleList = () => {
     const [departs, setDeparts] = useState([]);
@@ -139,7 +140,9 @@ const ScheduleList = () => {
                                             <tr key={row.id}>
                                                 <td style={{ textAlign: 'center' }}>{ i+1 }</td>
                                                 <td>{ row.division.ward_name }</td>
-                                                <td style={{ textAlign: 'center' }}>{ row.month } / { row.year }</td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <MonthlyText monthText={row.month} />
+                                                </td>
                                                 <td style={{ textAlign: 'center' }}>{ row.total_persons }</td>
                                                 <td style={{ textAlign: 'center' }}>{ row.total_shifts }</td>
                                                 <td style={{ textAlign: 'center' }}>

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import moment from 'moment';
 import api from '../../../api';
 import { getScheduleSuccess } from '../../../features/schedule';
-import DailyColumns from '../../../components/DailyColumns'
-import ShiftsOfDay from '../../../components/ShiftsOfDay'
-import moment from 'moment';
+import DailyColumns from '../../../components/DailyColumns';
+import ShiftsOfDay from '../../../components/ShiftsOfDay';
+import MonthlyText from '../../../components/MonthlyText';
 
 const ScheduleDetail = () => {
     const departs = [];
@@ -137,7 +138,7 @@ const ScheduleDetail = () => {
                                     หน่วยงาน : {schedule && schedule.division.ward_name}
                                 </div>
                                 <div className="col-md-3">
-                                    ประจำเดือน : {schedule && schedule.month}
+                                    ประจำเดือน : <MonthlyText monthText={schedule && schedule.month} />
                                 </div>
                             </div>
                             
