@@ -138,7 +138,7 @@ const ScheduleDetail = () => {
                                     หน่วยงาน : {schedule && schedule.division.ward_name}
                                 </div>
                                 <div className="col-md-3">
-                                    ประจำเดือน : <MonthlyText monthText={schedule && schedule.month} />
+                                    ประจำเดือน : {schedule && <MonthlyText monthText={schedule.month} /> }
                                 </div>
                             </div>
                             

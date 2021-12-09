@@ -5,7 +5,7 @@ const monthName = ['มกราคม','กุมภาพันธ์','มี
 const MonthlyText = ({ monthText }) => {
     const [year, month] = monthText.split('-');
 
-    return <span>{monthName[month]+ ' ' +(parseInt(year)+543)}</span>;
+    return <span>{monthName[parseInt(month)-1]+ ' ' +(parseInt(year)+543)}</span>;
 }
 
 export default MonthlyText
