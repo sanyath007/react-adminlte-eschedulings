@@ -146,10 +146,10 @@ const ScheduleDetail = () => {
                                 <div className="col-md-12 text-center">
                                     <h2>ตารางปฏิบัติงานนอกเวลาราชการ</h2>
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     หน่วยงาน : {schedule && schedule.division.ward_name}
                                 </div>
-                                <div className="col-md-3">
+                                <div className="col-md-4">
                                     ประจำเดือน : {schedule && <MonthlyText monthText={schedule.month} /> }
                                 </div>
                             </div>

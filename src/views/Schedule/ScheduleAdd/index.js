@@ -331,7 +331,7 @@ const ScheduleAdd = () => {
                                                         selected={formik.values.month}
                                                         onChange={(date) => {
                                                             formik.setFieldValue('month', date);
-                                                            formik.setFieldValue('year', date.getFullYear() + 543)
+                                                            formik.setFieldValue('year', date.getMonth() > 8 ? date.getFullYear() + 544 : date.getFullYear() + 543)
                                                             setDatesOfMonth(date);
                                                         }}
                                                         dateFormat="MM/yyyy"
