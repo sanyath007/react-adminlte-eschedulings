@@ -140,7 +140,7 @@ const ScheduleAdd = () => {
         }
 
         /** Check duplicated person */
-        if (personShifts.some(ps => ps.person.person_id === personSelected)) {
+        if (personShifts.some(ps => ps.person.person_id === personSelected.person_id)) {
             toast.error('คุณเลือกบุคลากรซ้ำ !!!', { autoClose: 1000, hideProgressBar: true });
             return;
         }
