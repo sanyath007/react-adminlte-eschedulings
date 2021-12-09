@@ -17,6 +17,7 @@ const ScheduleDetail = () => {
         totalCol: 31
     };
     const [holidays, setHolidays] = useState([]);
+    const [headOfFaction, setHeadOfFaction] = useState(null);
 
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -50,9 +51,20 @@ const ScheduleDetail = () => {
         }
     };
 
+    const getHeadOfFaction = async function () {
+        try {
+            const res = await api.get(`/api/persons/head-of/faction/5`);
+            console.log(res);
+            setHeadOfFaction(res.data)
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         getSchedule();
         getHolidays();
+        getHeadOfFaction();
     }, []);
 
     console.log(schedule);
@@ -143,7 +155,7 @@ const ScheduleDetail = () => {
                             </div>
                             
                             <div className="table-responsive">
-                                <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
+                                <table className="table table-bordered table-striped mb-1" style={{ fontSize: '14px' }}>
                                     <thead>
                                         <tr>
                                             <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
@@ -195,6 +207,9 @@ const ScheduleDetail = () => {
                                 </div>
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มภารกิจ
+                                    <p style={{ fontSize: '14px', color: 'grey' }}>
+                                        {headOfFaction && headOfFaction.person_firstname+ ' ' +headOfFaction.person_lastname}
+                                    </p>
                                 </div>
                             </div>
 
