@@ -32,8 +32,18 @@ const ScheduleDetail = () => {
     const getSchedule = async function (e) {        
         try {
             const res = await api.get(`/api/schedulings/${id}`);
-            console.log(res);
+
             dispatch(getScheduleSuccess(res.data.scheduling));
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const getHolidays = async function () {
+        try {
+            const res = await api.get(`/api/holidays`);
+
+            setHolidays(res.data);
         } catch (err) {
             console.log(err);
         }
@@ -41,6 +51,7 @@ const ScheduleDetail = () => {
 
     useEffect(() => {
         getSchedule();
+        getHolidays();
     }, []);
 
     console.log(schedule);
