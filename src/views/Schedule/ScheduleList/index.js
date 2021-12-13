@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import api from '../../../api';
 import { getSchedulesSuccess } from '../../../features/schedule';
@@ -41,6 +42,19 @@ const ScheduleList = () => {
 
     const onPaginateLinkClick = function (e, pageUrl) {
         console.log(e, pageUrl);
+    };
+
+    const onDelete = async function (e, id) {
+        if (window.confirm(`คุณต้องการลบข้อมูลตารางเวร รหัส ${id} ใช่หรือไม่ ?`)) {
+            /** Delete data from db */
+            let res = await api.delete(`/api/schedulings/${id}`);
+            
+            if (res.data.status === 1) {
+                toast.success('ลบข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+            } else {
+                toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
+            }
+        }
     };
 
     useEffect(() => {
@@ -160,7 +174,7 @@ const ScheduleList = () => {
                                                         <Link to={`/schedules/${row.id}/edit`} className="btn btn-warning">
                                                             <i className="fas fa-edit"></i>
                                                         </Link>
-                                                        <a href="#" className="btn btn-danger">
+                                                        <a href="#" className="btn btn-danger" onClick={(e) => onDelete(e, row.id)}>
                                                             <i className="far fa-trash-alt"></i>
                                                         </a>
                                                     </div>
