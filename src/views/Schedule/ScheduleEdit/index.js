@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import moment from 'moment';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 import api from '../../../api';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import DailyColumns from '../../../components/DailyColumns';
@@ -30,24 +30,34 @@ const scheduleSchema = Yup.object().shape({
 
 const ScheduleEdit = () => {
     const dispatch = useDispatch();
+    const schedules = useSelector(state => state.schedule.schedules);
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [shifts, setShifts] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
+    const [schedule, setSchedule] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
     const [shiftOfDay, setShiftOfDay] = useState('');
+    const { id } = useParams();
 
     useEffect(() => {
+        console.log('Test ScheduleEdit useEffect !!');
         getInitForm();
 
+        let tmpSchedule = schedules.find(sch => sch.id == id);
+
+        setSchedule(tmpSchedule);
+
+        setPersonShifts(tmpSchedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
+
         tmpPersonShifts = generateShiftDays(tableCol);
-    }, []);
+    }, [schedules]);
 
     const generateShiftDays = function (days) {
         let _personShifts = [];
@@ -211,6 +221,7 @@ const ScheduleEdit = () => {
         props.resetForm();
         setPersonShifts([]);
     };
+    console.log(schedule);
 
     return (
         <div className="container-fluid">
@@ -220,15 +231,16 @@ const ScheduleEdit = () => {
                 <section className="col-lg-12 connectedSortable">
 
                     <Formik
+                        enableReinitialize={schedule}
                         initialValues={{
-                            depart: '',
-                            division: '',
-                            month: '',
-                            year: '2565',
-                            controller: '',
-                            total_persons: 0,
-                            total_shifts: 0,
-                            remark: ''
+                            depart: schedule ? schedule.division.depart_id : '',
+                            division: schedule ? schedule.division.division_id : '',
+                            month: schedule ? moment(schedule.month).toDate() : '',
+                            year: schedule ? schedule.year : '2565',
+                            controller: schedule ? schedule.controller : '',
+                            total_persons: schedule ? schedule.total_persons : 0,
+                            total_shifts: schedule ? schedule.total_shifts : 0,
+                            remark: schedule ? schedule.remark :''
                         }}
                         validationSchema={scheduleSchema}
                         onSubmit={onSubmit}
