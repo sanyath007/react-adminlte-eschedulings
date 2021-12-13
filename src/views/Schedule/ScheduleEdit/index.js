@@ -48,15 +48,25 @@ const ScheduleEdit = () => {
 
     useEffect(() => {
         console.log('Test ScheduleEdit useEffect !!');
+        /** Fetch form dropdown inputs data */
         getInitForm();
 
+        /** Get editting schedule data by id param and set to schedule state */
         let tmpSchedule = schedules.find(sch => sch.id == id);
-
         setSchedule(tmpSchedule);
 
+        /** Format person's shifts of editting schedule data to array */
         setPersonShifts(tmpSchedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
 
+        /** Generate shift inputs on each days of editting schedule's month */
         tmpPersonShifts = generateShiftDays(tableCol);
+
+        /** TODO: To filter departments and divisions of selected faction */
+        setDeparts(tmpDeparts.filter(dep => dep.depart_id == tmpSchedule.division.depart_id));
+        setDivisions(tmpDivisions.filter(div => div.division_id == tmpSchedule.division_id));
+
+        /** Get persons that are member of editting schedule's division */
+        getMemberOfDepart(tmpSchedule.division.depart_id);
     }, [schedules]);
 
     const generateShiftDays = function (days) {
@@ -98,10 +108,13 @@ const ScheduleEdit = () => {
             const res = await api.get('/api/schedulings/add/init-form');
 
             setFactions(res.data.factions);
-            tmpDeparts = res.data.departs;
-            tmpDivisions = res.data.divisions;
+            setDeparts(res.data.departs);
+            setDivisions(res.data.divisions);
             setShifts(res.data.shifts);
             setHolidays(res.data.holidays);
+
+            tmpDeparts = res.data.departs;
+            tmpDivisions = res.data.divisions;
         } catch (err) {
             console.log(err);
         }
@@ -221,7 +234,6 @@ const ScheduleEdit = () => {
         props.resetForm();
         setPersonShifts([]);
     };
-    console.log(schedule);
 
     return (
         <div className="container-fluid">
@@ -233,8 +245,9 @@ const ScheduleEdit = () => {
                     <Formik
                         enableReinitialize={schedule}
                         initialValues={{
+                            faction: schedule ? schedule.division.faction_id : '',
                             depart: schedule ? schedule.division.depart_id : '',
-                            division: schedule ? schedule.division.division_id : '',
+                            division: schedule ? schedule.division_id : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? schedule.year : '2565',
                             controller: schedule ? schedule.controller : '',
@@ -275,6 +288,7 @@ const ScheduleEdit = () => {
                                                         className="form-control"
                                                         id="faction"
                                                         name="faction"
+                                                        value={formik.values.faction}
                                                         onChange={(e) => onFactionChange(e.target.value)}
                                                     >
                                                         <option value="">-- เลือกกลุ่มภารกิจ --</option>
