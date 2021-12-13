@@ -13,7 +13,6 @@ import PersonModal from '../../Modals/PersonModal';
 import PersonShiftsRow from '../PersonShiftsRow';
 import TotalShifts from '../TotalShifts';
 import th from 'date-fns/locale/th'
-import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
 
 let tmpDeparts = [];

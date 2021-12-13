@@ -5,6 +5,7 @@ import MainLayout from './layouts/MainLayout';
 import Signin from './views/Signin';
 import Signup from './views/Signup';
 import './App.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 function App() {
   return (
