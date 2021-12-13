@@ -222,15 +222,16 @@ const ScheduleEdit = () => {
             remark
         };
 
-        // Store data to db
-        let res = await api.post(`/api/schedulings`, data);
+        /** Update data to db */
+        let res = await api.put(`/api/schedulings/${id}`, data);
+
         if (res.data.status === 1) {
             toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
         } else {
             toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
         }
 
-        // TODO: Clear form input's values
+        /** TODO: Clear form input's values */
         props.resetForm();
         setPersonShifts([]);
     };
