@@ -1,1 +1,2 @@
-window.$ = window.jQuery = require('jquery')
+window.$ = window.jQuery = require('jquery');
+window.AdminLte = require('admin-lte');

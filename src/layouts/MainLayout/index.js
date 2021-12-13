@@ -18,6 +18,9 @@ const MainLayout = () => {
       addBodyClass('sidebar-mini');
       addBodyClass('layout-fixed');
     }
+
+    const trees = window.$('[data-widget="treeview"]');
+    trees.Treeview('init');
   }, []);
 
   return (
