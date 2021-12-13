@@ -8,10 +8,10 @@ import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import api from '../../../api';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
-import PersonModal from '../../Modals/PersonModal';
-import PersonShiftsRow from './PersonShiftsRow';
-import TotalShifts from './TotalShifts';
 import DailyColumns from '../../../components/DailyColumns';
+import PersonModal from '../../Modals/PersonModal';
+import PersonShiftsRow from '../PersonShiftsRow';
+import TotalShifts from '../TotalShifts';
 import th from 'date-fns/locale/th'
 import "react-datepicker/dist/react-datepicker.css";
 registerLocale("th", th);
