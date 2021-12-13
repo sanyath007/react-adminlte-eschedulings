@@ -24,7 +24,7 @@ const TotalShiftsRow = ({ shifts, person }) => {
                 } else if (['บ','บ*','บ**','บ^'].includes(el)) {
                     tmpTotal.even += 1;
                 } else if (['B','B*','B**','B^'].includes(el)) {
-                    tmpTotal.bd += 1;
+                    tmpTotal.bd += 0.5;
                 }
             });
         });

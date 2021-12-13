@@ -124,7 +124,7 @@ const ScheduleAdd = () => {
                     } else if (['บ','บ*','บ**','บ^'].includes(el)) {
                         total.even += 1;
                     } else if (['B','B*','B**','B^'].includes(el)) {
-                        total.bd += 1;
+                        total.bd += 0.5;
                     }
                 });
             });

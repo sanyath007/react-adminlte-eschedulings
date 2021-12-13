@@ -147,7 +147,7 @@ const ScheduleEdit = () => {
                     } else if (['บ','บ*','บ**','บ^'].includes(el)) {
                         total.even += 1;
                     } else if (['B','B*','B**','B^'].includes(el)) {
-                        total.bd += 1;
+                        total.bd += 0.5;
                     }
                 });
             });
@@ -226,14 +226,14 @@ const ScheduleEdit = () => {
         let res = await api.put(`/api/schedulings/${id}`, data);
 
         if (res.data.status === 1) {
-            toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+            toast.success('แก้ไขข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
         } else {
             toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
         }
 
         /** TODO: Clear form input's values */
-        props.resetForm();
-        setPersonShifts([]);
+        // props.resetForm();
+        // setPersonShifts([]);
     };
 
     return (

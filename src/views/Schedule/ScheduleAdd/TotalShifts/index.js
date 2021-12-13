@@ -22,7 +22,7 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
                 } else if (['บ','บ*','บ**','บ^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.even += 1;
                 } else if (['B','B*','B**','B^'].includes(shift[`${day}_${i}`])) {
-                    tmpTotal.bd += 1;
+                    tmpTotal.bd += 0.5;
                 }
             }
         });
