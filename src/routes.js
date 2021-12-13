@@ -12,8 +12,7 @@ import Profile from './views/Profile';
 import NotFound from './views/NotFound';
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
+  { path: '/', exact: true, name: 'Dashboard', component: Dashboard },
   { path: '/schedules/list', exact: true, name: 'Schedules', component: ScheduleList },
   { path: '/schedules/:id/detail', exact: true, name: 'Schedules', component: ScheduleDetail },
   { path: '/schedules/:id/edit', exact: true, name: 'Schedules', component: ScheduleEdit },

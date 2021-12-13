@@ -43,7 +43,7 @@ const MainLayout = () => {
                   path={route.path}
                   exact={route.exact}
                   name={route.name}
-                  render={props => <route.component {...props} />}
+                  render={props => <route.component routes={route.routes} {...props} />}
                 />
               ) : (null);
             })}
