@@ -43,7 +43,10 @@ const PersonShiftsDetail = () => {
                         <div className="card-body">
 
                             {/* // TODO: Render fullcalendar */}
-                            <ShiftsCalendar events={shfitEvents} />
+                            <ShiftsCalendar
+                                events={shfitEvents}
+                                defaultDate={schedule ? `${schedule.month}-01` : '2021-12-01'}
+                            />
 
                         </div>{/* <!-- /.card-body --> */}
                     </div>{/* <!-- /.card --> */}

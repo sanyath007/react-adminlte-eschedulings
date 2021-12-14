@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugins
+import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction";
+import thLocale from '@fullcalendar/core/locales/th';
+import moment from 'moment';
 
 const ShiftsCalendar = (props) => {
+    const calendarRef = useRef(null);
+    const [defaultDate, setDefaultDate] = useState(moment('2021-10-01').toDate());
+
     const handleDateClick = function (arg) {
         console.log('Date click!!', arg);
     };
@@ -27,15 +33,23 @@ const ShiftsCalendar = (props) => {
         );
     };
 
+    useEffect(() => {
+        setDefaultDate(moment(props.defaultDate).toDate());
+    }, [props.defaultDate]);
+
     return (
         <FullCalendar
-            plugins={[ dayGridPlugin, interactionPlugin ]}
             initialView="dayGridMonth"
+            initialDate={defaultDate}
             dateClick={(date) => handleDateClick(date)}
             eventClick={(arg) => handleEventClick(arg)}
             datesSet={(arg) => handleMonthChange(arg)}
             eventContent={renderEventContent}
             events={props.events}
+            locale={thLocale}
+            height={'auto'}
+            plugins={[ dayGridPlugin, timeGridPlugin, interactionPlugin ]}
+            ref={calendarRef}
         />
     )
 }
