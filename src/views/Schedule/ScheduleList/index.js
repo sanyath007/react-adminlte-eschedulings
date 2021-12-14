@@ -70,53 +70,53 @@ const ScheduleList = () => {
                     <div className="card">
                         <div className="card-header">
                             <h3 className="card-title">
-                                <i className="fas fa-hospital-user"></i>
+                                <i className="fas fa-hospital-user mr-1"></i>
                                 ตารางเวร
                             </h3>
-                        </div>{/* <!-- /.card-header --> */}
-                        <div className="card-body">
+                        </div>
+                        <div className="card-body pb-1">
 
-                            <form action="" method="POST" className="form-inline">
-                                {/* <div className="form-group">
-                                    <label>กลุ่มงาน :</label>
-                                    <select
-                                        className="form-control mr-2 ml-2"
-                                        id="cboDepart"
-                                        name="cboDepart"
-                                        onChange={ (e) => onDepartChange(e) }
-                                    >
-                                        <option value="">-- เลือกกลุ่มงาน --</option>
-                                        <option value="65">สำนักการพยาบาล</option>
-                                        { departs && departs.map(dep => {
-                                            return (
-                                                <option value={ dep.depart_id }>
-                                                    { dep.depart_name }
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>งาน :</label>
-                                    <select
-                                        className="form-control mr-2 ml-2"
-                                        id="cboDivision"
-                                        name="cboDivision"
-                                        onChange={ (e) => onDivisionChange(e) }
-                                    >
-                                        <option value="">-- เลือกงาน --</option>
-                                        { divisions && divisions.map(div => {
-                                            return (
-                                                <option value={ div.ward_id }>
-                                                    { div.ward_name }
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div> */}
+                            {/* <div className="form-group">
+                                <label>กลุ่มงาน :</label>
+                                <select
+                                    className="form-control mr-2 ml-2"
+                                    id="cboDepart"
+                                    name="cboDepart"
+                                    onChange={ (e) => onDepartChange(e) }
+                                >
+                                    <option value="">-- เลือกกลุ่มงาน --</option>
+                                    <option value="65">สำนักการพยาบาล</option>
+                                    { departs && departs.map(dep => {
+                                        return (
+                                            <option value={ dep.depart_id }>
+                                                { dep.depart_name }
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
+                            <div className="form-group">
+                                <label>งาน :</label>
+                                <select
+                                    className="form-control mr-2 ml-2"
+                                    id="cboDivision"
+                                    name="cboDivision"
+                                    onChange={ (e) => onDivisionChange(e) }
+                                >
+                                    <option value="">-- เลือกงาน --</option>
+                                    { divisions && divisions.map(div => {
+                                        return (
+                                            <option value={ div.ward_id }>
+                                                { div.ward_name }
+                                            </option>
+                                        );
+                                    })}
+                                </select>
+                            </div> */}
 
-                                <div className="form-group">
-                                    <label>ประจำเดือน :</label>
+                            <div className="form-group row">
+                                <label className='mt-1'>ประจำเดือน :</label>
+                                <div className='col-md-3'>
                                     <DatePicker
                                         selected={month}
                                         onChange={(date) => {
@@ -129,7 +129,7 @@ const ScheduleList = () => {
                                         className={ `form-control` }
                                     />
                                 </div>
-                            </form>
+                            </div>
 
                         </div>{/* <!-- /.card-body --> */}
                     </div>{/* <!-- /.card --> */}
