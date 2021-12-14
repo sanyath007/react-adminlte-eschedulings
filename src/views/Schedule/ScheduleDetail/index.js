@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import moment from 'moment';
 import api from '../../../api';
 import { getScheduleSuccess } from '../../../features/schedule';
@@ -9,27 +9,12 @@ import ShiftsOfDay from '../../../components/ShiftsOfDay';
 import MonthlyText from '../../../components/MonthlyText';
 
 const ScheduleDetail = () => {
-    const departs = [];
-    const divisions = [];
-    const scheduling_shifts = [];
-    const shifts = [];
-    const dataTableOptions = {
-        totalCol: 31
-    };
+    const dataTableOptions = { totalCol: 31 };
     const [holidays, setHolidays] = useState([]);
     const [headOfFaction, setHeadOfFaction] = useState(null);
-
     const { id } = useParams();
     const dispatch = useDispatch();
     const schedule = useSelector(state => state.schedule.schedule);
-
-    const onDepartChange = function (e) {
-        console.log(e);
-    };
-
-    const onDivisionChange = function (e) {
-        console.log(e);
-    };
 
     const getSchedule = async function (e) {        
         try {
@@ -82,62 +67,7 @@ const ScheduleDetail = () => {
                                 รายละเอียดตารางเวร
                             </h3>
                         </div>{/* <!-- /.card-header --> */}
-                        {/* <div className="card-body">
-
-                            <form action="" method="POST" className="form-inline"> */}
-                                {/* <div className="form-group">
-                                    <label>กลุ่มงาน :</label>
-                                    <select
-                                        className="form-control mr-2 ml-2"
-                                        id="cboDepart"
-                                        name="cboDepart"
-                                        onChange={ (e) => onDepartChange(e) }
-                                    >
-                                        <option value="">-- เลือกกลุ่มงาน --</option>
-                                        <option value="65">สำนักการพยาบาล</option>
-                                        { departs && departs.map(dep => {
-                                            return (
-                                                <option value={ dep.depart_id }>
-                                                    { dep.depart_name }
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label>งาน :</label>
-                                    <select
-                                        className="form-control mr-2 ml-2"
-                                        id="cboDivision"
-                                        name="cboDivision"
-                                        onChange={ (e) => onDivisionChange(e) }
-                                    >
-                                        <option value="">-- เลือกงาน --</option>
-                                        { divisions && divisions.map(div => {
-                                            return (
-                                                <option value={ div.ward_id }>
-                                                    { div.ward_name }
-                                                </option>
-                                            );
-                                        })}
-                                    </select>
-                                </div> */}
-                                {/* <div className="form-group">
-                                    <label>ประจำเดือน :</label>
-                                    <input
-                                        type="text"
-                                        id="cboMonth"
-                                        name="cboMonth"
-                                        className="form-control"
-                                        style={{ margin: '0 10px' }}
-                                        autoComplete="off"
-                                    />
-                                </div> */}
-
-                                {/* <button onClick={ (e) => getAll(e) } className="btn btn-primary">ตกลง</button> */}
-                            {/* </form>
-
-                        </div><!-- /.card-body --> */}
+                        {/* <div className="card-body"></div><!-- /.card-body --> */}
                     </div>{/* <!-- /.card --> */}
 
                     <div className="card">
@@ -184,7 +114,19 @@ const ScheduleDetail = () => {
                                                             </td>
                                                         );
                                                     })}
-                                                    <td style={{ textAlign: 'center' }}></td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                            <Link to={`/schedules/${row.id}/detail`} className="btn btn-info">
+                                                                <i className="fas fa-search"></i>
+                                                            </Link>
+                                                            <Link to={`/schedules/${row.id}/edit`} className="btn btn-warning">
+                                                                <i className="fas fa-edit"></i>
+                                                            </Link>
+                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, row.id)}>
+                                                                <i className="far fa-trash-alt"></i>
+                                                            </a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             );
                                         })}
@@ -215,7 +157,6 @@ const ScheduleDetail = () => {
 
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix">
-                            
                         </div>{/* <!-- /.card-footer --> */}
                     </div>{/* <!-- /.card --> */}
         
