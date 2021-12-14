@@ -1,7 +1,13 @@
-import React from 'react'
-import ShiftsCalendar from '../../components/ShiftsCalendar'
+import React from 'react';
+import ShiftsCalendar from '../../components/ShiftsCalendar';
 
 const PersonShiftsDetail = () => {
+    const events = [
+        { title: 'event 1', date: '2021-12-01' },
+        { title: 'event 2', date: '2021-12-02' },
+        { title: 'event 3', date: '2021-12-03' }
+    ];
+
     return (
         <div className="container-fluid">
             {/* <!-- Main row --> */}
@@ -18,7 +24,7 @@ const PersonShiftsDetail = () => {
                         <div className="card-body">
 
                             {/* // TODO: Render fullcalendar */}
-                            <ShiftsCalendar />
+                            <ShiftsCalendar events={events} />
 
                         </div>{/* <!-- /.card-body --> */}
                     </div>{/* <!-- /.card --> */}
@@ -28,4 +34,4 @@ const PersonShiftsDetail = () => {
     )
 }
 
-export default PersonShiftsDetail
+export default PersonShiftsDetail;
