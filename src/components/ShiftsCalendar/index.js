@@ -12,6 +12,10 @@ const ShiftsCalendar = (props) => {
         console.log('Event click!!', arg);
     };
 
+    const handleMonthChange = function (arg) {
+        console.log('Month change!!', arg);
+    };
+
     const renderEventContent = function (eventInfo) {
         console.log(eventInfo);
 
@@ -29,6 +33,7 @@ const ShiftsCalendar = (props) => {
             initialView="dayGridMonth"
             dateClick={(date) => handleDateClick(date)}
             eventClick={(arg) => handleEventClick(arg)}
+            datesSet={(arg) => handleMonthChange(arg)}
             eventContent={renderEventContent}
             events={props.events}
         />
