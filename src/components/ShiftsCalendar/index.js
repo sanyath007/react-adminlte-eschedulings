@@ -28,7 +28,7 @@ const ShiftsCalendar = (props) => {
             plugins={[ dayGridPlugin, interactionPlugin ]}
             initialView="dayGridMonth"
             dateClick={(date) => handleDateClick(date)}
-            eventClick={(date) => handleEventClick(date)}
+            eventClick={(arg) => handleEventClick(arg)}
             eventContent={renderEventContent}
             events={props.events}
         />
