@@ -16,7 +16,18 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
 
   /** //TODO: To handle on off shift button clicked */
   const handleOffShift = function () {
-    console.log(props.shift);
+    const newShiftsText = props.personShifts.shifts.split(',').map((shift, index) => {
+      if (parseInt(moment(props.shift.shiftDate).format('DD')) === (index+1)) {
+        return shift.replace(props.shift.shiftText, '');
+      }
+
+      return shift;
+    });
+
+    const { shifts, ...rest } = props.personShifts
+    const data = { ...rest, newShiftsText };
+
+    updatePersonShift(props.personShifts.id, data);
   };
 
   /** //TODO: To handle on swap shift button clicked */
