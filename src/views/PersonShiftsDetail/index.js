@@ -12,23 +12,28 @@ const PersonShiftsDetail = () => {
     const [openModal, setOpenModal] = useState(false);
     const schedule = useSelector(state => state.schedule.schedule);
 
-    const generateCalendarEvents = function (month, shiftText) {
+    const generateCalendarEvents = function (schedule, shiftId, shiftText) {
         let shfitEvents = [];
         shiftText.split(',').forEach((shift, index) => {
-            let tmp = [];
+            let calendarEvents = [];
             shift.split('|').forEach(sh => {
+                /** Create each calendar event from each shift */
                 if (sh !== '') {
-                    tmp.push({
+                    calendarEvents.push({
                         title: sh,
-                        start: moment(`${month}-${index+1}`).format('YYYY-MM-DD'),
+                        start: moment(`${schedule.month}-${index+1}`).format('YYYY-MM-DD'),
                         // allDay: false,
                         display: 'list-item',
-                        displayEventTime: false
+                        displayEventTime: false,
+                        extendedProps: {
+                            schedule: schedule,
+                            shiftId: shiftId
+                        }
                     });
                 }
             });
 
-            shfitEvents.push(...tmp);
+            shfitEvents.push(...calendarEvents);
         });
 
         setShfitEvents(shfitEvents);
@@ -39,7 +44,7 @@ const PersonShiftsDetail = () => {
         
         setPersonShifts(ps);
 
-        generateCalendarEvents(schedule.month, ps.shifts);
+        generateCalendarEvents(schedule, ps.id, ps.shifts);
     }, []);
     console.log(shfitEvents);
     
