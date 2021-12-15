@@ -5,69 +5,55 @@ import {
   Button,
   Col,
   Row,
-  Modal,
-  Pagination
+  Modal
 } from 'react-bootstrap';
 import moment from 'moment';
 import api from '../../api';
 import { calcAge } from '../../utils';
 
 function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
-  const [persons, setPersons] = useState([]);
-  const [pager, setPager] = useState(null);
-
-  const fetchPersons = async (fname='', faction='', depart='', division='') => {
-    faction = props.faction ? props.faction : '5';
-    depart = props.depart ? props.depart : '';
-    division = props.division ? props.division : '';
-
-    let res = await api.get(`/api/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
-
-    setPersons(res.data.items);
-    setPager(res.data.pager);
-  };
-
-  const fetchIpAllWithPage = async (url) => {
-    let res = await api.get(url);
-
-    setPersons(res.data.items);
-    setPager(res.data.pager);
-  };
-
-  const handlePaginationClick = (url) => {
-    fetchIpAllWithPage(url);
-  };
-
   useEffect(() => {
-    fetchPersons();
-  }, [props.faction, props.depart]);
+  }, []);
+  console.log(props.personShifts);
 
   return (
     <Modal
       show={isOpen}
       onHide={hideModal}
-      size="xl"
+      size="md"
       style={{ top: '50px', zIndex: '1500' }}
     >
       <Modal.Header closeButton>รายละเอียดเวร</Modal.Header>
       <Modal.Body>
         <Row>
           <Col>
-            <div className="form-group col-md-6 pl-0">
-              <div className="input-group">
-                <div className="input-group-prepend">
-                  <span className="input-group-text">คันหาชื่อ</span>
-                </div>
-                <BsForm.Control
-                  onChange={(e) => fetchPersons(e.target.value)}
-                ></BsForm.Control>
-              </div>
-            </div>{/* /.form-group */}
+            <p className='my-1'>
+              <span className='mr-1'>ชื่อ-สกุล</span> 
+              {props.personShifts && 
+                    props.personShifts.person.prefix.prefix_name+props.personShifts.person.person_firstname+ '' +props.personShifts.person.person_lastname
+              }
+            </p>
+            <p className='my-1'>
+              <span className='mr-1'>ตำแหน่ง</span>
+              {props.personShifts && 
+                    props.personShifts.person.position.position_name
+              }
+            </p>
+            <p className='my-1'>
+              <span className='mr-1'>เวรประจำวันที่</span>
+              {props.shift && props.shift.shiftText}
+            </p>
+            <p className='my-1'>
+              <span className='mr-1'>เวร</span>
+              {props.shift && props.shift.shiftText}
+            </p>
           </Col>
         </Row>
-
         <Row>
-          
+          <Col className='text-center mt-4'>
+            <Button variant="primary" className="mr-2">Off เวร</Button>
+            <Button variant="success">สลับเวร</Button>
+          </Col>
         </Row>
       </Modal.Body>
     </Modal>

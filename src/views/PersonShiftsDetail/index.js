@@ -10,6 +10,7 @@ const PersonShiftsDetail = () => {
     const [personShifts, setPersonShifts] = useState(null);
     const [shfitEvents, setShfitEvents] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    const [shift, setshift] = useState('');
     const schedule = useSelector(state => state.schedule.schedule);
 
     const generateCalendarEvents = function (schedule, shiftId, shiftText) {
@@ -27,7 +28,8 @@ const PersonShiftsDetail = () => {
                         displayEventTime: false,
                         extendedProps: {
                             schedule: schedule,
-                            shiftId: shiftId
+                            shiftId: shiftId,
+                            shiftText: sh
                         }
                     });
                 }
@@ -53,6 +55,8 @@ const PersonShiftsDetail = () => {
             <ShiftModal
                 isOpen={openModal}
                 hideModal={() => setOpenModal(false)}
+                personShifts={personShifts}
+                shift={shift}
             />
 
             {/* <!-- Main row --> */}
@@ -76,6 +80,7 @@ const PersonShiftsDetail = () => {
                                     setOpenModal(true);
 
                                     console.log(arg);
+                                    setshift(arg.event?.extendedProps)
                                 }}
                             />
 

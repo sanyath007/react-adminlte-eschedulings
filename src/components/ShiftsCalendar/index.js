@@ -17,6 +17,7 @@ const ShiftsCalendar = (props) => {
     const handleEventClick = function (arg) {
         console.log('Event click!!', arg);
 
+        /** Pass event data to its parant */
         props.onEventClicked(arg);
     };
 
