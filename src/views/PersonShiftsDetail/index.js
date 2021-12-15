@@ -96,7 +96,6 @@ const PersonShiftsDetail = () => {
                                 onEventClicked={(arg) => {
                                     setOpenModal(true);
 
-                                    console.log(arg);
                                     setshift(arg.event?.extendedProps)
                                 }}
                             />
