@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Accordion,
   Form as BsForm,
   Button,
   Col,
@@ -12,9 +13,19 @@ import api from '../../api';
 import { calcAge } from '../../utils';
 
 function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
+
+  /** //TODO: To handle on off shift button clicked */
+  const handleOffShift = function () {
+    console.log(props.shift);
+  };
+
+  /** //TODO: To handle on swap shift button clicked */
+  const handleSwapShift = function () {
+    console.log(props.shift);
+  };
+
   useEffect(() => {
   }, []);
-  console.log(props.personShifts);
 
   return (
     <Modal
@@ -47,12 +58,13 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
               <span className='mr-1'>เวร</span>
               {props.shift && props.shift.shiftText}
             </p>
+
           </Col>
         </Row>
         <Row>
           <Col className='text-center mt-4'>
-            <Button variant="primary" className="mr-2">Off เวร</Button>
-            <Button variant="success">เปลี่ยนเวร</Button>
+            <Button variant="primary" className="mr-2" onClick={() => handleOffShift()}>Off เวร</Button>
+            <Button variant="success" onClick={() => handleSwapShift()}>เปลี่ยนเวร</Button>
           </Col>
         </Row>
       </Modal.Body>
