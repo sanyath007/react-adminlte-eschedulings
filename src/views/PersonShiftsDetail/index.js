@@ -13,7 +13,7 @@ const PersonShiftsDetail = () => {
     const [shift, setshift] = useState('');
     const schedule = useSelector(state => state.schedule.schedule);
 
-    const generateCalendarEvents = function (schedule, shiftId, shiftText) {
+    const generateCalendarEvents = function (month, shiftId, shiftText) {
         let shfitEvents = [];
         shiftText.split(',').forEach((shift, index) => {
             let calendarEvents = [];
@@ -22,15 +22,16 @@ const PersonShiftsDetail = () => {
                 if (sh !== '') {
                     calendarEvents.push({
                         title: sh,
-                        start: moment(`${schedule.month}-${index+1}`).format('YYYY-MM-DD'),
+                        start: moment(`${month}-${index+1}`).format('YYYY-MM-DD'),
                         // allDay: false,
                         display: 'list-item',
                         displayEventTime: false,
                         extendedProps: {
-                            schedule: schedule,
                             shiftId: shiftId,
+                            shiftDate: moment(`${month}-${index+1}`).format('YYYY-MM-DD'),
                             shiftText: sh
-                        }
+                        },
+                        backgroundColor: sh == 'ด' ? '#8bc24c' : sh == 'ช' ? '#5bd1d7' : '#f5587b'
                     });
                 }
             });
@@ -46,7 +47,7 @@ const PersonShiftsDetail = () => {
         
         setPersonShifts(ps);
 
-        generateCalendarEvents(schedule, ps.id, ps.shifts);
+        generateCalendarEvents(schedule.month, ps.id, ps.shifts);
     }, []);
     console.log(shfitEvents);
     

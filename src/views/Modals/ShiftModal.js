@@ -40,8 +40,8 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
               }
             </p>
             <p className='my-1'>
-              <span className='mr-1'>เวรประจำวันที่</span>
-              {props.shift && props.shift.shiftText}
+              <span className='mr-1'>ประจำวันที่</span>
+              {props.shift && props.shift.shiftDate}
             </p>
             <p className='my-1'>
               <span className='mr-1'>เวร</span>
