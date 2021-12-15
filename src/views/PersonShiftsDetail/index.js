@@ -5,15 +5,29 @@ import moment from 'moment';
 import ShiftsCalendar from '../../components/ShiftsCalendar';
 
 const PersonShiftsDetail = () => {
+    const { id } = useParams();
     const [personShifts, setPersonShifts] = useState(null);
     const [shfitEvents, setShfitEvents] = useState([]);
     const schedule = useSelector(state => state.schedule.schedule);
-    const { id } = useParams();
 
     const generateCalendarEvents = function (month, shiftText) {
-        const arrShifts = shiftText.split(',');
+        let shfitEvents = [];
+        shiftText.split(',').forEach((shift, index) => {
+            let tmp = [];
+            shift.split('|').forEach(sh => {
+                if (sh !== '') {
+                    tmp.push({
+                        title: sh,
+                        start: moment(`${month}-${index+1}`).format('YYYY-MM-DD'),
+                        // allDay: false,
+                        display: 'list-item',
+                        displayEventTime: false
+                    });
+                }
+            });
 
-        const shfitEvents = arrShifts.map((shift, index) => ({ title: shift, start: moment(`${month}-${index+1}`).format('YYYY-MM-DD') }));
+            shfitEvents.push(...tmp);
+        });
 
         setShfitEvents(shfitEvents);
     };
