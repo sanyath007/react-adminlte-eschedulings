@@ -16,6 +16,8 @@ const ShiftsCalendar = (props) => {
 
     const handleEventClick = function (arg) {
         console.log('Event click!!', arg);
+
+        props.onEventClicked(arg);
     };
 
     const handleMonthChange = function (arg) {
