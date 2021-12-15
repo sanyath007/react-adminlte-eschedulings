@@ -52,7 +52,7 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
         <Row>
           <Col className='text-center mt-4'>
             <Button variant="primary" className="mr-2">Off เวร</Button>
-            <Button variant="success">สลับเวร</Button>
+            <Button variant="success">เปลี่ยนเวร</Button>
           </Col>
         </Row>
       </Modal.Body>
