@@ -13,6 +13,23 @@ const PersonShiftsDetail = () => {
     const [shift, setshift] = useState('');
     const schedule = useSelector(state => state.schedule.schedule);
 
+    const getEventBgColor = function (shift) {
+        let bgColor = '';
+        if (['ด','ด*','ด**','ด^'].includes(shift)) {
+            bgColor = '#2BBBD8';
+        } else if (['ช','ช*','ช**','ช^'].includes(shift)) {
+            bgColor = '#00a03e';
+        } else if (['บ','บ*','บ**','บ^'].includes(shift)) {
+            bgColor = '#F71E35';
+        } else if (['B','B*','B**','B^'].includes(shift)) {
+            bgColor = '#FFE869';
+        } else {
+            bgColor = '#DCDDD8';
+        }
+
+        return bgColor;
+    };
+
     const generateCalendarEvents = function (month, shiftId, shiftText) {
         let shfitEvents = [];
         shiftText.split(',').forEach((shift, index) => {
@@ -31,7 +48,7 @@ const PersonShiftsDetail = () => {
                             shiftDate: moment(`${month}-${index+1}`).format('YYYY-MM-DD'),
                             shiftText: sh
                         },
-                        backgroundColor: sh == 'ด' ? '#8bc24c' : sh == 'ช' ? '#5bd1d7' : '#f5587b'
+                        backgroundColor: getEventBgColor(sh)
                     });
                 }
             });
@@ -49,7 +66,6 @@ const PersonShiftsDetail = () => {
 
         generateCalendarEvents(schedule.month, ps.id, ps.shifts);
     }, []);
-    console.log(shfitEvents);
     
     return (
         <div className="container-fluid">

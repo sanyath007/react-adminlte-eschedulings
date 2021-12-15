@@ -47,7 +47,7 @@ const ShiftsCalendar = (props) => {
             dateClick={(date) => handleDateClick(date)}
             eventClick={(arg) => handleEventClick(arg)}
             datesSet={(arg) => handleMonthChange(arg)}
-            eventContent={renderEventContent}
+            // eventContent={renderEventContent}
             events={props.events}
             locale={thLocale}
             height={'auto'}
