@@ -3,11 +3,13 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import ShiftsCalendar from '../../components/ShiftsCalendar';
+import ShiftModal from '../Modals/ShiftModal';
 
 const PersonShiftsDetail = () => {
     const { id } = useParams();
     const [personShifts, setPersonShifts] = useState(null);
     const [shfitEvents, setShfitEvents] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
     const schedule = useSelector(state => state.schedule.schedule);
 
     const generateCalendarEvents = function (month, shiftText) {
@@ -43,6 +45,11 @@ const PersonShiftsDetail = () => {
     
     return (
         <div className="container-fluid">
+            <ShiftModal
+                isOpen={openModal}
+                hideModal={() => setOpenModal(false)}
+            />
+
             {/* <!-- Main row --> */}
             <div className="row">
                 <section className="col-lg-12 connectedSortable">
@@ -60,6 +67,11 @@ const PersonShiftsDetail = () => {
                             <ShiftsCalendar
                                 events={shfitEvents}
                                 defaultDate={schedule ? `${schedule.month}-01` : '2021-12-01'}
+                                onEventClicked={(arg) => {
+                                    setOpenModal(true);
+
+                                    console.log(arg);
+                                }}
                             />
 
                         </div>{/* <!-- /.card-body --> */}
