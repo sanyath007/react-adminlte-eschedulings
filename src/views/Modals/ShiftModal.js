@@ -10,7 +10,6 @@ import {
 } from 'react-bootstrap';
 import moment from 'moment';
 import api from '../../api';
-import { calcAge } from '../../utils';
 
 function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
 
@@ -25,10 +24,25 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
     });
 
     const { shifts, ...rest } = props.personShifts
-    const data = { ...rest, newShiftsText };
+    const data = { ...rest, shifts: newShiftsText.join() };
 
     updatePersonShift(props.personShifts.id, data);
   };
+
+  /** TODO: To update scheduling_detail in db and redux store */
+  const updatePersonShift = async function (id, data) {
+    try {
+      const res = await api.put(`/schedules-detail/${id}`, data);
+
+      if (res.data.status === 1) {
+        
+      } else {
+
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   /** //TODO: To handle on swap shift button clicked */
   const handleSwapShift = function () {
