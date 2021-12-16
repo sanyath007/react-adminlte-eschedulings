@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import moment from 'moment';
 import api from '../../../api';
-import { getScheduleSuccess } from '../../../features/schedule';
+import { getScheduleById } from '../../../features/schedules';
 import DailyColumns from '../../../components/DailyColumns';
 import ShiftsOfDay from '../../../components/ShiftsOfDay';
 import MonthlyText from '../../../components/MonthlyText';
@@ -12,15 +12,16 @@ const ScheduleDetail = () => {
     const dataTableOptions = { totalCol: 31 };
     const [holidays, setHolidays] = useState([]);
     const [headOfFaction, setHeadOfFaction] = useState(null);
+
     const { id } = useParams();
     const dispatch = useDispatch();
-    const schedule = useSelector(state => state.schedule.schedule);
+    const schedule = useSelector(state => getScheduleById(state, id));
 
     const getSchedule = async function (e) {        
         try {
             const res = await api.get(`/api/schedulings/${id}`);
 
-            dispatch(getScheduleSuccess(res.data.scheduling));
+            // dispatch(getScheduleSuccess(res.data.scheduling));
         } catch (err) {
             console.log(err);
         }

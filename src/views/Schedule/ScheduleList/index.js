@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import DatePicker, { registerLocale } from 'react-datepicker';
+import { Spinner } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import api from '../../../api';
-import { getSchedulesSuccess } from '../../../features/schedule';
+import { getAllSchedules, fetchSchedules } from '../../../features/schedules';
 import MonthlyText from '../../../components/MonthlyText';
 import th from 'date-fns/locale/th'
 registerLocale("th", th);
@@ -14,11 +15,12 @@ const ScheduleList = () => {
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [month, setMonth] = useState(new Date());
-    const shifts = [];
     const pager = null;
 
     const dispatch = useDispatch();
-    const schedules = useSelector(state => state.schedule.schedules);
+    const schedules = useSelector(getAllSchedules);
+    const scheduleStatus = useSelector(state => state.schedules.status);
+    const scheduleError = useSelector(state => state.schedules.error);
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -31,13 +33,7 @@ const ScheduleList = () => {
     const getSchedules = async function (date) {
         const month = date ? moment(date).format('YYYY-MM') : '';
 
-        try {
-            const res = await api.get(`/api/schedulings?month=${month}`);
-
-            dispatch(getSchedulesSuccess(res.data.schedulings));
-        } catch (error) {
-            console.log(error);
-        }
+        dispatch(fetchSchedules(month));
     };
 
     const onPaginateLinkClick = function (e, pageUrl) {
@@ -59,7 +55,7 @@ const ScheduleList = () => {
 
     useEffect(() => {
         getSchedules();
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className="container-fluid">
@@ -156,6 +152,7 @@ const ScheduleList = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    {(scheduleStatus === 'loading') && <Spinner animation="border" />}
                                     {schedules && schedules.map((row, i) => {
                                         return (
                                             <tr key={row.id}>

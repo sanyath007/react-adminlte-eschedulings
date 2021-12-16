@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authSlice from './auth';
-import scheduleSlice from './schedule';
+import schedulesSlice from './schedules';
 
 export default configureStore({
   reducer: {
     auth: authSlice,
-    schedule: scheduleSlice
+    schedules: schedulesSlice
   }
 });
