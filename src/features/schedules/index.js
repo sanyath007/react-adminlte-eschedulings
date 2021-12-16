@@ -53,4 +53,6 @@ export const { storeSchedule, updateSchedule, deleteSchedule } = schedulesSlice.
 
 export const getAllSchedules = state => state.schedules.schedules;
 
-export const getScheduleById = (state, id) => state.schedules.schedules.find(schedule => schedule.id === id);
+export const getScheduleById = (state, id) => {
+  return state.schedules.schedules.find(schedule => schedule.id === parseInt(id))
+};

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import api from '../../../api';
 import { getScheduleById } from '../../../features/schedules';
@@ -14,18 +14,9 @@ const ScheduleDetail = () => {
     const [headOfFaction, setHeadOfFaction] = useState(null);
 
     const { id } = useParams();
+    const history = useHistory();
     const dispatch = useDispatch();
     const schedule = useSelector(state => getScheduleById(state, id));
-
-    const getSchedule = async function (e) {        
-        try {
-            const res = await api.get(`/api/schedulings/${id}`);
-
-            // dispatch(getScheduleSuccess(res.data.scheduling));
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
     const getHolidays = async function () {
         try {
@@ -48,9 +39,13 @@ const ScheduleDetail = () => {
     };
 
     useEffect(() => {
-        getSchedule();
         getHolidays();
         getHeadOfFaction();
+
+        /** To redirect to /schedules/list if schedule is null */
+        if (!schedule) {
+            history.push('/schedules/list');
+        }
     }, []);
 
     return (
