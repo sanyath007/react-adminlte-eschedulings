@@ -69,6 +69,8 @@ const PersonShiftsDetail = () => {
         } catch (err) {
             console.log(err);
         }
+
+        setOpenModal(false)
     };
 
     useEffect(() => {
