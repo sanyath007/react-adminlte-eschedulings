@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DatePicker, { registerLocale } from 'react-datepicker';
-import moment from 'moment';
+import { useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import moment from 'moment';
 import api from '../../../api';
+import { getScheduleById } from '../../../features/schedules';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import DailyColumns from '../../../components/DailyColumns';
 import PersonModal from '../../Modals/PersonModal';
@@ -29,44 +30,46 @@ const scheduleSchema = Yup.object().shape({
 
 const ScheduleEdit = () => {
     const dispatch = useDispatch();
-    const schedules = useSelector(state => state.schedule.schedules);
+    const history = useHistory();
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [shifts, setShifts] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
-    const [schedule, setSchedule] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [tableCol, setTableCol] = useState(moment().endOf('month').date());
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
     const [shiftOfDay, setShiftOfDay] = useState('');
+
     const { id } = useParams();
+    const schedule = useSelector(state => getScheduleById(state, id));
 
     useEffect(() => {
         console.log('Test ScheduleEdit useEffect !!');
         /** Fetch form dropdown inputs data */
         getInitForm();
 
-        /** Get editting schedule data by id param and set to schedule state */
-        let tmpSchedule = schedules.find(sch => sch.id == id);
-        setSchedule(tmpSchedule);
-
         /** Format person's shifts of editting schedule data to array */
-        setPersonShifts(tmpSchedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
+        setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
 
         /** Generate shift inputs on each days of editting schedule's month */
         tmpPersonShifts = generateShiftDays(tableCol);
 
         /** TODO: To filter departments and divisions of selected faction */
-        setDeparts(tmpDeparts.filter(dep => dep.depart_id == tmpSchedule.division.depart_id));
-        setDivisions(tmpDivisions.filter(div => div.division_id == tmpSchedule.division_id));
+        setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.division.depart_id));
+        setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
 
         /** Get persons that are member of editting schedule's division */
-        getMemberOfDepart(tmpSchedule.division.depart_id);
-    }, [schedules]);
+        getMemberOfDepart(schedule.division.depart_id);
+
+        /** To redirect to /schedules/list if schedule is null */
+        if (!schedule) {
+            history.push('/schedules/list');
+        }
+    }, [schedule]);
 
     const generateShiftDays = function (days) {
         let _personShifts = [];
