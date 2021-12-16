@@ -27,7 +27,9 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
     const data = { ...rest, shifts: newShiftsText.join() };
 
     /** Pass updating data up to parent */
-    props.onUpdateScheduleDetail(props.personShifts.id, data)
+    if (window.confirm(`คุณต้องการ Off เวรใช่หรือไม่ ?`)) {
+      props.onUpdateScheduleDetail(props.personShifts.id, data)
+    }
   };
 
   /** //TODO: To handle on swap shift button clicked */
