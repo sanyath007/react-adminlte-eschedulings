@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import ShiftsCalendar from '../../components/ShiftsCalendar';
 import ShiftModal from '../Modals/ShiftModal';
+import { getScheduleDetailsById } from '../../features/scheduleDetails';
 
 const PersonShiftsDetail = () => {
-    const { id } = useParams();
     const [personShifts, setPersonShifts] = useState(null);
     const [shfitEvents, setShfitEvents] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [shift, setshift] = useState('');
-    const schedule = useSelector(state => state.schedule.schedule);
+
+    const { id } = useParams();
+    const history = useHistory();
+    const scheduleDetails = useSelector(state => getScheduleDetailsById(state, id));
 
     const getEventBgColor = function (shift) {
         let bgColor = '';
@@ -60,15 +63,19 @@ const PersonShiftsDetail = () => {
     };
 
     useEffect(() => {
-        const ps = schedule.shifts.find(shift => shift.id === parseInt(id));
-        
-        setPersonShifts(ps);
+        /** To redirect to /schedules/list if schedule is null */
+        if (!scheduleDetails) {
+            history.push('/schedules/list');
+        }
 
-        generateCalendarEvents(schedule.month, ps.id, ps.shifts);
+        setPersonShifts(scheduleDetails);
+
+        generateCalendarEvents(scheduleDetails.scheduling.month, scheduleDetails.id, scheduleDetails.shifts);
     }, []);
     
     return (
         <div className="container-fluid">
+
             <ShiftModal
                 isOpen={openModal}
                 hideModal={() => setOpenModal(false)}
@@ -84,7 +91,7 @@ const PersonShiftsDetail = () => {
                         <div className="card-header">
                             <h3 className="card-title">
                                 <i className="far fa-calendar-alt mr-1"></i>
-                                ตารางเวรของ {personShifts && personShifts.person.prefix.prefix_name + personShifts.person.person_firstname+ ' ' +personShifts.person.person_lastname}
+                                {/* ตารางเวรของ {personShifts && personShifts.person.prefix.prefix_name + personShifts.person.person_firstname+ ' ' +personShifts.person.person_lastname} */}
                             </h3>
                         </div>{/* <!-- /.card-header --> */}
                         <div className="card-body">
@@ -92,7 +99,7 @@ const PersonShiftsDetail = () => {
                             {/* Render component of fullcalendar */}
                             <ShiftsCalendar
                                 events={shfitEvents}
-                                defaultDate={schedule ? `${schedule.month}-01` : '2021-12-01'}
+                                defaultDate={scheduleDetails ? `${scheduleDetails.scheduling.month}-01` : '2021-12-01'}
                                 onEventClicked={(arg) => {
                                     setOpenModal(true);
 

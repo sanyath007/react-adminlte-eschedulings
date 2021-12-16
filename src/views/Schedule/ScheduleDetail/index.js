@@ -4,6 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import api from '../../../api';
 import { getScheduleById } from '../../../features/schedules';
+import { fetchAll } from '../../../features/scheduleDetails';
 import DailyColumns from '../../../components/DailyColumns';
 import ShiftsOfDay from '../../../components/ShiftsOfDay';
 import MonthlyText from '../../../components/MonthlyText';
@@ -31,7 +32,7 @@ const ScheduleDetail = () => {
     const getHeadOfFaction = async function () {
         try {
             const res = await api.get(`/api/persons/head-of/faction/5`);
-            console.log(res);
+
             setHeadOfFaction(res.data)
         } catch (err) {
             console.log(err);
@@ -39,6 +40,8 @@ const ScheduleDetail = () => {
     };
 
     useEffect(() => {
+        dispatch(fetchAll(id));
+
         getHolidays();
         getHeadOfFaction();
 
