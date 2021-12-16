@@ -9,11 +9,9 @@ import {
   Modal
 } from 'react-bootstrap';
 import moment from 'moment';
-import api from '../../api';
 
 function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
-
-  /** //TODO: To handle on off shift button clicked */
+  /** Handle on off shift button clicked */
   const handleOffShift = function () {
     const newShiftsText = props.personShifts.shifts.split(',').map((shift, index) => {
       if (parseInt(moment(props.shift.shiftDate).format('DD')) === (index+1)) {
@@ -23,26 +21,14 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
       return shift;
     });
 
+    /** TODO: Calculate total_persons and total_shifts */
+
     const { shifts, ...rest } = props.personShifts
     const data = { ...rest, shifts: newShiftsText.join() };
 
-    updatePersonShift(props.personShifts.id, data);
+    /** Pass updating data up to parent */
+    props.onUpdateScheduleDetail(props.personShifts.id, data)
   };
-
-  /** TODO: To update scheduling_detail in db and redux store */
-  const updatePersonShift = async function (id, data) {
-    try {
-      const res = await api.put(`/schedules-detail/${id}`, data);
-
-      if (res.data.status === 1) {
-        
-      } else {
-
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
 
   /** //TODO: To handle on swap shift button clicked */
   const handleSwapShift = function () {

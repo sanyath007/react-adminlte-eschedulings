@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import api from '../../api';
 
 const initialState = {
@@ -9,9 +9,19 @@ const initialState = {
 
 export const fetchAll = createAsyncThunk('scheduleDetails/fetchAll', async (id) => {
   try {
-    console.log(id);
     const res = await api.get(`/api/schedule-details/${id}/scheduling`);
     return res.data.details;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+export const update = createAsyncThunk('scheduleDetails/update', async ({ id, data }) => {
+  const { scheduling_id, person_id, shifts } = data;
+
+  try {
+    const res = await api.put(`/api/schedule-details/${id}`, { scheduling_id, person_id, shifts });
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -21,13 +31,13 @@ const scheduleDetailsSlice = createSlice({
   name: 'scheduleDetails',
   initialState,
   reducers: {
-    storeSchedule: (state, action) => {
+    storeScheduleDetail: (state, action) => {
       state.scheduleDetails = action.payload;
     },
-    updateSchedule: (state, action) => {
+    updateScheduleDetail: (state, action) => {
       state.scheduleDetails = action.payload;
     },
-    deleteSchedule: (state, action) => {
+    deleteScheduleDetail: (state, action) => {
       state.scheduleDetails = action.payload;
     },
   },
@@ -43,6 +53,21 @@ const scheduleDetailsSlice = createSlice({
       .addCase(fetchAll.rejected, (state, action) => {
         state.status = 'failed'
         state.error = action.error.message
+      })
+      .addCase(update.fulfilled, (state, action) => {
+        state.status = 'succeeded'
+        let updatedData = state.scheduleDetails.map(detail => {
+          if (detail.id === action.payload.id) {
+            return {
+              ...detail,
+              shifts: detail.shifts
+            }
+          }
+
+          return detail;
+        })
+        
+        state.scheduleDetails = updatedData;
       })
   }
 });

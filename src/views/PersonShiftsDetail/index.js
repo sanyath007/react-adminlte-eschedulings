@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
 import ShiftsCalendar from '../../components/ShiftsCalendar';
 import ShiftModal from '../Modals/ShiftModal';
-import { getScheduleDetailsById } from '../../features/scheduleDetails';
+import { update, getScheduleDetailsById } from '../../features/scheduleDetails';
 
 const PersonShiftsDetail = () => {
     const [personShifts, setPersonShifts] = useState(null);
@@ -14,6 +14,7 @@ const PersonShiftsDetail = () => {
 
     const { id } = useParams();
     const history = useHistory();
+    const dispatch = useDispatch();
     const scheduleDetails = useSelector(state => getScheduleDetailsById(state, id));
 
     const getEventBgColor = function (shift) {
@@ -62,6 +63,14 @@ const PersonShiftsDetail = () => {
         setShfitEvents(shfitEvents);
     };
 
+    const onUpdateScheduleDetail = async function (id, data) {
+        try {
+            await dispatch(update({ id, data })).unwrap();
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     useEffect(() => {
         /** To redirect to /schedules/list if schedule is null */
         if (!scheduleDetails) {
@@ -81,6 +90,7 @@ const PersonShiftsDetail = () => {
                 hideModal={() => setOpenModal(false)}
                 personShifts={personShifts}
                 shift={shift}
+                onUpdateScheduleDetail={onUpdateScheduleDetail}
             />
 
             {/* <!-- Main row --> */}
