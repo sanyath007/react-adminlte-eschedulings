@@ -77,11 +77,11 @@ const PersonShiftsDetail = () => {
         /** To redirect to /schedules/list if schedule is null */
         if (!scheduleDetails) {
             history.push('/schedules/list');
+        } else {
+            setPersonShifts(scheduleDetails);
+    
+            generateCalendarEvents(scheduleDetails.scheduling?.month, scheduleDetails.id, scheduleDetails.shifts);
         }
-
-        setPersonShifts(scheduleDetails);
-
-        generateCalendarEvents(scheduleDetails.scheduling?.month, scheduleDetails.id, scheduleDetails.shifts);
     }, [scheduleDetails]);
 
     return (
