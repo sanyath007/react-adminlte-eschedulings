@@ -12,15 +12,14 @@ const MainLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
+    /** Set body class and style */
     if (location.pathname === '/') {
       removeBodyClass('login-page');
-
       addBodyClass('sidebar-mini');
-      addBodyClass('layout-fixed');
-    }
 
-    const trees = window.$('[data-widget="treeview"]');
-    trees.Treeview('init');
+      document.body.style.minHeight = null;
+      document.body.style.height = "auto";
+    }
   }, []);
 
   return (

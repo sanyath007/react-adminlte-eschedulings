@@ -13,8 +13,6 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
-    "admin-lte": "^3.1.0",
-    "adminlte": "^2.4.1",
     "antd": "^4.17.3",
     "axios": "^0.24.0",
     "bootstrap": "^4.6.1",

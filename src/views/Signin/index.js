@@ -24,13 +24,13 @@ const Signin = () => {
     props.resetForm();
   };
 
-  // Set body class
   useEffect(() => {
+    /** Set body class and style */
     if (url === '/signin') {
       removeBodyClass('sidebar-mini');
-      removeBodyClass('layout-fixed');
-
       addBodyClass('login-page');
+
+      document.body.style.height = null;
     }
   }, []);
 
