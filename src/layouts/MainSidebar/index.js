@@ -1,46 +1,7 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const MainSidebar = () => {
-
-  useEffect(() => {
-    window.$(function () {
-      /** All menu items */
-      window.$(".nav-sidebar > .nav-item > .nav-link").on("click", function (e) {
-        // e.preventDefault();
-        console.log('On menu is clicked!!');
-        /** Remove .active class from previous actived .nav-link that is child of .nav-item */
-        window.$(".nav-sidebar .nav-item").find(".active").removeClass("active");
-        /** Set .active class to clicked .nav-link */
-        window.$(this).addClass("active");
-      });
-
-      /** menu has submenu */
-      window.$(".nav-sidebar > .nav-item.has-treeview > .nav-link").on("click", function (e) {
-        e.preventDefault();
-        console.log('On menu is clicked!!');
-        /** Set display style of .nav-treeview that is child of previous opened .nav-item to none */
-        window.$(".nav-sidebar").find(".menu-open").children(".nav-treeview").css("display", "none");
-        /** Remove .menu-open class from previous opened .nav-item */
-        window.$(".nav-sidebar").find(".menu-open").removeClass("menu-is-opening menu-open");
-
-        /** Set class and style to clicked .nav-item */
-        // window.$(this).parent().addClass("menu-open");
-        /** Set display style of .nav-treeview that is child of clicked .nav-item to block */
-        // window.$(this).parent().children(".nav-treeview").css("display", "block");
-      });
-
-      /** submenu */
-      window.$(".nav-treeview .nav-link").on("click", function (e) {
-        console.log('On submenu is clicked!!');
-
-        window.$(".nav-treeview").find(".active").removeClass("active");
-        window.$(this).addClass("active");
-      });
-    });
-  }, []);
-
   return (
     <aside className="main-sidebar sidebar-dark-primary elevation-4">
       {/* Brand Logo */}
@@ -68,7 +29,11 @@ const MainSidebar = () => {
 
         {/* Sidebar Menu */}
         <nav className="mt-2">
-          <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <ul
+            className="nav nav-pills nav-sidebar flex-column"
+            data-widget="treeview"
+            role="menu"
+          >
             <li className="nav-item">
               <Link to="/" className="nav-link active">
                 <i className="nav-icon fas fa-tachometer-alt"></i>
