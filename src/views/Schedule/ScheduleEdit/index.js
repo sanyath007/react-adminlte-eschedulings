@@ -48,26 +48,25 @@ const ScheduleEdit = () => {
     const schedule = useSelector(state => getScheduleById(state, id));
 
     useEffect(() => {
-        console.log('Test ScheduleEdit useEffect !!');
-        /** Fetch form dropdown inputs data */
-        getInitForm();
-
-        /** Format person's shifts of editting schedule data to array */
-        setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
-
-        /** Generate shift inputs on each days of editting schedule's month */
-        tmpPersonShifts = generateShiftDays(tableCol);
-
-        /** TODO: To filter departments and divisions of selected faction */
-        setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.division.depart_id));
-        setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
-
-        /** Get persons that are member of editting schedule's division */
-        getMemberOfDepart(schedule.division.depart_id);
-
         /** To redirect to /schedules/list if schedule is null */
         if (!schedule) {
             history.push('/schedules/list');
+        } else {
+            /** Fetch form dropdown inputs data */
+            getInitForm();
+    
+            /** Format person's shifts of editting schedule data to array */
+            setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
+    
+            /** Generate shift inputs on each days of editting schedule's month */
+            tmpPersonShifts = generateShiftDays(tableCol);
+    
+            /** TODO: To filter departments and divisions of selected faction */
+            setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.division.depart_id));
+            setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
+    
+            /** Get persons that are member of editting schedule's division */
+            getMemberOfDepart(schedule.division.depart_id);
         }
     }, [schedule]);
 
@@ -292,7 +291,10 @@ const ScheduleEdit = () => {
                                                         id="faction"
                                                         name="faction"
                                                         value={formik.values.faction}
-                                                        onChange={(e) => onFactionChange(e.target.value)}
+                                                        onChange={(e) => {
+                                                            formik.setFieldValue('faction', e.target.value);
+                                                            onFactionChange(e.target.value);
+                                                        }}
                                                     >
                                                         <option value="">-- เลือกกลุ่มภารกิจ --</option>
                                                         {factions && factions.map(fac => {
