@@ -70,7 +70,7 @@ const PersonShiftsDetail = () => {
             console.log(err);
         }
 
-        setOpenModal(false)
+        setOpenModal(false);
     };
 
     useEffect(() => {
@@ -81,9 +81,9 @@ const PersonShiftsDetail = () => {
 
         setPersonShifts(scheduleDetails);
 
-        generateCalendarEvents(scheduleDetails.scheduling.month, scheduleDetails.id, scheduleDetails.shifts);
-    }, []);
-    
+        generateCalendarEvents(scheduleDetails.scheduling?.month, scheduleDetails.id, scheduleDetails.shifts);
+    }, [scheduleDetails]);
+
     return (
         <div className="container-fluid">
 
@@ -103,7 +103,7 @@ const PersonShiftsDetail = () => {
                         <div className="card-header">
                             <h3 className="card-title">
                                 <i className="far fa-calendar-alt mr-1"></i>
-                                {/* ตารางเวรของ {personShifts && personShifts.person.prefix.prefix_name + personShifts.person.person_firstname+ ' ' +personShifts.person.person_lastname} */}
+                                ตารางเวรของ {personShifts && personShifts.person.prefix.prefix_name + personShifts.person.person_firstname+ ' ' +personShifts.person.person_lastname}
                             </h3>
                         </div>{/* <!-- /.card-header --> */}
                         <div className="card-body">
@@ -111,7 +111,7 @@ const PersonShiftsDetail = () => {
                             {/* Render component of fullcalendar */}
                             <ShiftsCalendar
                                 events={shfitEvents}
-                                defaultDate={scheduleDetails ? `${scheduleDetails.scheduling.month}-01` : '2021-12-01'}
+                                defaultDate={scheduleDetails ? `${scheduleDetails.scheduling?.month}-01` : '2021-12-01'}
                                 onEventClicked={(arg) => {
                                     setOpenModal(true);
 

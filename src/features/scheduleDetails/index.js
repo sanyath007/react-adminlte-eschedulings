@@ -60,13 +60,13 @@ const scheduleDetailsSlice = createSlice({
           if (detail.id === action.payload.id) {
             return {
               ...detail,
-              shifts: detail.shifts
+              shifts: action.payload.shifts
             }
           }
 
           return detail;
         })
-        
+
         state.scheduleDetails = updatedData;
       })
   }
