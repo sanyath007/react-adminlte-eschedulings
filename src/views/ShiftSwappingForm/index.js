@@ -17,6 +17,8 @@ const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [personsOfSchedule, setPersonsOfSchedule] = useState([]);
+    const [shiftsOfPerson, setShiftsOfPerson] = useState([]);
+
     const { id, date, shift: shiftText } = useParams();
     const history = useHistory();
     const dispatch = useDispatch();
@@ -28,21 +30,20 @@ const ShiftSwappingForm = () => {
             history.push('/schedules/list')
         } else {
             getHolidays();
-            // const newShiftsText = scheduleDetails.shifts.split(',').map((shift, index) => {
-            //     if (parseInt(moment(date).format('DD')) === (index+1)) {
-            //     return shift.replace(shiftText, '');
-            //     }
-        
-            //     return shift;
-            // });
 
             const schedule = schedules.find(schedule => schedule.id === parseInt(scheduleDetails.scheduling_id));
-            const persons = schedule.shifts.map(shift => shift.person);
+            const persons = schedule.shifts
+                                .filter(shift => shift.person_id !== scheduleDetails.person_id)
+                                .map(shift => shift.person);
 
             setSchedule(schedule);
             setPersonsOfSchedule(persons);
         }
     }, []);
+
+    const onSelectedDelegate = function (personId) {
+        setShiftsOfPerson(schedule.shifts.find(shift => shift.person_id === personId));
+    };
 
     const getHolidays = async function () {
         try {
@@ -97,7 +98,7 @@ const ShiftSwappingForm = () => {
                 </thead>
                 <tbody>
                     <tr>
-                        {scheduleDetails.shifts.split(',').map((shift, index) => {
+                        {shiftsOfPerson && shiftsOfPerson.shifts.split(',').map((shift, index) => {
                             return (
                                 <td key={index} style={{ textAlign: 'center', fontSize: '14px', padding: '0' }}>
                                     {renderShiftsOfDay(shift)}
@@ -176,7 +177,10 @@ const ShiftSwappingForm = () => {
                                                                 name="delegate"
                                                                 className='form-control'
                                                                 value={formik.values.delegate}
-                                                                onChange={formik.handleChange}
+                                                                onChange={(e) => {
+                                                                    formik.setFieldValue('delegate', e.target.value);
+                                                                    onSelectedDelegate(e.target.value);
+                                                                }}
                                                             >
                                                                 <option value="">-- เลือกผู้ปฏิบัติงานแทน --</option>
                                                                 {personsOfSchedule && personsOfSchedule.map(person => {
@@ -192,7 +196,7 @@ const ShiftSwappingForm = () => {
 
                                                         {/* TODO: Render delegate's shifts list */}
                                                         {formik.values.delegate && (
-                                                            <div class="card">
+                                                            <div className="card">
                                                                 <div className="card-body">
                                                                     {renderDelegateShifts()}
                                                                 </div>
