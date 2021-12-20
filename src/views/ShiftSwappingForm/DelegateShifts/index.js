@@ -3,7 +3,7 @@ import moment from 'moment';
 import api from '../../../api';
 import DailyColumns from '../../../components/DailyColumns';
 
-const DelegateShifts = ({ schedule, shiftsOfPerson }) => {
+const DelegateShifts = ({ schedule, shiftsOfPerson, onSelectedShift }) => {
     const [holidays, setHolidays] = useState([]);
 
     useEffect(() => {
@@ -54,7 +54,7 @@ const DelegateShifts = ({ schedule, shiftsOfPerson }) => {
     };
 
     const handleSelectedShift = function (date, shift) {
-
+        onSelectedShift(date, shift)
     };
 
     return (

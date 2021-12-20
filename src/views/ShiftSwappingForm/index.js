@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
+import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById } from '../../features/scheduleDetails';
 import DelegateShifts from './DelegateShifts';
@@ -40,6 +41,11 @@ const ShiftSwappingForm = () => {
 
     };
 
+    const handleOnSelectedShift = function (formik, date, shift) {
+        formik.setFieldValue('represent_date', moment(date).format('YYYY-MM-DD'))
+        formik.setFieldValue('represent_shift', shift)
+    };
+
     return (
         <div className="container-fluid">
             {/* <!-- Main row --> */}
@@ -59,7 +65,9 @@ const ShiftSwappingForm = () => {
                             <Formik
                                 initialValues={{
                                     reason: '',
-                                    delegate: ''
+                                    delegate: '',
+                                    represent_shift: '',
+                                    represent_date: ''
                                 }}
                                 onSubmit={onSubmit}
                             >
@@ -122,18 +130,39 @@ const ShiftSwappingForm = () => {
                                                                 })}
                                                             </select>
                                                         </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
-                                                        {/* TODO: Render delegate's shifts list */}
-                                                        {formik.values.delegate && (
-                                                            <div className="card">
-                                                                <div className="card-body">
-                                                                    <DelegateShifts
-                                                                        schedule={schedule}
-                                                                        shiftsOfPerson={shiftsOfPerson}
-                                                                    />
+                                                            {/* TODO: Render delegate's shifts list */}
+                                                            {formik.values.delegate && (
+                                                                <div className="card">
+                                                                    <div className="card-body">
+                                                                        
+                                                                        <DelegateShifts
+                                                                            schedule={schedule}
+                                                                            shiftsOfPerson={shiftsOfPerson}
+                                                                            onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
+                                                                        />
+                                                                        <div class="row px-2">
+                                                                            <input
+                                                                                type="type"
+                                                                                name="represent_shift"
+                                                                                value={formik.values.represent_shift}
+                                                                                className="form-control col-md-2 mr-1"
+                                                                            />
+                                                                            <input
+                                                                                type="type"
+                                                                                name="represent_date"
+                                                                                value={formik.values.represent_date}
+                                                                                className="form-control col-md-4"
+                                                                            />
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        )}
+                                                            )}
+
+
+                                                        </div>
 
                                                     </div>
                                                 </Col>
