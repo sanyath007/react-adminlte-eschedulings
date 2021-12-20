@@ -37,8 +37,8 @@ const ShiftSwappingForm = () => {
         setShiftsOfPerson(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
-    const onSubmit = function () {
-
+    const onSubmit = function (values, props) {
+        console.log(values);
     };
 
     const handleOnSelectedShift = function (formik, date, shift) {
@@ -63,9 +63,14 @@ const ShiftSwappingForm = () => {
 
                             {/* Render swapping form component */}
                             <Formik
+                                enableReinitialize={scheduleDetails}
                                 initialValues={{
-                                    reason: '',
+                                    schedule_detail_id: scheduleDetails ? scheduleDetails.id : '',
+                                    owner:  scheduleDetails ? scheduleDetails.person : '',
                                     delegate: '',
+                                    reason: '',
+                                    old_shift: '',
+                                    old_date: '',
                                     represent_shift: '',
                                     represent_date: ''
                                 }}
@@ -148,12 +153,14 @@ const ShiftSwappingForm = () => {
                                                                                 type="type"
                                                                                 name="represent_shift"
                                                                                 value={formik.values.represent_shift}
+                                                                                onChange={formik.handleChange}
                                                                                 className="form-control col-md-2 mr-1"
                                                                             />
                                                                             <input
                                                                                 type="type"
                                                                                 name="represent_date"
                                                                                 value={formik.values.represent_date}
+                                                                                onChange={formik.handleChange}
                                                                                 className="form-control col-md-4"
                                                                             />
                                                                         </div>
@@ -168,11 +175,10 @@ const ShiftSwappingForm = () => {
                                                 </Col>
                                                 </Row>
                                                 <Row>
-                                                <Col className='text-center mt-4'>
+                                                <Col className='text-center'>
                                                     <Button
+                                                        type="submit"
                                                         variant="primary"
-                                                        className="mr-2"
-                                                        onClick={() => console.log('On save!!')}
                                                     >
                                                         บันทึกเปลี่ยนเวร
                                                     </Button>
