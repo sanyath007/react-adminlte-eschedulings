@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom'
 import {
-  Accordion,
-  Form as BsForm,
   Button,
   Col,
   Row,
@@ -32,14 +31,6 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
     }
   };
 
-  /** //TODO: To handle on swap shift button clicked */
-  const handleSwapShift = function () {
-    console.log(props.shift);
-  };
-
-  useEffect(() => {
-  }, []);
-
   return (
     <Modal
       show={isOpen}
@@ -54,13 +45,13 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
             <p className='my-1'>
               <span className='mr-1'>ชื่อ-สกุล</span> 
               {props.personShifts && 
-                    props.personShifts.person.prefix.prefix_name+props.personShifts.person.person_firstname+ '' +props.personShifts.person.person_lastname
+                props.personShifts.person.prefix.prefix_name+props.personShifts.person.person_firstname+ '' +props.personShifts.person.person_lastname
               }
             </p>
             <p className='my-1'>
               <span className='mr-1'>ตำแหน่ง</span>
               {props.personShifts && 
-                    props.personShifts.person.position.position_name
+                props.personShifts.person.position.position_name
               }
             </p>
             <p className='my-1'>
@@ -76,8 +67,15 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
         </Row>
         <Row>
           <Col className='text-center mt-4'>
-            <Button variant="primary" className="mr-2" onClick={() => handleOffShift()}>Off เวร</Button>
-            <Button variant="success" onClick={() => handleSwapShift()}>เปลี่ยนเวร</Button>
+            <Button variant="primary" className="mr-2" onClick={() => handleOffShift()}>
+              Off เวร
+            </Button>
+            <Link
+              to={`/person-shifts/${props.shift.shiftId}/${props.shift.shiftDate}/${props.shift.shiftText}/swapping`}
+              className='btn btn-success'
+            >
+              เปลี่ยนเวร
+            </Link>
           </Col>
         </Row>
       </Modal.Body>
