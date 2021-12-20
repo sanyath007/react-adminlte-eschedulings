@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import moment from 'moment';
-import {
-    Button,
-    Col,
-    Row
-} from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
-import api from '../../api';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById } from '../../features/scheduleDetails';
-import DailyColumns from '../../components/DailyColumns';
+import DelegateShifts from './DelegateShifts';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
-    const [holidays, setHolidays] = useState([]);
     const [personsOfSchedule, setPersonsOfSchedule] = useState([]);
     const [shiftsOfPerson, setShiftsOfPerson] = useState([]);
 
@@ -29,8 +22,6 @@ const ShiftSwappingForm = () => {
         if (!scheduleDetails) {
             history.push('/schedules/list')
         } else {
-            getHolidays();
-
             const schedule = schedules.find(schedule => schedule.id === parseInt(scheduleDetails.scheduling_id));
             const persons = schedule.shifts
                                 .filter(shift => shift.person_id !== scheduleDetails.person_id)
@@ -45,70 +36,8 @@ const ShiftSwappingForm = () => {
         setShiftsOfPerson(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
-    const getHolidays = async function () {
-        try {
-            const res = await api.get(`/api/holidays`);
-
-            setHolidays(res.data);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
     const onSubmit = function () {
 
-    };
-
-    const getEventBgColor = function (shift) {
-        let btnColor = '';
-        if (['ด','ด*','ด**','ด^'].includes(shift)) {
-            btnColor = 'btn-info';
-        } else if (['ช','ช*','ช**','ช^'].includes(shift)) {
-            btnColor = 'btn-success';
-        } else if (['บ','บ*','บ**','บ^'].includes(shift)) {
-            btnColor = 'btn-danger';
-        } else if (['B','B*','B**','B^'].includes(shift)) {
-            btnColor = 'btn-warning';
-        } else {
-            btnColor = 'btn-default';
-        }
-
-        return btnColor;
-    };
-
-    const renderShiftsOfDay = function (shift) {
-        return shift.split('|').map((sh, index) => {
-            return sh !== ''
-                    ? <a key={sh+index} href="#" className={ `btn ${getEventBgColor(sh)} btn-sm mb-1` }>{sh}</a>
-                    : null;
-        });
-    };
-
-    const renderDelegateShifts = function () {
-        return (
-            <table className="table table-bordered table-striped mb-1">
-                <thead>
-                    <tr>
-                        <td style={{ textAlign: 'center' }} colSpan={ 31 }>วันที่</td>
-                    </tr>
-                    <DailyColumns
-                        month={schedule ? schedule.month : moment().format('YYYY-MM')}
-                        holidays={holidays}
-                    />
-                </thead>
-                <tbody>
-                    <tr>
-                        {shiftsOfPerson && shiftsOfPerson.shifts.split(',').map((shift, index) => {
-                            return (
-                                <td key={index} style={{ textAlign: 'center', fontSize: '14px', padding: '0' }}>
-                                    {renderShiftsOfDay(shift)}
-                                </td>
-                            );
-                        })}
-                    </tr>
-                </tbody>
-            </table>
-        );
     };
 
     return (
@@ -198,10 +127,14 @@ const ShiftSwappingForm = () => {
                                                         {formik.values.delegate && (
                                                             <div className="card">
                                                                 <div className="card-body">
-                                                                    {renderDelegateShifts()}
+                                                                    <DelegateShifts
+                                                                        schedule={schedule}
+                                                                        shiftsOfPerson={shiftsOfPerson}
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         )}
+
                                                     </div>
                                                 </Col>
                                                 </Row>
