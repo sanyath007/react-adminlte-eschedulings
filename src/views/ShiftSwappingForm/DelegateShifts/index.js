@@ -37,12 +37,24 @@ const DelegateShifts = ({ schedule, shiftsOfPerson }) => {
         return btnColor;
     };
 
-    const renderShiftsOfDay = function (shift) {
+    const renderShiftsOfDay = function (day, shift) {
         return shift.split('|').map((sh, index) => {
             return sh !== ''
-                    ? <a key={sh+index} href="#" className={ `btn ${getEventBgColor(sh)} btn-sm mb-1` }>{sh}</a>
-                    : null;
+                    ? (
+                        <a
+                            href="#"
+                            key={sh+index}
+                            className={ `btn ${getEventBgColor(sh)} btn-sm mb-1` }
+                            onClick={() => handleSelectedShift(moment(`${schedule.month}-${day}`).toDate(), sh)}
+                        >
+                            {sh}
+                        </a>
+                    ) : null;
         });
+    };
+
+    const handleSelectedShift = function (date, shift) {
+
     };
 
     return (
@@ -61,7 +73,7 @@ const DelegateShifts = ({ schedule, shiftsOfPerson }) => {
                     {shiftsOfPerson && shiftsOfPerson.shifts.split(',').map((shift, index) => {
                         return (
                             <td key={index} style={{ textAlign: 'center', fontSize: '14px', padding: '0' }}>
-                                {renderShiftsOfDay(shift)}
+                                {renderShiftsOfDay(index+1, shift)}
                             </td>
                         );
                     })}
