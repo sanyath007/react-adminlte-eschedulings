@@ -69,10 +69,10 @@ const ShiftSwappingForm = () => {
                                     owner:  scheduleDetails ? scheduleDetails.person?.person_id : '',
                                     delegator: '',
                                     reason: '',
-                                    old_shift: '',
-                                    old_date: '',
-                                    represent_shift: '',
-                                    represent_date: ''
+                                    swap_date: date,
+                                    swap_shift: shiftText,
+                                    represent_date: '',
+                                    represent_shift: ''
                                 }}
                                 onSubmit={onSubmit}
                             >
@@ -139,7 +139,7 @@ const ShiftSwappingForm = () => {
                                                             <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
                                                             {/* Render delegate's shifts list */}
-                                                            {formik.values.delegate && (
+                                                            {formik.values.delegator && (
                                                                 <div className="card">
                                                                     <div className="card-body">
                                                                         
