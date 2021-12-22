@@ -27,6 +27,15 @@ export const update = createAsyncThunk('scheduleDetails/update', async ({ id, da
   }
 });
 
+export const swap = createAsyncThunk('scheduleDetails/swap', async ({ id, data }) => {
+  try {
+    const res = await api.put(`/api/schedule-details/${id}/swap`, { ...data });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const scheduleDetailsSlice = createSlice({
   name: 'scheduleDetails',
   initialState,
@@ -41,34 +50,48 @@ const scheduleDetailsSlice = createSlice({
       state.scheduleDetails = action.payload;
     },
   },
-  extraReducers(builder) {
-    builder
-      .addCase(fetchAll.pending, (state, action) => {
-        state.status = 'loadiing'
-      })
-      .addCase(fetchAll.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        state.scheduleDetails = action.payload
-      })
-      .addCase(fetchAll.rejected, (state, action) => {
-        state.status = 'failed'
-        state.error = action.error.message
-      })
-      .addCase(update.fulfilled, (state, action) => {
-        state.status = 'succeeded'
-        let updatedData = state.scheduleDetails.map(detail => {
-          if (detail.id === action.payload.id) {
-            return {
-              ...detail,
-              shifts: action.payload.shifts
-            }
+  extraReducers: {
+    [fetchAll.pending]: (state, action) => {
+      state.status = 'loadiing'
+    },
+    [fetchAll.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      state.scheduleDetails = action.payload
+    },
+    [fetchAll.rejected]: (state, action) => {
+      state.status = 'failed'
+      state.error = action.error.message
+    },
+    [update.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      let updatedData = state.scheduleDetails.map(detail => {
+        if (detail.id === action.payload.id) {
+          return {
+            ...detail,
+            shifts: action.payload.shifts
           }
+        }
 
-          return detail;
-        })
-
-        state.scheduleDetails = updatedData;
+        return detail;
       })
+
+      state.scheduleDetails = updatedData;
+    },
+    [swap.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      let updatedData = state.scheduleDetails.map(detail => {
+        if (detail.id === action.payload.id) {
+          return {
+            ...detail,
+            shifts: action.payload.shifts
+          }
+        }
+
+        return detail;
+      })
+
+      state.scheduleDetails = updatedData;
+    },
   }
 });
 
