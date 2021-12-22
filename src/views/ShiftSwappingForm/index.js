@@ -66,8 +66,8 @@ const ShiftSwappingForm = () => {
                                 enableReinitialize={scheduleDetails}
                                 initialValues={{
                                     schedule_detail_id: scheduleDetails ? scheduleDetails.id : '',
-                                    owner:  scheduleDetails ? scheduleDetails.person : '',
-                                    delegate: '',
+                                    owner:  scheduleDetails ? scheduleDetails.person?.person_id : '',
+                                    delegator: '',
                                     reason: '',
                                     old_shift: '',
                                     old_date: '',
@@ -116,11 +116,11 @@ const ShiftSwappingForm = () => {
                                                         <div className="form-group">
                                                             <label htmlFor="delegate">โดยมอบหมายให้</label>
                                                             <select
-                                                                name="delegate"
+                                                                name="delegator"
                                                                 className='form-control'
-                                                                value={formik.values.delegate}
+                                                                value={formik.values.delegator}
                                                                 onChange={(e) => {
-                                                                    formik.setFieldValue('delegate', e.target.value);
+                                                                    formik.setFieldValue('delegator', e.target.value);
                                                                     onSelectedDelegate(e.target.value);
                                                                 }}
                                                             >
@@ -138,7 +138,7 @@ const ShiftSwappingForm = () => {
                                                         <div className="form-group">
                                                             <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
-                                                            {/* TODO: Render delegate's shifts list */}
+                                                            {/* Render delegate's shifts list */}
                                                             {formik.values.delegate && (
                                                                 <div className="card">
                                                                     <div className="card-body">
@@ -148,7 +148,7 @@ const ShiftSwappingForm = () => {
                                                                             shiftsOfPerson={shiftsOfPerson}
                                                                             onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
                                                                         />
-                                                                        <div class="row px-2">
+                                                                        <div className="row px-2">
                                                                             <input
                                                                                 type="type"
                                                                                 name="represent_shift"
@@ -168,13 +168,11 @@ const ShiftSwappingForm = () => {
                                                                 </div>
                                                             )}
 
-
                                                         </div>
-
                                                     </div>
                                                 </Col>
-                                                </Row>
-                                                <Row>
+                                            </Row>
+                                            <Row>
                                                 <Col className='text-center'>
                                                     <Button
                                                         type="submit"
