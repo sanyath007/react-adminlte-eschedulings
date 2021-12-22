@@ -33,7 +33,7 @@ const ShiftSwappingForm = () => {
         }
     }, []);
 
-    const onSelectedDelegate = function (personId) {
+    const onSelectedDelegator = function (personId) {
         setShiftsOfPerson(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
@@ -121,7 +121,7 @@ const ShiftSwappingForm = () => {
                                                                 value={formik.values.delegator}
                                                                 onChange={(e) => {
                                                                     formik.setFieldValue('delegator', e.target.value);
-                                                                    onSelectedDelegate(e.target.value);
+                                                                    onSelectedDelegator(e.target.value);
                                                                 }}
                                                             >
                                                                 <option value="">-- เลือกผู้ปฏิบัติงานแทน --</option>
