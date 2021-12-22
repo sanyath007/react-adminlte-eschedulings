@@ -5,13 +5,13 @@ import { Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
-import { getScheduleDetailsById } from '../../features/scheduleDetails';
+import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
 import DelegateShifts from './DelegateShifts';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
     const [personsOfSchedule, setPersonsOfSchedule] = useState([]);
-    const [shiftsOfPerson, setShiftsOfPerson] = useState([]);
+    const [shiftsOfDelegator, setShiftsOfDelegator] = useState([]);
 
     const { id, date, shift: shiftText } = useParams();
     const history = useHistory();
@@ -34,11 +34,24 @@ const ShiftSwappingForm = () => {
     }, []);
 
     const onSelectedDelegator = function (personId) {
-        setShiftsOfPerson(schedule.shifts.find(shift => shift.person_id === personId));
+        setShiftsOfDelegator(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
-    const onSubmit = function (values, props) {
-        console.log(values);
+    const onSubmit = async function (values, props) {
+        /** Update scheduleDetails's shifts */
+        const updatedShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
+            if (parseInt(moment(date).format('DD')) === (index+1)) {
+                return shift.replace(shift, '');
+            }
+        
+            return shift;
+        });
+
+        try {
+            await dispatch(swap({ id, data: { shifts: updatedShifts.join(), ...values } })).unwrap();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     const handleOnSelectedShift = function (formik, date, shift) {
@@ -84,7 +97,7 @@ const ShiftSwappingForm = () => {
                                                     <span className='my-1'>
                                                         <span className='mr-1' style={{ fontWeight: 'bold' }}>ข้าพเจ้า</span> 
                                                         {scheduleDetails && 
-                                                            scheduleDetails.person.prefix.prefix_name+scheduleDetails.person.person_firstname+ '' +scheduleDetails.person.person_lastname
+                                                            scheduleDetails.person.prefix.prefix_name+scheduleDetails.person.person_firstname+ ' ' +scheduleDetails.person.person_lastname
                                                         }
                                                     </span>
                                                     <span className='my-1 ml-2'>
@@ -145,7 +158,7 @@ const ShiftSwappingForm = () => {
                                                                         
                                                                         <DelegateShifts
                                                                             schedule={schedule}
-                                                                            shiftsOfPerson={shiftsOfPerson}
+                                                                            shiftsOfPerson={shiftsOfDelegator}
                                                                             onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
                                                                         />
                                                                         <div className="row px-2">
