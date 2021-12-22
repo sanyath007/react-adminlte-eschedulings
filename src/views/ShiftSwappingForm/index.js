@@ -6,7 +6,7 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
-import DelegateShifts from './DelegateShifts';
+import DelegateShifts from './DelegatorShifts';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);

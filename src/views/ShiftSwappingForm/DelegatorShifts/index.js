@@ -3,7 +3,7 @@ import moment from 'moment';
 import api from '../../../api';
 import DailyColumns from '../../../components/DailyColumns';
 
-const DelegateShifts = ({ schedule, shiftsOfPerson, onSelectedShift }) => {
+const DelegatorShifts = ({ schedule, shiftsOfDelegator, onSelectedShift }) => {
     const [holidays, setHolidays] = useState([]);
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const DelegateShifts = ({ schedule, shiftsOfPerson, onSelectedShift }) => {
             </thead>
             <tbody>
                 <tr>
-                    {shiftsOfPerson && shiftsOfPerson.shifts.split(',').map((shift, index) => {
+                    {shiftsOfDelegator && shiftsOfDelegator.shifts.split(',').map((shift, index) => {
                         return (
                             <td key={index} style={{ textAlign: 'center', fontSize: '14px', padding: '0' }}>
                                 {renderShiftsOfDay(index+1, shift)}
@@ -83,4 +83,4 @@ const DelegateShifts = ({ schedule, shiftsOfPerson, onSelectedShift }) => {
     )
 }
 
-export default DelegateShifts
+export default DelegatorShifts
