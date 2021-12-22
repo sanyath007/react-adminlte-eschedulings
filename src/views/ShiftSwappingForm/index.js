@@ -6,7 +6,7 @@ import { Formik, Form } from 'formik';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
-import DelegateShifts from './DelegatorShifts';
+import DelegatorShifts from './DelegatorShifts';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
@@ -156,9 +156,9 @@ const ShiftSwappingForm = () => {
                                                                 <div className="card">
                                                                     <div className="card-body">
                                                                         
-                                                                        <DelegateShifts
+                                                                        <DelegatorShifts
                                                                             schedule={schedule}
-                                                                            shiftsOfPerson={shiftsOfDelegator}
+                                                                            shiftsOfDelegator={shiftsOfDelegator}
                                                                             onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
                                                                         />
                                                                         <div className="row px-2">
