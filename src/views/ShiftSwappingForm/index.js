@@ -54,15 +54,26 @@ const ShiftSwappingForm = () => {
             return shift;
         });
 
+        /** Update delegator's shifts */
+        if (shiftsOfDelegator) {
+            const delegatorShifts = shiftsOfDelegator.shifts.split(',').map((shift, index) => {
+                if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
+                    return shift.replace(values.owner_shift, 'R'); // Set shift R=REQUEST
+                }
+            
+                return shift;
+            });
+        }
+
         try {
-            // await dispatch(swap({
-            //     id,
-            //     data: {
-            //         owner_shifts: ownerShifts.join(),
-            //         delegator_shifts: delegatorShifts.join(),
-            //         ...values
-            //     }
-            // })).unwrap();
+            await dispatch(swap({
+                id,
+                data: {
+                    owner_shifts: ownerShifts.join(),
+                    delegator_shifts: delegatorShifts.join(),
+                    ...values
+                }
+            })).unwrap();
         } catch (err) {
             console.log(err);
         }
