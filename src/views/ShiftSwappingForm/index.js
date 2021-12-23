@@ -36,12 +36,7 @@ const ShiftSwappingForm = () => {
     const onSelectedDelegator = function (formik, personId) {
         formik.setFieldValue('delegator', personId);
 
-        if (!formik.values.have_swap) {
-            const shift = schedule.shifts.find(shift => shift.person_id === personId);
-            setShiftsOfDelegator(shift);
-
-            formik.setFieldValue('swap_detail_id', shift.id);
-        }
+        setShiftsOfDelegator(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
     const onSubmit = async function (values, props) {
@@ -55,15 +50,13 @@ const ShiftSwappingForm = () => {
         });
 
         /** Update delegator's shifts */
-        if (shiftsOfDelegator) {
-            const delegatorShifts = shiftsOfDelegator.shifts.split(',').map((shift, index) => {
-                if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
-                    return shift.replace(values.owner_shift, 'R'); // Set shift R=REQUEST
-                }
-            
-                return shift;
-            });
-        }
+        const delegatorShifts = shiftsOfDelegator.shifts.split(',').map((shift, index) => {
+            if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
+                return shift.replace(values.swap_shift, 'R'); // Set shift R=REQUEST
+            }
+        
+            return shift;
+        });
 
         try {
             await dispatch(swap({
@@ -71,6 +64,7 @@ const ShiftSwappingForm = () => {
                 data: {
                     owner_shifts: ownerShifts.join(),
                     delegator_shifts: delegatorShifts.join(),
+                    swap_detail_id: shiftsOfDelegator.id,
                     ...values
                 }
             })).unwrap();
@@ -107,8 +101,7 @@ const ShiftSwappingForm = () => {
                                     owner_shift: shiftText,
                                     reason: '',
                                     delegator: '',
-                                    have_swap: false,
-                                    swap_detail_id: '',
+                                    no_swap: true,
                                     swap_date: '',
                                     swap_shift: '',
                                 }}
@@ -153,11 +146,11 @@ const ShiftSwappingForm = () => {
                                                         </div>
                                                         <div className="form-group">
                                                             <label htmlFor="delegate" className="mr-4">โดยมอบหมายให้</label>
-                                                            <Field
+                                                            ( <Field
                                                                 type="checkbox"
-                                                                name="have_swap"
-                                                                onChange={(e) => formik.setFieldValue('have_swap', e.target.checked)}
-                                                            /> โดยไม่ขึ้นปฏิบัติงานแทน
+                                                                name="no_swap"
+                                                                onChange={(e) => formik.setFieldValue('no_swap', e.target.checked)}
+                                                            /> โดยไม่ขึ้นปฏิบัติงานแทน )
                                                             <select
                                                                 name="delegator"
                                                                 className='form-control'
@@ -176,7 +169,7 @@ const ShiftSwappingForm = () => {
                                                             </select>
                                                         </div>
 
-                                                        {!formik.values.have_swap && (
+                                                        {!formik.values.no_swap && (
                                                             <div className="form-group">
                                                                 <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
