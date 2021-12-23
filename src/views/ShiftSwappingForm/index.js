@@ -36,25 +36,50 @@ const ShiftSwappingForm = () => {
     const onSelectedDelegator = function (formik, personId) {
         formik.setFieldValue('delegator', personId);
 
+        /** TODO: To Check if delegator have same shift on same day the request would be denied */
         setShiftsOfDelegator(schedule.shifts.find(shift => shift.person_id === personId));
     };
 
     const onSubmit = async function (values, props) {
         /** Update scheduleDetails's shifts */
         const ownerShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
+            /** เซตเวรของวันที่ขอเปลี่ยนเป็น R (REQUEST)
+             * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
+             **/
             if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
-                return shift.replace(values.owner_shift, 'R'); // Set shift R=REQUEST
+                return shift.replace(values.owner_shift, 'R');
             }
-        
+
+            if (!values.no_swap) {
+                /** ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
+                 * และจะถูกเปลี่ยนเป็นเวรตามที่รับแลกเมื่อได้รับการอนุมัติแล้ว
+                 **/
+                if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
+                    return shift.replace(values.swap_shift, 'D');
+                }
+            }
+
             return shift;
         });
 
         /** Update delegator's shifts */
         const delegatorShifts = shiftsOfDelegator.shifts.split(',').map((shift, index) => {
-            if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
-                return shift.replace(values.swap_shift, 'R'); // Set shift R=REQUEST
+            /** เซตเวรของวันที่รับเปลี่ยนเป็น R (REQUEST)
+             * และจะถูกเปลี่ยนเป็นเวรตามที่รับเปลี่ยนเมื่อได้รับการอนุมัติแล้ว
+             **/
+            if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
+                return shift.replace(values.owner_shift, 'R');
             }
-        
+
+            if (!values.no_swap) {
+                /** ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
+                 * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
+                 **/
+                if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
+                    return shift.replace(values.swap_shift, 'D');
+                }
+            }
+
             return shift;
         });
 
