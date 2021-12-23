@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
-import { Formik, Form } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
@@ -33,30 +33,44 @@ const ShiftSwappingForm = () => {
         }
     }, []);
 
-    const onSelectedDelegator = function (personId) {
-        setShiftsOfDelegator(schedule.shifts.find(shift => shift.person_id === personId));
+    const onSelectedDelegator = function (formik, personId) {
+        formik.setFieldValue('delegator', personId);
+
+        if (!formik.values.have_swap) {
+            const shift = schedule.shifts.find(shift => shift.person_id === personId);
+            setShiftsOfDelegator(shift);
+
+            formik.setFieldValue('swap_detail_id', shift.id);
+        }
     };
 
     const onSubmit = async function (values, props) {
         /** Update scheduleDetails's shifts */
-        const updatedShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
-            if (parseInt(moment(date).format('DD')) === (index+1)) {
-                return shift.replace(shift, '');
+        const ownerShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
+            if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
+                return shift.replace(values.owner_shift, 'R'); // Set shift R=REQUEST
             }
         
             return shift;
         });
 
         try {
-            await dispatch(swap({ id, data: { shifts: updatedShifts.join(), ...values } })).unwrap();
+            // await dispatch(swap({
+            //     id,
+            //     data: {
+            //         owner_shifts: ownerShifts.join(),
+            //         delegator_shifts: delegatorShifts.join(),
+            //         ...values
+            //     }
+            // })).unwrap();
         } catch (err) {
             console.log(err);
         }
     };
 
     const handleOnSelectedShift = function (formik, date, shift) {
-        formik.setFieldValue('represent_date', moment(date).format('YYYY-MM-DD'))
-        formik.setFieldValue('represent_shift', shift)
+        formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'))
+        formik.setFieldValue('swap_shift', shift)
     };
 
     return (
@@ -78,14 +92,14 @@ const ShiftSwappingForm = () => {
                             <Formik
                                 enableReinitialize={scheduleDetails}
                                 initialValues={{
-                                    schedule_detail_id: scheduleDetails ? scheduleDetails.id : '',
-                                    owner:  scheduleDetails ? scheduleDetails.person?.person_id : '',
-                                    delegator: '',
+                                    owner_date: date,
+                                    owner_shift: shiftText,
                                     reason: '',
-                                    swap_date: date,
-                                    swap_shift: shiftText,
-                                    represent_date: '',
-                                    represent_shift: ''
+                                    delegator: '',
+                                    have_swap: false,
+                                    swap_detail_id: '',
+                                    swap_date: '',
+                                    swap_shift: '',
                                 }}
                                 onSubmit={onSubmit}
                             >
@@ -127,15 +141,17 @@ const ShiftSwappingForm = () => {
                                                             ></textarea>
                                                         </div>
                                                         <div className="form-group">
-                                                            <label htmlFor="delegate">โดยมอบหมายให้</label>
+                                                            <label htmlFor="delegate" className="mr-4">โดยมอบหมายให้</label>
+                                                            <Field
+                                                                type="checkbox"
+                                                                name="have_swap"
+                                                                onChange={(e) => formik.setFieldValue('have_swap', e.target.checked)}
+                                                            /> โดยไม่ขึ้นปฏิบัติงานแทน
                                                             <select
                                                                 name="delegator"
                                                                 className='form-control'
                                                                 value={formik.values.delegator}
-                                                                onChange={(e) => {
-                                                                    formik.setFieldValue('delegator', e.target.value);
-                                                                    onSelectedDelegator(e.target.value);
-                                                                }}
+                                                                onChange={(e) => onSelectedDelegator(formik, e.target.value)}
                                                             >
                                                                 <option value="">-- เลือกผู้ปฏิบัติงานแทน --</option>
                                                                 {personsOfSchedule && personsOfSchedule.map(person => {
@@ -148,40 +164,44 @@ const ShiftSwappingForm = () => {
                                                                 })}
                                                             </select>
                                                         </div>
-                                                        <div className="form-group">
-                                                            <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
-                                                            {/* Render delegate's shifts list */}
-                                                            {formik.values.delegator && (
-                                                                <div className="card">
-                                                                    <div className="card-body">
-                                                                        
-                                                                        <DelegatorShifts
-                                                                            schedule={schedule}
-                                                                            shiftsOfDelegator={shiftsOfDelegator}
-                                                                            onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
-                                                                        />
-                                                                        <div className="row px-2">
-                                                                            <input
-                                                                                type="type"
-                                                                                name="represent_shift"
-                                                                                value={formik.values.represent_shift}
-                                                                                onChange={formik.handleChange}
-                                                                                className="form-control col-md-2 mr-1"
+                                                        {!formik.values.have_swap && (
+                                                            <div className="form-group">
+                                                                <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
+
+                                                                {/* Render delegate's shifts list */}
+                                                                {formik.values.delegator && (
+                                                                    <div className="card">
+                                                                        <div className="card-body">
+                                                                            
+                                                                            <DelegatorShifts
+                                                                                schedule={schedule}
+                                                                                shiftsOfDelegator={shiftsOfDelegator}
+                                                                                onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
                                                                             />
-                                                                            <input
-                                                                                type="type"
-                                                                                name="represent_date"
-                                                                                value={formik.values.represent_date}
-                                                                                onChange={formik.handleChange}
-                                                                                className="form-control col-md-4"
-                                                                            />
+                                                                            <div className="row px-2">
+                                                                                <input
+                                                                                    type="type"
+                                                                                    name="swap_shift"
+                                                                                    value={formik.values.swap_shift}
+                                                                                    onChange={formik.handleChange}
+                                                                                    className="form-control col-md-2 mr-1"
+                                                                                />
+                                                                                <input
+                                                                                    type="type"
+                                                                                    name="swap_date"
+                                                                                    value={formik.values.swap_date}
+                                                                                    onChange={formik.handleChange}
+                                                                                    className="form-control col-md-4"
+                                                                                />
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                            )}
+                                                                )}
 
-                                                        </div>
+                                                            </div>
+                                                        )}
+
                                                     </div>
                                                 </Col>
                                             </Row>
