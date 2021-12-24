@@ -3,11 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form, Field } from 'formik';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
 import DelegatorShifts from './DelegatorShifts';
-import { toast } from 'react-toastify';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
@@ -50,6 +50,11 @@ const ShiftSwappingForm = () => {
         }
 
         setShiftsOfDelegator(shift);
+    };
+
+    const handleOnSelectedShift = function (formik, date, shift) {
+        formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'))
+        formik.setFieldValue('swap_shift', shift)
     };
 
     const onSubmit = async function (values, props) {
@@ -108,11 +113,6 @@ const ShiftSwappingForm = () => {
         } catch (err) {
             console.log(err);
         }
-    };
-
-    const handleOnSelectedShift = function (formik, date, shift) {
-        formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'))
-        formik.setFieldValue('swap_shift', shift)
     };
 
     return (
