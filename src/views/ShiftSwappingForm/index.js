@@ -7,6 +7,7 @@ import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
 import DelegatorShifts from './DelegatorShifts';
+import { toast } from 'react-toastify';
 
 const ShiftSwappingForm = () => {
     const [schedule, setSchedule] = useState([]);
@@ -36,12 +37,23 @@ const ShiftSwappingForm = () => {
     const onSelectedDelegator = function (formik, personId) {
         formik.setFieldValue('delegator', personId);
 
-        /** TODO: To Check if delegator have same shift on same day the request would be denied */
-        setShiftsOfDelegator(schedule.shifts.find(shift => shift.person_id === personId));
+        /** To Check if delegator have same shift on same day the request would be denied */
+        const shift = schedule.shifts.find(shift => shift.person_id === personId);
+
+        if (
+            shift.shifts
+                .split(",")
+                .some((sh, index) => parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1)
+        ) {
+            toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
+            formik.setFieldValue('delegator', '');
+        }
+
+        setShiftsOfDelegator(shift);
     };
 
     const onSubmit = async function (values, props) {
-        /** Update scheduleDetails's shifts */
+        /** Update owner's shifts */
         const ownerShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
             /** เซตเวรของวันที่ขอเปลี่ยนเป็น R (REQUEST)
              * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
