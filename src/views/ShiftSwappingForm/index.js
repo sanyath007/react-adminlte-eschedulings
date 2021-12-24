@@ -74,6 +74,18 @@ const ShiftSwappingForm = () => {
         formik.setFieldValue('swap_shift', shift)
     };
 
+    const insertShiftText = function (shift, owner_shift) {
+        let arrShift = shift.split('|');
+
+        if (shift.split('|').every(sh => sh === '')) { /** If shift is all empty */
+            arrShift[0] = 'R';
+        } else { /** If shift is not empty */
+            arrShift[1] = 'R';
+        }
+
+        return arrShift.join('|');
+    };
+
     const onSubmit = async function (values, props) {
         /** Update owner's shifts */
         const ownerShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
@@ -102,8 +114,7 @@ const ShiftSwappingForm = () => {
              * และจะถูกเปลี่ยนเป็นเวรตามที่รับเปลี่ยนเมื่อได้รับการอนุมัติแล้ว
              **/
             if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
-                /** TODO: To get index of owner_shift by shift type */
-                return shift.replace(values.owner_shift, 'R');
+                return insertShiftText(shift, values.owner_shift);
             }
 
             if (!values.no_swap) {
