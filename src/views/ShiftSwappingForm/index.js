@@ -39,13 +39,30 @@ const ShiftSwappingForm = () => {
 
         /** To Check if delegator have same shift on same day the request would be denied */
         const shift = schedule.shifts.find(shift => shift.person_id === personId);
+        const isOverLoaded = shift.shifts
+                                .split(",")
+                                .some((sh, index) => {
+                                    if (parseInt(moment(date).format('DD')) === (index+1)) {
+                                        console.log(moment(date).format('YYYY-MM-DD'), sh);
+                                        const sumShift = sh.split('|').reduce((sum, curVal) => {
+                                            if (curVal !== '') return sum += 1;
+                                            
+                                            return sum;
+                                        }, 0);
+
+                                        if (sumShift >= 2) return true;
+                                    }
+
+                                    return false;
+                                });
 
         if (
             shift.shifts
                 .split(",")
                 .some((sh, index) => parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1)
+            || isOverLoaded
         ) {
-            toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
+            toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
             formik.setFieldValue('delegator', '');
         }
 
@@ -68,7 +85,7 @@ const ShiftSwappingForm = () => {
             }
 
             if (!values.no_swap) {
-                /** ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
+                /** TODO: ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
                  * และจะถูกเปลี่ยนเป็นเวรตามที่รับแลกเมื่อได้รับการอนุมัติแล้ว
                  **/
                 if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
@@ -85,11 +102,12 @@ const ShiftSwappingForm = () => {
              * และจะถูกเปลี่ยนเป็นเวรตามที่รับเปลี่ยนเมื่อได้รับการอนุมัติแล้ว
              **/
             if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
+                /** TODO: To get index of owner_shift by shift type */
                 return shift.replace(values.owner_shift, 'R');
             }
 
             if (!values.no_swap) {
-                /** ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
+                /** TODO: ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
                  * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
                  **/
                 if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
@@ -100,16 +118,26 @@ const ShiftSwappingForm = () => {
             return shift;
         });
 
+        console.log({
+            id,
+            data: {
+                owner_shifts: ownerShifts.join(),
+                delegator_shifts: delegatorShifts.join(),
+                swap_detail_id: shiftsOfDelegator.id,
+                ...values
+            }
+        });
+
         try {
-            await dispatch(swap({
-                id,
-                data: {
-                    owner_shifts: ownerShifts.join(),
-                    delegator_shifts: delegatorShifts.join(),
-                    swap_detail_id: shiftsOfDelegator.id,
-                    ...values
-                }
-            })).unwrap();
+            // await dispatch(swap({
+            //     id,
+            //     data: {
+            //         owner_shifts: ownerShifts.join(),
+            //         delegator_shifts: delegatorShifts.join(),
+            //         swap_detail_id: shiftsOfDelegator.id,
+            //         ...values
+            //     }
+            // })).unwrap();
         } catch (err) {
             console.log(err);
         }
@@ -206,7 +234,7 @@ const ShiftSwappingForm = () => {
                                                             </select>
                                                         </div>
 
-                                                        {!formik.values.no_swap && (
+                                                        {/* {!formik.values.no_swap && ( */}
                                                             <div className="form-group">
                                                                 <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
@@ -241,7 +269,7 @@ const ShiftSwappingForm = () => {
                                                                 )}
 
                                                             </div>
-                                                        )}
+                                                        {/* )} */}
 
                                                     </div>
                                                 </Col>
