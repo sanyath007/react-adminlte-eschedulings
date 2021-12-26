@@ -72,9 +72,12 @@ const ShiftSwappingForm = () => {
     const handleOnSelectedShift = function (formik, date, shift) {
         formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'))
         formik.setFieldValue('swap_shift', shift)
+
+        /** TODO: To Check if owner have same shift on same day the request would be denied */
+
     };
 
-    const insertShiftText = function (shift, owner_shift) {
+    const insertShiftText = function (shift) {
         let arrShift = shift.split('|');
 
         if (shift.split('|').every(sh => sh === '')) { /** If shift is all empty */
@@ -86,48 +89,68 @@ const ShiftSwappingForm = () => {
         return arrShift.join('|');
     };
 
-    const onSubmit = async function (values, props) {
-        /** Update owner's shifts */
-        const ownerShifts = scheduleDetails.shifts.split(',').map((shift, index) => {
+    const delegateShiftText = function (shift) {
+        let arrShift = shift.split('|');
+
+        if (shift.split('|').every(sh => sh === '')) { /** If shift is all empty */
+            arrShift[0] = 'D';
+        } else { /** If shift is not empty */
+            arrShift[1] = 'D';
+        }
+
+        return arrShift.join('|');
+    };
+
+    const updatePersonShifts = function (personShifts, isOwner, values) {
+        return personShifts.shifts.split(',').map((shift, index) => {
             /** เซตเวรของวันที่ขอเปลี่ยนเป็น R (REQUEST)
              * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
              **/
             if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
-                return shift.replace(values.owner_shift, 'R');
+                /** If person is not owner */
+                if (isOwner) {
+                    console.log('Is owner!!');
+                    if (shift.split('|').every(sh => sh === '')) return 'R||';
+
+                    return shift.replace(values.owner_shift, 'R')
+                }
+
+                /** If person is owner */
+                return insertShiftText(shift);
             }
 
             if (!values.no_swap) {
+                console.log('Is on swap shift !!!');
                 /** TODO: ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
                  * และจะถูกเปลี่ยนเป็นเวรตามที่รับแลกเมื่อได้รับการอนุมัติแล้ว
                  **/
                 if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
-                    return shift.replace(values.swap_shift, 'D');
+                    /** If person is not owner */
+                    console.log(moment(values.swap_date).format('DD'), shift);
+                    if (!isOwner) {
+                        console.log('Is delegator!!');
+                        if (shift.split('|').every(sh => sh === '')) {
+                            return 'D||';
+                        }
+
+                        return shift.replace(values.swap_shift, 'D')
+                    }
+
+                    /** If person is owner */
+                    return delegateShiftText(shift);
                 }
             }
 
             return shift;
         });
+    };
+
+    const onSubmit = async function (values, props) {
+        /** Update owner's shifts */
+        const ownerShifts = updatePersonShifts(scheduleDetails, true, values);
 
         /** Update delegator's shifts */
-        const delegatorShifts = shiftsOfDelegator.shifts.split(',').map((shift, index) => {
-            /** เซตเวรของวันที่รับเปลี่ยนเป็น R (REQUEST)
-             * และจะถูกเปลี่ยนเป็นเวรตามที่รับเปลี่ยนเมื่อได้รับการอนุมัติแล้ว
-             **/
-            if (parseInt(moment(values.owner_date).format('DD')) === (index+1)) {
-                return insertShiftText(shift, values.owner_shift);
-            }
-
-            if (!values.no_swap) {
-                /** TODO: ถ้าเป็นการสลับเวร/แลก ให้เซตเวรของวันที่รับแลกเป็น D (DELEGATE)
-                 * และถูกลบออกเมื่อได้รับการอนุมัติแล้ว
-                 **/
-                if (parseInt(moment(values.swap_date).format('DD')) === (index+1)) {
-                    return shift.replace(values.swap_shift, 'D');
-                }
-            }
-
-            return shift;
-        });
+        const delegatorShifts = updatePersonShifts(shiftsOfDelegator, false, values);
 
         console.log({
             id,
