@@ -34,33 +34,36 @@ const ShiftSwappingForm = () => {
         }
     }, []);
 
+    const isOverLoaded = function (shift) {
+        return shift.shifts
+                    .split(",")
+                    .some((sh, index) => {
+                        if (parseInt(moment(date).format('DD')) === (index+1)) {
+                            console.log(moment(date).format('YYYY-MM-DD'), sh);
+                            const sumShift = sh.split('|').reduce((sum, curVal) => {
+                                if (curVal !== '') return sum += 1;
+                                
+                                return sum;
+                            }, 0);
+
+                            if (sumShift >= 2) return true;
+                        }
+
+                        return false;
+                    });
+    };
+
     const onSelectedDelegator = function (formik, personId) {
         formik.setFieldValue('delegator', personId);
 
         /** To Check if delegator have same shift on same day the request would be denied */
         const shift = schedule.shifts.find(shift => shift.person_id === personId);
-        const isOverLoaded = shift.shifts
-                                .split(",")
-                                .some((sh, index) => {
-                                    if (parseInt(moment(date).format('DD')) === (index+1)) {
-                                        console.log(moment(date).format('YYYY-MM-DD'), sh);
-                                        const sumShift = sh.split('|').reduce((sum, curVal) => {
-                                            if (curVal !== '') return sum += 1;
-                                            
-                                            return sum;
-                                        }, 0);
-
-                                        if (sumShift >= 2) return true;
-                                    }
-
-                                    return false;
-                                });
 
         if (
             shift.shifts
                 .split(",")
                 .some((sh, index) => parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1)
-            || isOverLoaded
+            || isOverLoaded(shift)
         ) {
             toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
             formik.setFieldValue('delegator', '');
@@ -74,7 +77,7 @@ const ShiftSwappingForm = () => {
         formik.setFieldValue('swap_shift', shift)
 
         /** TODO: To Check if owner have same shift on same day the request would be denied */
-
+        
     };
 
     const insertShiftText = function (shift) {
