@@ -17,12 +17,12 @@ const DailyColumns = ({ month, holidays }) => {
         setCols([...daysOfMonth]);
     }, [month, holidays]);
 
-    console.log(`cols is `, cols);
+    // console.log(`cols is `, cols);
 
     return (
         <tr>
             {cols && cols.map((obj, i) => {
-                console.log(`i = ${i}`);
+                // console.log(`i = ${i}`);
                 /** Check is day in holiday */
                 const isHoliday = holiday.some(hd => moment(hd.holiday_date).format('YYYY-MM-DD') == moment(`${month}-${i+1}`).format('YYYY-MM-DD'));
 

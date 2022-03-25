@@ -262,7 +262,10 @@ const ScheduleAdd = () => {
                                                         className="form-control"
                                                         id="faction"
                                                         name="faction"
-                                                        onChange={(e) => onFactionChange(e.target.value)}
+                                                        onChange={(e) => {
+                                                            formik.setFieldValue('faction', e.target.value);
+                                                            onFactionChange(e.target.value);
+                                                        }}
                                                     >
                                                         <option value="">-- เลือกกลุ่มภารกิจ --</option>
                                                         {factions && factions.map(fac => {
