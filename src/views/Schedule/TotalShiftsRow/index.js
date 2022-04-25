@@ -11,6 +11,7 @@ const TotalShiftsRow = ({ shifts, person }) => {
     const [total, setTotal] = useState(initialTotal);
 
     const calculateTotal = () => {
+        /** =========================== TODO: Duplicated Code =========================== */
         let tmpTotal = { ...initialTotal };
 
         shifts.forEach((shift, day) => {
@@ -28,6 +29,7 @@ const TotalShiftsRow = ({ shifts, person }) => {
                 }
             });
         });
+        /** =========================== Duplicated Code =========================== */
 
         setTotal(tmpTotal);
     };

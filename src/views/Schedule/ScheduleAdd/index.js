@@ -156,8 +156,9 @@ const ScheduleAdd = () => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
         });
 
-        /** =========================== Duplicated Code =========================== */
+        /** =========================== TODO: Duplicated Code =========================== */
         let tmpTotal = { ...initialTotal };
+
         shifts.forEach((shift, day) => {
             let arrShift = shift.split('|');
 
