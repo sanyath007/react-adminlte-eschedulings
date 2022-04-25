@@ -90,9 +90,9 @@ const ScheduleDetail = () => {
     }, []);
 
     const renderOT = (ot) => {
-        let sumOt = 0;
+        let sumOT = 0;
         if (ot) {
-            sumOt = ot.shifts.reduce((sum, curVal) => {
+            sumOT = ot.shifts.reduce((sum, curVal) => {
                 if (curVal !== '') {
                     return sum += 1;
                 }
@@ -101,7 +101,7 @@ const ScheduleDetail = () => {
             }, 0);
         }
 
-        return <span>{sumOt}</span>
+        return <span>{sumOT}</span>
     };
 
     const renderTotalShift = (shifts, ot) => {
@@ -114,9 +114,9 @@ const ScheduleDetail = () => {
             });
         });
 
-        let sumOt = 0;
+        let sumOT = 0;
         if (ot) {
-            sumOt = ot.shifts.reduce((sum, curVal) => {
+            sumOT = ot.shifts.reduce((sum, curVal) => {
                 if (curVal !== '') {
                     return sum += 1;
                 }
@@ -125,11 +125,7 @@ const ScheduleDetail = () => {
             }, 0);
         }
 
-        return (
-            <button className="btn btn-primary btn-sm">
-                {totalShift - sumOt}
-            </button>
-        )
+        return <span>{totalShift - sumOT}</span>;
     };
 
     return (

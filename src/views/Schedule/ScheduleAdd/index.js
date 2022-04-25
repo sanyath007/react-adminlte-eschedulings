@@ -19,6 +19,13 @@ let tmpDeparts = [];
 let tmpDivisions = [];
 let tmpPersonShifts = [];
 
+const initialTotal = {
+    night: 0,
+    morn: 0,
+    even: 0,
+    bd: 0
+};
+
 const scheduleSchema = Yup.object().shape({
     depart: Yup.string().required('Depart!!!'),
     division: Yup.string().required('Division!!!'),
@@ -149,7 +156,28 @@ const ScheduleAdd = () => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
         });
 
-        const newRow = [...personShifts, { person: personSelected, shifts }];
+        /** =========================== Duplicated Code =========================== */
+        let tmpTotal = { ...initialTotal };
+        shifts.forEach((shift, day) => {
+            let arrShift = shift.split('|');
+
+            arrShift.forEach(el => {
+                if (['ด','ด*','ด**','ด^'].includes(el)) {
+                    tmpTotal.night += 1;
+                } else if (['ช','ช*','ช**','ช^'].includes(el)) {
+                    tmpTotal.morn += 1;
+                } else if (['บ','บ*','บ**','บ^'].includes(el)) {
+                    tmpTotal.even += 1;
+                } else if (['B','B*','B**','B^'].includes(el)) {
+                    tmpTotal.bd += 0.5;
+                }
+            });
+        });
+        /** =========================== Duplicated Code =========================== */
+
+        const totalShifts = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
+        const newRow = [...personShifts, { person: personSelected, shifts, total_shifts: totalShifts }];
+
         setPersonShifts(newRow);
 
         /** Calculate total person */
