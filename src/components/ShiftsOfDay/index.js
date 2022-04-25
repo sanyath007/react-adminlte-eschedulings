@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react';
+import ShiftText from '../ShiftText';
 
 const ShiftsOfDay = ({ shifts }) => {
-    const [text, setText] = useState('');
-
-    useEffect(() => {
-        let tmp = '';
-        shifts.split('|').forEach(el => {
-            if (el !== '') {
-                tmp += el;
-            }
-        });
-
-        setText(tmp);
-    }, []);
-
-    return <span>{text}</span>;
+  return (
+    <>
+      {shifts.split('|').length > 0 && shifts.split('|').map(el => <ShiftText text={el} />)}
+    </>
+  );
 }
 
 export default ShiftsOfDay
