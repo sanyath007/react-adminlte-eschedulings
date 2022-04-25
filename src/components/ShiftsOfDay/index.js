@@ -1,10 +1,12 @@
 import React from 'react';
 import ShiftText from '../ShiftText';
 
-const ShiftsOfDay = ({ shifts }) => {
+const ShiftsOfDay = ({ shifts, onSetOT }) => {
   return (
     <>
-      {shifts.split('|').length > 0 && shifts.split('|').map(el => <ShiftText text={el} />)}
+      {shifts.split('|').length > 0 && shifts.split('|').map((el, index) => (
+        <ShiftText key={index+el} text={el} onSetOT={onSetOT} />
+      ))}
     </>
   );
 }

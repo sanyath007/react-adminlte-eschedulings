@@ -13,6 +13,7 @@ const ScheduleDetail = () => {
     const dataTableOptions = { totalCol: 31 };
     const [holidays, setHolidays] = useState([]);
     const [headOfFaction, setHeadOfFaction] = useState(null);
+    const [ot, setOt] = useState([]);
 
     const { id } = useParams();
     const history = useHistory();
@@ -39,6 +40,43 @@ const ScheduleDetail = () => {
         }
     };
 
+    const handleOnSetOT = (scheduleDetail, date, shift, isOt) => {
+        const { id, person_id, ...other } = scheduleDetail;
+        const personOt = ot.find(o => o.id === id);
+
+        if (personOt) {
+            const newPersonOt = personOt.shifts.map((sh, i) => {
+                if (i+1 === date) {
+                    return sh = isOt ? shift : '';
+                }
+
+                return sh;
+            });
+
+            const newOt = ot.map(o => {
+                if (o.id === id) {
+                    o.shifts = newPersonOt;
+                }
+
+                return o;
+            });
+
+            setOt(newOt);
+        } else {
+            let newShifts = scheduleDetail.shifts.split(',').map((sh, i) => {
+                if (i+1 === date) {
+                    return isOt ? shift : '';
+                }
+    
+                return sh = '';
+            });
+    
+            const newOt = [...ot, { id, person_id, shifts: newShifts }];
+
+            setOt(newOt);
+        }
+    };
+
     useEffect(() => {
         dispatch(fetchAll(id));
 
@@ -50,6 +88,49 @@ const ScheduleDetail = () => {
             history.push('/schedules/list');
         }
     }, []);
+
+    const renderOT = (ot) => {
+        let sumOt = 0;
+        if (ot) {
+            sumOt = ot.shifts.reduce((sum, curVal) => {
+                if (curVal !== '') {
+                    return sum += 1;
+                }
+
+                return sum;
+            }, 0);
+        }
+
+        return <span>{sumOt}</span>
+    };
+
+    const renderTotalShift = (shifts, ot) => {
+        let totalShift = 0;
+        shifts.split(',').forEach((sh, index) => {
+            sh.split('|').forEach(s => {
+                if (s !== '') {
+                    totalShift += 1;
+                }
+            });
+        });
+
+        let sumOt = 0;
+        if (ot) {
+            sumOt = ot.shifts.reduce((sum, curVal) => {
+                if (curVal !== '') {
+                    return sum += 1;
+                }
+
+                return sum;
+            }, 0);
+        }
+
+        return (
+            <button className="btn btn-primary btn-sm">
+                {totalShift - sumOt}
+            </button>
+        )
+    };
 
     return (
         <div className="container-fluid">
@@ -87,6 +168,8 @@ const ScheduleDetail = () => {
                                         <tr>
                                             <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
                                             <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
+                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
+                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                         </tr>
                                         <DailyColumns
@@ -107,10 +190,21 @@ const ScheduleDetail = () => {
                                                     {row.shifts.split(',').map((shift, index) => {
                                                         return (
                                                             <td key={index} style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
-                                                                <ShiftsOfDay shifts={ shift } />
+                                                                <ShiftsOfDay
+                                                                    shifts={ shift }
+                                                                    onSetOT={(sh, isOt) => {
+                                                                        handleOnSetOT(row, index+1, sh, isOt)
+                                                                    }}
+                                                                />
                                                             </td>
                                                         );
                                                     })}
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        {renderTotalShift(row.shifts, ot.find(o => o.id == row.id))}
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        {renderOT(ot.find(o => o.id == row.id))}
+                                                    </td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <div className="btn-group btn-group-sm" role="group" aria-label="...">
                                                             <Link to={`/person-shifts/${row.id}/detail`} className="btn btn-info">
