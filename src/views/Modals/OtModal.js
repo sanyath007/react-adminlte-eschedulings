@@ -31,8 +31,11 @@ function OtModal({
       const shifts = ot_shifts ? ot_shifts.split(',') : [];
 
       setDaysOfMonth(moment(month).endOf('month').date());
-      setOt([{id, person_id: person.person_id, shifts}]);
       setOtShifts(shifts);
+
+      if (ot_shifts) {
+        setOt([{id, person_id: person.person_id, shifts}]);
+      }
     }
   }, [schedule]);
 
@@ -58,6 +61,17 @@ function OtModal({
     if (personOt) {
         const newPersonOt = personOt.shifts.map((sh, i) => {
             if (i+1 === date) {
+                if (sh !== '') {
+                  let arrShifts = sh.split('|');
+
+                  /** On deselected case  */
+                  if (arrShifts.length > 1 && !isOt) {
+                    return sh = arrShifts.filter(ar => ar !== shift).toString();
+                  }
+
+                  return sh = isOt ? `${sh}|${shift}` : '';
+                }
+
                 return sh = isOt ? shift : '';
             }
 
