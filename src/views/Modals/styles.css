@@ -1,0 +1,6 @@
+.modal-90w {
+    width: 90vw;
+    max-width: none!important;
+    top: 50px;
+    z-index: 1500;
+}

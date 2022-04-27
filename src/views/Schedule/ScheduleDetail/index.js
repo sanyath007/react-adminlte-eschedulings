@@ -2,19 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { toast } from 'react-toastify';
 import api from '../../../api';
 import { getScheduleById } from '../../../features/schedules';
 import { fetchAll } from '../../../features/scheduleDetails';
 import DailyColumns from '../../../components/DailyColumns';
 import ShiftsOfDay from '../../../components/ShiftsOfDay';
 import MonthlyText from '../../../components/MonthlyText';
+import OtModal from '../../Modals/OtModal';
+import './styles.css';
 
 const ScheduleDetail = () => {
-    const dataTableOptions = { totalCol: 31 };
+    const [daysOfMonth, setDaysOfMonth] = useState(31);
     const [holidays, setHolidays] = useState([]);
     const [headOfFaction, setHeadOfFaction] = useState(null);
-    const [ot, setOt] = useState([]);
+    const [openOtModal, setOpenOtModal] = useState(false);
+    const [personSchedule, setPersonSchedule] = useState(null);
 
     const { id } = useParams();
     const history = useHistory();
@@ -30,6 +32,8 @@ const ScheduleDetail = () => {
         /** To redirect to /schedules/list if schedule is null */
         if (!schedule) {
             history.push('/schedules/list');
+        } else {
+            setDaysOfMonth(moment(schedule.month).endOf('month').date());
         }
     }, []);
 
@@ -53,108 +57,19 @@ const ScheduleDetail = () => {
         }
     };
 
-    const handleOnSetOT = (scheduleDetail, date, shift, isOt) => {
-        const { id, person_id, ...other } = scheduleDetail;
-        const personOt = ot.find(o => o.id === id);
-
-        if (personOt) {
-            const newPersonOt = personOt.shifts.map((sh, i) => {
-                if (i+1 === date) {
-                    return sh = isOt ? shift : '';
-                }
-
-                return sh;
-            });
-
-            const newOt = ot.map(o => {
-                if (o.id === id) {
-                    o.shifts = newPersonOt;
-                }
-
-                return o;
-            });
-
-            setOt(newOt);
-        } else {
-            let newShifts = scheduleDetail.shifts.split(',').map((sh, i) => {
-                if (i+1 === date) {
-                    return isOt ? shift : '';
-                }
-    
-                return sh = '';
-            });
-    
-            const newOt = [...ot, { id, person_id, shifts: newShifts }];
-
-            setOt(newOt);
-        }
-    };
-
-    const handleSubmitOT = async (id, ot_shifts, totalShift, OT) => {
-        const working = parseFloat(totalShift, 10) - parseFloat(OT, 10);
-        const data = { ot_shifts, total_shift: parseFloat(totalShift, 10), working, ot: OT };
-
-        let res = await api.put(`/api/schedule-details/${id}/ot`, data);
-
-        if (res.data.status === 1) {
-            toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
-        } else {
-            toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
-        }
-    };
-
-    const renderTotalShift = (shifts, ot) => {
-        let totalShift = 0;
-        shifts.split(',').forEach((sh, index) => {
-            sh.split('|').forEach(s => {
-                if (s !== '') {
-                    totalShift += 1;
-                }
-            });
-        });
-
-        let sumOT = 0;
-        if (ot) {
-            sumOT = ot.shifts.reduce((sum, curVal) => {
-                if (curVal !== '') {
-                    return sum += 1;
-                }
-
-                return sum;
-            }, 0);
-        }
-
-        return <span>{totalShift - sumOT}</span>;
-    };
-
-    const renderOT = (id, totalShift, ot) => {
-        let sumOT = 0;
-        if (ot) {
-            sumOT = ot.shifts.reduce((sum, curVal) => {
-                if (curVal !== '') {
-                    return sum += 1;
-                }
-
-                return sum;
-            }, 0);
-        }
-
-        return (
-            <a
-                href="#" 
-                className="btn btn-outline-primary btn-sm"
-                onClick={() => handleSubmitOT(id, ot.shifts, totalShift, sumOT)}
-            >
-                {sumOT}
-            </a>
-        );
-    };
-
     return (
         <div className="container-fluid">
             {/* <!-- Main row --> */}
             <div className="row">
                 <section className="col-lg-12 connectedSortable">
+
+                <OtModal
+                    isOpen={openOtModal}
+                    hideModal={() => setOpenOtModal(false)}
+                    schedule={personSchedule}
+                    month={schedule ? schedule.month : moment().format('YYYY-MM')}
+                    holidays={holidays}
+                />
 
                     <div className="card">
                         <div className="card-header">
@@ -179,13 +94,14 @@ const ScheduleDetail = () => {
                                     ประจำเดือน : {schedule && <MonthlyText monthText={schedule.month} /> }
                                 </div>
                             </div>
-                            
+
                             <div className="table-responsive">
                                 <table className="table table-bordered table-striped mb-1" style={{ fontSize: '14px' }}>
+                                    {/* TODO: Duplicated code */}
                                     <thead>
                                         <tr>
                                             <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
-                                            <td style={{ textAlign: 'center' }} colSpan={ dataTableOptions.totalCol }>วันที่</td>
+                                            <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
@@ -195,6 +111,7 @@ const ScheduleDetail = () => {
                                             holidays={holidays}
                                         />
                                     </thead>
+                                    {/* TODO: Duplicated code */}
                                     <tbody>
                                         {schedule && schedule.shifts.map(row => {
                                             let otShifts = row.ot_shifts ? row.ot_shifts.split(',') : [];
@@ -214,21 +131,28 @@ const ScheduleDetail = () => {
                                                                     shifts={ shift }
                                                                     otShift={otShifts.length > 0 ? otShifts[index] : ''}
                                                                     onSetOT={(sh, isOt) => {
-                                                                        handleOnSetOT(row, index+1, sh, isOt)
+                                                                        console.log(row, index+1, sh, isOt)
                                                                     }}
                                                                 />
                                                             </td>
                                                         );
                                                     })}
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {row.working !== 0
-                                                            ? row.working
-                                                            : renderTotalShift(row.shifts, ot.find(o => o.id == row.id))}
+                                                        <span className="text-btn outline-danger btn-sm">
+                                                            {row.working ? row.working : row.total_shift}
+                                                        </span>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {row.ot !== 0
-                                                            ? row.ot
-                                                            : renderOT(row.id, row.total_shift, ot.find(o => o.id == row.id))}
+                                                        <a
+                                                            href="#"
+                                                            className="btn btn-danger btn-sm"
+                                                            onClick={() => {
+                                                                setPersonSchedule(row)
+                                                                setOpenOtModal(true);
+                                                            }}
+                                                        >
+                                                            {row.ot ? row.ot : 'OT'}
+                                                        </a>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <div className="btn-group btn-group-sm" role="group" aria-label="...">
