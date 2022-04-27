@@ -90,11 +90,11 @@ const ScheduleDetail = () => {
         }
     };
 
-    const handleSubmitOT = async (id, totalShift, OT) => {
-        console.log(id, parseFloat(totalShift, 10), OT);
-        const data = { total_shift: parseFloat(totalShift, 10), ot: OT };
+    const handleSubmitOT = async (id, ot_shifts, totalShift, OT) => {
+        const working = parseFloat(totalShift, 10) - parseFloat(OT, 10);
+        const data = { ot_shifts, total_shift: parseFloat(totalShift, 10), working, ot: OT };
 
-        let res = await api.put(`/api/schedulings/${id}/ot`, data);
+        let res = await api.put(`/api/schedule-details/${id}/ot`, data);
 
         if (res.data.status === 1) {
             toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
@@ -143,7 +143,7 @@ const ScheduleDetail = () => {
             <a
                 href="#" 
                 className="btn btn-outline-primary btn-sm"
-                onClick={() => handleSubmitOT(id, totalShift, sumOT)}
+                onClick={() => handleSubmitOT(id, ot.shifts, totalShift, sumOT)}
             >
                 {sumOT}
             </a>
