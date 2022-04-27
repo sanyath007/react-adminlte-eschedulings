@@ -197,6 +197,8 @@ const ScheduleDetail = () => {
                                     </thead>
                                     <tbody>
                                         {schedule && schedule.shifts.map(row => {
+                                            let otShifts = row.ot_shifts ? row.ot_shifts.split(',') : [];
+
                                             return (
                                                 <tr key={row.id}>
                                                     <td>
@@ -210,6 +212,7 @@ const ScheduleDetail = () => {
                                                             <td key={index} style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
                                                                 <ShiftsOfDay
                                                                     shifts={ shift }
+                                                                    otShift={otShifts.length > 0 ? otShifts[index] : ''}
                                                                     onSetOT={(sh, isOt) => {
                                                                         handleOnSetOT(row, index+1, sh, isOt)
                                                                     }}
@@ -218,10 +221,14 @@ const ScheduleDetail = () => {
                                                         );
                                                     })}
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {renderTotalShift(row.shifts, ot.find(o => o.id == row.id))}
+                                                        {row.working !== 0
+                                                            ? row.working
+                                                            : renderTotalShift(row.shifts, ot.find(o => o.id == row.id))}
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {renderOT(row.id, row.total_shift, ot.find(o => o.id == row.id))}
+                                                        {row.ot !== 0
+                                                            ? row.ot
+                                                            : renderOT(row.id, row.total_shift, ot.find(o => o.id == row.id))}
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <div className="btn-group btn-group-sm" role="group" aria-label="...">
