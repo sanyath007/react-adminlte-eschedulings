@@ -39,17 +39,18 @@ function OtModal({
     }
   }, [schedule]);
 
-  const handleSubmitOT = async (id, ot_shifts, totalShift, OT) => {
+  const handleSubmitOT = async (id, totalShift, _ot) => {
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
-      const working = parseFloat(totalShift, 10) - parseFloat(OT, 10);
-      const data = { ot_shifts, total_shift: parseFloat(totalShift, 10), working, ot: OT };
+      const count = countOT(_ot);
+      const working = totalShift - count;
+      const data = { ot_shifts: _ot, total_shift: parseFloat(totalShift, 10), working, ot: count };
 
       let res = await api.put(`/api/schedule-details/${id}/ot`, data);
 
       if (res.data.status === 1) {
-          toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+        toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
       } else {
-          toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
+        toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
       }
     }
   };
@@ -59,88 +60,81 @@ function OtModal({
     const personOt = ot.find(o => o.id === id);
 
     if (personOt) {
-        const newPersonOt = personOt.shifts.map((sh, i) => {
-            if (i+1 === date) {
-                if (sh !== '') {
-                  let arrShifts = sh.split('|');
+      const newPersonOt = personOt.shifts.map((sh, i) => {
+        if (i+1 === date) {
+          if (sh !== '') {
+            let arrShifts = sh.split('|');
 
-                  /** On deselected case  */
-                  if (arrShifts.length > 1 && !isOt) {
-                    return sh = arrShifts.filter(ar => ar !== shift).toString();
-                  }
-
-                  return sh = isOt ? `${sh}|${shift}` : '';
-                }
-
-                return sh = isOt ? shift : '';
+            /** On deselected case  */
+            if (arrShifts.length > 1 && !isOt) {
+              return sh = arrShifts.filter(ar => ar !== shift).toString();
             }
 
-            return sh;
-        });
+            return sh = isOt ? `${sh}|${shift}` : '';
+          }
 
-        const newOt = ot.map(o => {
-            if (o.id === id) {
-                o.shifts = newPersonOt;
-            }
+          return sh = isOt ? shift : '';
+        }
 
-            return o;
-        });
+        return sh;
+      });
 
-        setOt(newOt);
+      const newOt = ot.map(o => {
+        if (o.id === id) {
+          o.shifts = newPersonOt;
+        }
+
+        return o;
+      });
+
+      setOt(newOt);
     } else {
-        let newShifts = scheduleDetail.shifts.split(',').map((sh, i) => {
-            if (i+1 === date) {
-                return isOt ? shift : '';
-            }
+      let newShifts = scheduleDetail.shifts.split(',').map((sh, i) => {
+        if (i+1 === date) {
+          return isOt ? shift : '';
+        }
 
-            return sh = '';
-        });
+        return sh = '';
+      });
 
-        const newOt = [...ot, { id, person_id, shifts: newShifts }];
+      const newOt = [...ot, { id, person_id, shifts: newShifts }];
 
-        setOt(newOt);
+      setOt(newOt);
     }
   };
 
-  const renderTotalShift = (shifts, ot) => {
-      let totalShift = 0;
-      shifts.split(',').forEach((sh, index) => {
-          sh.split('|').forEach(s => {
-              if (s !== '') {
-                  totalShift += 1;
-              }
-          });
-      });
+  const countOT = (_ot) => {
+    console.log(_ot);
+    if (_ot) {
+      return _ot.shifts.reduce((sum, curVal) => {
+        if (curVal !== '') {
+          let arrShifts = curVal.split('|');
 
-      let sumOT = 0;
-      if (ot) {
-          sumOT = ot.shifts.reduce((sum, curVal) => {
-              if (curVal !== '') {
-                  return sum += 1;
-              }
+          return sum += arrShifts.length;
+        }
 
-              return sum;
-          }, 0);
-      }
+        return sum;
+      }, 0);
+    }
 
-      return <span>{totalShift - sumOT}</span>;
+    return 0;
   };
 
-  const renderOT = (ot) => {
-      let sumOT = 0;
-      if (ot) {
-          sumOT = ot.shifts.reduce((sum, curVal) => {
-              if (curVal !== '') {
-                  return sum += 1;
-              }
+  const renderWorking = (shifts, _ot) => {
+    let totalShift = 0;
+    shifts.split(',').forEach((sh, index) => {
+      sh.split('|').forEach(s => {
+        if (s !== '') {
+          totalShift += 1;
+        }
+      });
+    });
 
-              return sum;
-          }, 0);
-      }
+    return <span>{totalShift - countOT(_ot)}</span>;
+  };
 
-      return (
-          <span>{sumOT}</span>
-      );
+  const renderOT = (_ot) => {
+    return <span>{countOT(_ot)}</span>;
   };
 
   return (
@@ -160,7 +154,7 @@ function OtModal({
                   <tr>
                     <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
                     <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
-                    <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
+                    <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">ทำการ</td>
                     <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
                   </tr>
                   <DailyColumns
@@ -192,7 +186,7 @@ function OtModal({
                         );
                       })}
                       <td style={{ textAlign: 'center' }}>
-                        {renderTotalShift(schedule.shifts, ot.find(o => o.id == schedule.id))}
+                        {renderWorking(schedule.shifts, ot.find(o => o.id == schedule.id))}
                       </td>
                       <td style={{ textAlign: 'center' }}>
                         {renderOT(ot.find(o => o.id == schedule.id))}
@@ -204,14 +198,12 @@ function OtModal({
             </div>
           </Col>
         </Row>
-        <Row>
-          <Col className='text-center mt-4'>
-            <Button variant="primary" className="mr-2" onClick={() => handleSubmitOT()}>
-              บันทึก
-            </Button>
-          </Col>
-        </Row>
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant="primary" onClick={() => handleSubmitOT(schedule.id, schedule.total_shift, ot.find(o => o.id == schedule.id))}>
+          บันทึก
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 }
