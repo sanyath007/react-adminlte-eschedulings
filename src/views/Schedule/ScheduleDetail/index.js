@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 import api from '../../../api';
 import { getScheduleById } from '../../../features/schedules';
 import { fetchAll } from '../../../features/scheduleDetails';
@@ -19,6 +20,18 @@ const ScheduleDetail = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const schedule = useSelector(state => getScheduleById(state, id));
+
+    useEffect(() => {
+        dispatch(fetchAll(id));
+
+        getHolidays();
+        getHeadOfFaction();
+
+        /** To redirect to /schedules/list if schedule is null */
+        if (!schedule) {
+            history.push('/schedules/list');
+        }
+    }, []);
 
     const getHolidays = async function () {
         try {
@@ -77,31 +90,17 @@ const ScheduleDetail = () => {
         }
     };
 
-    useEffect(() => {
-        dispatch(fetchAll(id));
+    const handleSubmitOT = async (id, totalShift, OT) => {
+        console.log(id, parseFloat(totalShift, 10), OT);
+        const data = { total_shift: parseFloat(totalShift, 10), ot: OT };
 
-        getHolidays();
-        getHeadOfFaction();
+        let res = await api.put(`/api/schedulings/${id}/ot`, data);
 
-        /** To redirect to /schedules/list if schedule is null */
-        if (!schedule) {
-            history.push('/schedules/list');
+        if (res.data.status === 1) {
+            toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+        } else {
+            toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
         }
-    }, []);
-
-    const renderOT = (ot) => {
-        let sumOT = 0;
-        if (ot) {
-            sumOT = ot.shifts.reduce((sum, curVal) => {
-                if (curVal !== '') {
-                    return sum += 1;
-                }
-
-                return sum;
-            }, 0);
-        }
-
-        return <span>{sumOT}</span>
     };
 
     const renderTotalShift = (shifts, ot) => {
@@ -126,6 +125,29 @@ const ScheduleDetail = () => {
         }
 
         return <span>{totalShift - sumOT}</span>;
+    };
+
+    const renderOT = (id, totalShift, ot) => {
+        let sumOT = 0;
+        if (ot) {
+            sumOT = ot.shifts.reduce((sum, curVal) => {
+                if (curVal !== '') {
+                    return sum += 1;
+                }
+
+                return sum;
+            }, 0);
+        }
+
+        return (
+            <a
+                href="#" 
+                className="btn btn-outline-primary btn-sm"
+                onClick={() => handleSubmitOT(id, totalShift, sumOT)}
+            >
+                {sumOT}
+            </a>
+        );
     };
 
     return (
@@ -199,7 +221,7 @@ const ScheduleDetail = () => {
                                                         {renderTotalShift(row.shifts, ot.find(o => o.id == row.id))}
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        {renderOT(ot.find(o => o.id == row.id))}
+                                                        {renderOT(row.id, row.total_shift, ot.find(o => o.id == row.id))}
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
                                                         <div className="btn-group btn-group-sm" role="group" aria-label="...">
