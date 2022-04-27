@@ -176,8 +176,8 @@ const ScheduleAdd = () => {
         });
         /** =========================== Duplicated Code =========================== */
 
-        const totalShifts = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
-        const newRow = [...personShifts, { person: personSelected, shifts, total_shifts: totalShifts }];
+        const total_shift = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
+        const newRow = [...personShifts, { person: personSelected, shifts, total_shift }];
 
         setPersonShifts(newRow);
 
