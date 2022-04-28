@@ -57,10 +57,7 @@ const ScheduleEdit = () => {
     
             /** Format person's shifts of editting schedule data to array */
             setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
-    
-            /** Generate shift inputs on each days of editting schedule's month */
-            tmpPersonShifts = generateShiftDays(tableCol);
-    
+
             /** TODO: To filter departments and divisions of selected faction */
             setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.division.depart_id));
             setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
@@ -69,7 +66,10 @@ const ScheduleEdit = () => {
             getMemberOfDepart(schedule.division.depart_id);
 
             if (schedule) {
-                setTableCol(moment(schedule.month).endOf('month').date())
+                setTableCol(moment(schedule.month).endOf('month').date());
+
+                /** Generate shift inputs on each days of editting schedule's month */
+                tmpPersonShifts = generateShiftDays(tableCol);
             }
         }
     }, [schedule]);
@@ -256,7 +256,7 @@ const ScheduleEdit = () => {
                             division: schedule ? schedule.division_id : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? schedule.year : '2565',
-                            controller: schedule ? schedule.controller : '',
+                            controller: schedule ? schedule.controller_id : '',
                             total_persons: schedule ? schedule.total_persons : 0,
                             total_shifts: schedule ? schedule.total_shifts : 0,
                             remark: schedule ? schedule.remark :''
