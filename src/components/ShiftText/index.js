@@ -31,4 +31,4 @@ ShiftText.propTypes = {
   onSetOT: PropTypes.func
 };
 
-export default ShiftText
+export default ShiftText;

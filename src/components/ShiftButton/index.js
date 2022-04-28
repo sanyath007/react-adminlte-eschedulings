@@ -14,7 +14,7 @@ const ShiftButton = ({ text, otShiftText, onClick }) => {
   return (
     <a
       href='#'
-      onClick={() => onClick(text, !isOT)}
+      onClick={() => onClick(text)}
       className={ isOT ? 'ot-active' : '' }
     >
       {text}
@@ -28,4 +28,4 @@ ShiftButton.propTypes = {
   onClick: PropTypes.func
 };
 
-export default ShiftButton
+export default ShiftButton;

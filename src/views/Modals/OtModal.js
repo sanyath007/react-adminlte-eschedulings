@@ -192,6 +192,7 @@ function OtModal({
                         return (
                           <td key={index} style={{ textAlign: 'center', fontSize: 'small', padding: '0px' }}>
                             <ShiftsOfDay
+                              asShiftText
                               shifts={ shift }
                               otShift={otShifts.length > 0 ? otShifts[index] : ''}
                               onSetOT={(sh, isOt) => {

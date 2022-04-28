@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import uuid from 'react-uuid';
 import ShiftText from '../ShiftText';
@@ -7,11 +7,11 @@ import ShiftButton from '../ShiftButton';
 const ShiftsOfDay = ({
   shifts,
   otShift,
-  shiftText,
+  asShiftText,
   onSetOT,
   onClick,
+  ...props
 }) => {
-
   return (
     <>
       {shifts.split('|').length > 0 && shifts.split('|').map((el, index) => {
@@ -19,23 +19,21 @@ const ShiftsOfDay = ({
         const arrOtShift = otShift.split('|');
 
         return (
-          <>
-            {shiftText ? (
+          <Fragment key={el+index}>
+            {asShiftText ? (
               <ShiftText
-                key={uuid()}
                 text={el}
                 otShiftText={arrOtShift.length > 1 ? arrOtShift[index] : arrOtShift[0]}
                 onSetOT={onSetOT}
               />
             ) : (
               <ShiftButton
-                key={uuid()}
                 text={el}
                 otShiftText={arrOtShift.length > 1 ? arrOtShift[index] : arrOtShift[0]}
-                onClick={onClick}
+                onClick={(shiftText) => console.log(shiftText)}
               />
             )}
-          </>
+          </Fragment>
         );
       })}
     </>
@@ -45,9 +43,8 @@ const ShiftsOfDay = ({
 ShiftsOfDay.propTypes = {
   shifts: PropTypes.string,
   otShift: PropTypes.string,
-  shiftText: PropTypes.bool,
+  asShiftText: PropTypes.bool,
   onSetOT: PropTypes.func,
-  onClick: PropTypes.func
 };
 
 export default ShiftsOfDay
