@@ -104,13 +104,21 @@ function OtModal({
   };
 
   const countOT = (_ot) => {
-    console.log(_ot);
     if (_ot) {
       return _ot.shifts.reduce((sum, curVal) => {
         if (curVal !== '') {
+          /** TODO: Duplicated code in renderWorking function */
           let arrShifts = curVal.split('|');
+          let count  = arrShifts.reduce((acc, sh) => {
+            if (sh === 'B') {
+              return acc += 0.5;
+            }
 
-          return sum += arrShifts.length;
+            return acc += 1;
+          }, 0);
+          /** TODO: Duplicated code in renderWorking function */
+
+          return sum += count;
         }
 
         return sum;
@@ -123,11 +131,17 @@ function OtModal({
   const renderWorking = (shifts, _ot) => {
     let totalShift = 0;
     shifts.split(',').forEach((sh, index) => {
+      /** TODO: Duplicated code in countOT function */
       sh.split('|').forEach(s => {
         if (s !== '') {
-          totalShift += 1;
+          if (s === 'B') {
+            totalShift += 0.5;
+          } else {
+            totalShift += 1;
+          }
         }
       });
+      /** TODO: Duplicated code in countOT function */
     });
 
     return <span>{totalShift - countOT(_ot)}</span>;
