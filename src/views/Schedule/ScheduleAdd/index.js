@@ -28,7 +28,6 @@ const initialTotal = {
 
 const scheduleSchema = Yup.object().shape({
     depart: Yup.string().required('Depart!!!'),
-    division: Yup.string().required('Division!!!'),
     month: Yup.string().required('Month!!!'),
     year: Yup.string().required('Year!!!'),
     controller: Yup.string().required('Controller!!!')
@@ -219,8 +218,6 @@ const ScheduleAdd = () => {
         // TODO: Calculate total shifts
         formik.setFieldValue('total_shifts', calculateTotal(ps));
     };
-
-    console.log(personShifts);
 
     const onSubmit = async function (values, props) {
         if (personShifts.length === 0) {

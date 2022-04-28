@@ -29,7 +29,6 @@ const initialTotal = {
 
 const scheduleSchema = Yup.object().shape({
     depart: Yup.string().required('Depart!!!'),
-    division: Yup.string().required('Division!!!'),
     month: Yup.string().required('Month!!!'),
     year: Yup.string().required('Year!!!'),
     controller: Yup.string().required('Controller!!!')
