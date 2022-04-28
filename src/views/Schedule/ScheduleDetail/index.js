@@ -9,6 +9,7 @@ import DailyColumns from '../../../components/DailyColumns';
 import ShiftsOfDay from '../../../components/ShiftsOfDay';
 import MonthlyText from '../../../components/MonthlyText';
 import OtModal from '../../Modals/OtModal';
+import ShiftModal from '../../Modals/ShiftModal';
 import './styles.css';
 
 const ScheduleDetail = () => {
@@ -16,7 +17,9 @@ const ScheduleDetail = () => {
     const [holidays, setHolidays] = useState([]);
     const [headOfFaction, setHeadOfFaction] = useState(null);
     const [openOtModal, setOpenOtModal] = useState(false);
+    const [openShiftModal, setOpenShiftModal] = useState(false);
     const [personSchedule, setPersonSchedule] = useState(null);
+    const [shift, setshift] = useState('');
 
     const { id } = useParams();
     const history = useHistory();
@@ -57,8 +60,10 @@ const ScheduleDetail = () => {
         }
     };
 
-    const handleShiftClicked = (shiftText, date) => {
-        console.log(shiftText, date);
+    const handleShiftClicked = (shiftId, shiftText, date) => {
+        setshift({ shiftId ,shiftDate: `${schedule.month}-${date}`, shiftText });
+
+        setOpenShiftModal(true);
     };
 
     return (
@@ -73,6 +78,13 @@ const ScheduleDetail = () => {
                         schedule={personSchedule}
                         month={schedule ? schedule.month : moment().format('YYYY-MM')}
                         holidays={holidays}
+                    />
+
+                    <ShiftModal
+                        isOpen={openShiftModal}
+                        hideModal={() => setOpenShiftModal(false)}
+                        personShifts={personSchedule}
+                        shift={shift}
                     />
 
                     <div className="card">
@@ -134,10 +146,10 @@ const ScheduleDetail = () => {
                                                                 <ShiftsOfDay
                                                                     shifts={ shift }
                                                                     otShift={otShifts.length > 0 ? otShifts[index] : ''}
-                                                                    onSetOT={(sh, isOt) => {
-                                                                        console.log(row, index+1, sh, isOt)
+                                                                    onClick={(shiftText) => {
+                                                                        setPersonSchedule(row);
+                                                                        handleShiftClicked(row.id, shiftText, index+1);
                                                                     }}
-                                                                    onClick={(shiftText) => handleShiftClicked(shiftText, index+1)}
                                                                 />
                                                             </td>
                                                         );
@@ -152,7 +164,7 @@ const ScheduleDetail = () => {
                                                             href="#"
                                                             className="btn btn-danger btn-sm"
                                                             onClick={() => {
-                                                                setPersonSchedule(row)
+                                                                setPersonSchedule(row);
                                                                 setOpenOtModal(true);
                                                             }}
                                                         >

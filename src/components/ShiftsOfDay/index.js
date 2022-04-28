@@ -30,7 +30,7 @@ const ShiftsOfDay = ({
               <ShiftButton
                 text={el}
                 otShiftText={arrOtShift.length > 1 ? arrOtShift[index] : arrOtShift[0]}
-                onClick={(shiftText) => console.log(shiftText)}
+                onClick={(shiftText) => onClick(shiftText)}
               />
             )}
           </Fragment>
