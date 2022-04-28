@@ -67,6 +67,10 @@ const ScheduleEdit = () => {
     
             /** Get persons that are member of editting schedule's division */
             getMemberOfDepart(schedule.division.depart_id);
+
+            if (schedule) {
+                setTableCol(moment(schedule.month).endOf('month').date())
+            }
         }
     }, [schedule]);
 
@@ -411,6 +415,7 @@ const ScheduleEdit = () => {
                                             
                                             <div style={{ overflowY: 'visible' }}>
                                                 <table className="table table-bordered table-striped" style={{ fontSize: '14px' }}>
+                                                    {/* TODO: Duplicated code */}
                                                     <thead>
                                                         <tr>
                                                             <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
@@ -425,6 +430,7 @@ const ScheduleEdit = () => {
                                                             holidays={holidays}
                                                         />
                                                     </thead>
+                                                    {/* TODO: Duplicated code */}
                                                     <tbody>
                                                         <tr>
                                                             <td>
