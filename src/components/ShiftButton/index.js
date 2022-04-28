@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types';
 import './styles.css';
 
-const ShiftText = ({ text, otShiftText, onSetOT }) => {
+const ShiftButton = ({ text, otShiftText, onClick }) => {
   const [isOT, setIsOT] = useState(false);
 
   useEffect(() => {
@@ -14,10 +14,7 @@ const ShiftText = ({ text, otShiftText, onSetOT }) => {
   return (
     <a
       href='#'
-      onClick={() => {
-        setIsOT(!isOT);
-        onSetOT(text, !isOT)
-      }}
+      onClick={() => onClick(text, !isOT)}
       className={ isOT ? 'ot-active' : '' }
     >
       {text}
@@ -25,10 +22,10 @@ const ShiftText = ({ text, otShiftText, onSetOT }) => {
   );
 }
 
-ShiftText.propTypes = {
+ShiftButton.propTypes = {
   text: PropTypes.string,
   otShiftText: PropTypes.string,
-  onSetOT: PropTypes.func
+  onClick: PropTypes.func
 };
 
-export default ShiftText
+export default ShiftButton

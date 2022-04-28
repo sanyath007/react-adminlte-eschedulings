@@ -57,19 +57,23 @@ const ScheduleDetail = () => {
         }
     };
 
+    const handleShiftClicked = (shiftText, date) => {
+        console.log(shiftText, date);
+    };
+
     return (
         <div className="container-fluid">
             {/* <!-- Main row --> */}
             <div className="row">
                 <section className="col-lg-12 connectedSortable">
 
-                <OtModal
-                    isOpen={openOtModal}
-                    hideModal={() => setOpenOtModal(false)}
-                    schedule={personSchedule}
-                    month={schedule ? schedule.month : moment().format('YYYY-MM')}
-                    holidays={holidays}
-                />
+                    <OtModal
+                        isOpen={openOtModal}
+                        hideModal={() => setOpenOtModal(false)}
+                        schedule={personSchedule}
+                        month={schedule ? schedule.month : moment().format('YYYY-MM')}
+                        holidays={holidays}
+                    />
 
                     <div className="card">
                         <div className="card-header">
@@ -133,6 +137,7 @@ const ScheduleDetail = () => {
                                                                     onSetOT={(sh, isOt) => {
                                                                         console.log(row, index+1, sh, isOt)
                                                                     }}
+                                                                    onClick={(shiftText) => handleShiftClicked(shiftText, index+1)}
                                                                 />
                                                             </td>
                                                         );
