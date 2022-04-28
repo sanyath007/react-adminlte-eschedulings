@@ -39,6 +39,11 @@ function OtModal({
     }
   }, [schedule]);
 
+  useEffect(() => {
+    /** Clear ot state on component did mounted */
+    setOt([]);
+  }, [isOpen]);
+
   const handleSubmitOT = async (id, totalShift, personOT) => {
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
       const count = countOT(personOT);
