@@ -39,16 +39,18 @@ function OtModal({
     }
   }, [schedule]);
 
-  const handleSubmitOT = async (id, totalShift, _ot) => {
+  const handleSubmitOT = async (id, totalShift, personOT) => {
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
-      const count = countOT(_ot);
+      const count = countOT(personOT);
       const working = totalShift - count;
-      const data = { ot_shifts: _ot, total_shift: parseFloat(totalShift, 10), working, ot: count };
+      const data = { ot_shifts: personOT.shifts, working, ot: count };
 
       let res = await api.put(`/api/schedule-details/${id}/ot`, data);
 
       if (res.data.status === 1) {
         toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+
+        hideModal();
       } else {
         toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
       }
@@ -103,9 +105,9 @@ function OtModal({
     }
   };
 
-  const countOT = (_ot) => {
-    if (_ot) {
-      return _ot.shifts.reduce((sum, curVal) => {
+  const countOT = (personOT) => {
+    if (personOT) {
+      return personOT.shifts.reduce((sum, curVal) => {
         if (curVal !== '') {
           /** TODO: Duplicated code in renderWorking function */
           let arrShifts = curVal.split('|');
@@ -128,7 +130,7 @@ function OtModal({
     return 0;
   };
 
-  const renderWorking = (shifts, _ot) => {
+  const renderWorking = (shifts, personOT) => {
     let totalShift = 0;
     shifts.split(',').forEach((sh, index) => {
       /** TODO: Duplicated code in countOT function */
@@ -144,11 +146,11 @@ function OtModal({
       /** TODO: Duplicated code in countOT function */
     });
 
-    return <span>{totalShift - countOT(_ot)}</span>;
+    return <span>{totalShift - countOT(personOT)}</span>;
   };
 
-  const renderOT = (_ot) => {
-    return <span>{countOT(_ot)}</span>;
+  const renderOT = (personOT) => {
+    return <span>{countOT(personOT)}</span>;
   };
 
   return (
