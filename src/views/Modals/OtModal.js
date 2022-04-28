@@ -48,7 +48,16 @@ function OtModal({
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
       const count = countOT(personOT);
       const working = totalShift - count;
-      const data = { ot_shifts: personOT.shifts, working, ot: count };
+      const { morn, even, night, bd } = calculateTotal(personOT);
+      const data = {
+        ot_shifts: personOT.shifts,
+        working,
+        ot: count,
+        m: morn,
+        e: even,
+        n: night,
+        b: bd
+      };
 
       let res = await api.put(`/api/schedule-details/${id}/ot`, data);
 
@@ -60,6 +69,33 @@ function OtModal({
         toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
       }
     }
+  };
+
+  const calculateTotal = (personOT) => {
+    let total = {
+      night: 0,
+      morn: 0,
+      even: 0,
+      bd: 0
+    };
+
+    personOT.shifts.forEach((shift, day) => {
+      let arrShift = shift.split('|');
+
+      arrShift.forEach(el => {
+        if (['ด','ด*','ด**','ด^'].includes(el)) {
+          total.night += 1;
+        } else if (['ช','ช*','ช**','ช^'].includes(el)) {
+          total.morn += 1;
+        } else if (['บ','บ*','บ**','บ^'].includes(el)) {
+          total.even += 1;
+        } else if (['B','B*','B**','B^'].includes(el)) {
+          total.bd += 0.5;
+        }
+      });
+    });
+
+    return total;
   };
 
   const handleOnSetOT = (scheduleDetail, date, shift, isOt) => {
@@ -222,7 +258,7 @@ function OtModal({
         </Row>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="primary" onClick={() => handleSubmitOT(schedule.id, schedule.total_shift, ot.find(o => o.id == schedule.id))}>
+        <Button variant="primary" onClick={() => handleSubmitOT(schedule.id, schedule.total, ot.find(o => o.id == schedule.id))}>
           บันทึก
         </Button>
       </Modal.Footer>
