@@ -55,6 +55,7 @@ const ScheduleAdd = () => {
         tmpPersonShifts = generateShiftDays(tableCol);
     }, []);
 
+    /** =========================== TODO: Duplicated Code =========================== */
     const generateShiftDays = function (days) {
         let _personShifts = [];
         /** Generate person's shift array */
@@ -68,6 +69,7 @@ const ScheduleAdd = () => {
 
         return _personShifts;
     };
+    /** =========================== TODO: Duplicated Code =========================== */
 
     const onFactionChange = function (faction) {
         setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
@@ -177,7 +179,18 @@ const ScheduleAdd = () => {
         /** =========================== Duplicated Code =========================== */
 
         const total_shift = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
-        const newRow = [...personShifts, { person: personSelected, shifts, total_shift }];
+        const newRow = [
+            ...personShifts,
+            {
+                person: personSelected,
+                shifts,
+                n: tmpTotal.night,
+                m: tmpTotal.morn,
+                e: tmpTotal.even,
+                b: tmpTotal.bd,
+                total_shift
+            }
+        ];
 
         setPersonShifts(newRow);
 
@@ -206,6 +219,8 @@ const ScheduleAdd = () => {
         // TODO: Calculate total shifts
         formik.setFieldValue('total_shifts', calculateTotal(ps));
     };
+
+    console.log(personShifts);
 
     const onSubmit = async function (values, props) {
         if (personShifts.length === 0) {

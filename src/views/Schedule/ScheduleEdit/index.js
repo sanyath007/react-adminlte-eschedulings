@@ -20,6 +20,13 @@ let tmpDeparts = [];
 let tmpDivisions = [];
 let tmpPersonShifts = [];
 
+const initialTotal = {
+    night: 0,
+    morn: 0,
+    even: 0,
+    bd: 0
+};
+
 const scheduleSchema = Yup.object().shape({
     depart: Yup.string().required('Depart!!!'),
     division: Yup.string().required('Division!!!'),
@@ -38,7 +45,7 @@ const ScheduleEdit = () => {
     const [divisions, setDivisions] = useState([]);
     const [divisionMembers, setDivisionMembers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
-    const [tableCol, setTableCol] = useState(moment().endOf('month').date());
+    const [tableCol, setTableCol] = useState(31);
     const [personSelected, setPersonSelected] = useState(null);
     const [personShifts, setPersonShifts] = useState([]);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
@@ -74,6 +81,7 @@ const ScheduleEdit = () => {
         }
     }, [schedule]);
 
+    /** =========================== TODO: Duplicated Code =========================== */
     const generateShiftDays = function (days) {
         let _personShifts = [];
         /** Generate person's shift array */
@@ -87,6 +95,7 @@ const ScheduleEdit = () => {
 
         return _personShifts;
     };
+    /** =========================== TODO: Duplicated Code =========================== */
 
     const onFactionChange = function (faction) {
         setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
@@ -178,7 +187,39 @@ const ScheduleEdit = () => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
         });
 
-        const newRow = [...personShifts, { person: personSelected, shifts }];
+        /** =========================== TODO: Duplicated Code =========================== */
+        let tmpTotal = { ...initialTotal };
+
+        shifts.forEach((shift, day) => {
+            let arrShift = shift.split('|');
+
+            arrShift.forEach(el => {
+                if (['ด','ด*','ด**','ด^'].includes(el)) {
+                    tmpTotal.night += 1;
+                } else if (['ช','ช*','ช**','ช^'].includes(el)) {
+                    tmpTotal.morn += 1;
+                } else if (['บ','บ*','บ**','บ^'].includes(el)) {
+                    tmpTotal.even += 1;
+                } else if (['B','B*','B**','B^'].includes(el)) {
+                    tmpTotal.bd += 0.5;
+                }
+            });
+        });
+        /** =========================== Duplicated Code =========================== */
+
+        const total_shift = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
+        const newRow = [
+            ...personShifts,
+            {
+                person: personSelected,
+                shifts,
+                n: tmpTotal.night,
+                m: tmpTotal.morn,
+                e: tmpTotal.even,
+                b: tmpTotal.bd,
+                total_shift
+            }
+        ];
         setPersonShifts(newRow);
 
         /** Calculate total person */
@@ -192,6 +233,8 @@ const ScheduleEdit = () => {
         setToggleShiftVal(true);
         tmpPersonShifts = generateShiftDays(tableCol);
     };
+
+    console.log(personShifts);
 
     const onDeletePersonShifts = function (person, formik) {
         const ps = personShifts.filter(ps => {
