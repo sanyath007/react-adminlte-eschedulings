@@ -156,7 +156,7 @@ const ScheduleDetail = () => {
                                                     })}
                                                     <td style={{ textAlign: 'center' }}>
                                                         <span className="text-btn outline-danger btn-sm">
-                                                            {row.working ? row.working : row.total_shift}
+                                                            {row.working > 0 ? row.working : row.total}
                                                         </span>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
