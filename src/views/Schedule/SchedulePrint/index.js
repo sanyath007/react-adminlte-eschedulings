@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { CustomErrorComponent } from 'custom-error';
+import FileViewer from 'react-file-viewer';
 import { Document, Page, pdfjs } from 'react-pdf';
 import api from '../../../api';
 import pdfjsWorker from "react-pdf/src/pdf.worker.entry";
@@ -8,6 +10,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const SchedulePrint = (props) => {
     const { id } = useParams();
+    const [file, setFile] = useState(null);
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1); //setting 1 to show fisrt page
 
@@ -29,19 +32,29 @@ const SchedulePrint = (props) => {
     }
 
     const getFile = async () => {
-        const res = await api.get('http://localhost/public_html/slim3-eschedulings-api/public/uploads/10122021081424616543e0f0970.pdf');
+        const res = await api.get('/files/1');
 
-        console.log(res);
+        setFile(res.data);
     };
 
     useEffect(() => {
         getFile();
     }, []);
 
+    const onError = (e) => {
+        console.log(e, 'error in file-viewer');
+    }
+
     return (
         <div className="container-fluid">
-            <Document
-                file="http://localhost/public_html/slim3-eschedulings-api/public/uploads/10122021081424616543e0f0970.pdf"
+            <FileViewer
+                fileType="pdf"
+                filePath={file}
+                errorComponent={CustomErrorComponent}
+                onError={onError}
+            />
+            {/* <Document
+                file={file}
                 options={{ workerSrc: "/pdf.worker.js" }}
                 onLoadSuccess={onDocumentLoadSuccess}
             >
@@ -61,7 +74,7 @@ const SchedulePrint = (props) => {
                 >
                     Next
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 }
