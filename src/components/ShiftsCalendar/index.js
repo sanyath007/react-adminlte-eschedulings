@@ -8,7 +8,6 @@ import moment from 'moment';
 
 const ShiftsCalendar = (props) => {
     const calendarRef = useRef(null);
-    const [defaultDate, setDefaultDate] = useState(moment('2021-10-01').toDate());
 
     const handleDateClick = function (arg) {
         console.log('Date click!!', arg);
@@ -36,14 +35,10 @@ const ShiftsCalendar = (props) => {
         );
     };
 
-    useEffect(() => {
-        setDefaultDate(moment(props.defaultDate).toDate());
-    }, [props.defaultDate]);
-
     return (
         <FullCalendar
             initialView="dayGridMonth"
-            initialDate={defaultDate}
+            initialDate={moment(props.defaultDate).toDate()}
             dateClick={(date) => handleDateClick(date)}
             eventClick={(arg) => handleEventClick(arg)}
             datesSet={(arg) => handleMonthChange(arg)}
