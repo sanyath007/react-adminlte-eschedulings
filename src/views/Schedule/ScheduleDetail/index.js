@@ -120,7 +120,7 @@ const ScheduleDetail = () => {
                                             <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
-                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                            <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                         </tr>
                                         <DailyColumns
                                             month={schedule ? schedule.month : moment().format('YYYY-MM')}
@@ -162,27 +162,22 @@ const ScheduleDetail = () => {
                                                     <td style={{ textAlign: 'center' }}>
                                                         <a
                                                             href="#"
-                                                            className="btn btn-danger btn-sm"
-                                                            onClick={() => {
-                                                                setPersonSchedule(row);
-                                                                setOpenOtModal(true);
-                                                            }}
+                                                            className="btn btn-outline-danger btn-sm"
                                                         >
                                                             {row.ot ? row.ot : 'OT'}
                                                         </a>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                            <Link to={`/person-shifts/${row.id}/detail`} className="btn btn-info">
-                                                                <i className="fas fa-search"></i>
-                                                            </Link>
-                                                            <Link to={`/person-shifts/${row.id}/edit`} className="btn btn-warning">
-                                                                <i className="fas fa-edit"></i>
-                                                            </Link>
-                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, row.id)}>
-                                                                <i className="far fa-trash-alt"></i>
-                                                            </a>
-                                                        </div>
+                                                        <a
+                                                            href="#"
+                                                            className="btn btn-primary btn-sm"
+                                                            onClick={() => {
+                                                                setPersonSchedule(row);
+                                                                setOpenOtModal(true);
+                                                            }}
+                                                        >
+                                                            วัน OT
+                                                        </a>
                                                     </td>
                                                 </tr>
                                             );
@@ -213,7 +208,11 @@ const ScheduleDetail = () => {
                             </div>
 
                         </div>{/* <!-- /.card-body --> */}
-                        <div className="card-footer clearfix">
+                        <div className="card-footer clearfix text-center">
+                            <a href="" className="btn btn-success">
+                                <i class="fas fa-print"></i>
+                                <span className="ml-1">พิมพ์ตารางเวร</span>
+                            </a>
                         </div>{/* <!-- /.card-footer --> */}
                     </div>{/* <!-- /.card --> */}
         
