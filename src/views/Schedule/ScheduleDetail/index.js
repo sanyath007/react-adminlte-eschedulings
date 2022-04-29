@@ -42,9 +42,9 @@ const ScheduleDetail = () => {
 
     const getHolidays = async function () {
         try {
-            const res = await api.get(`/api/holidays`);
+            const res = await api.get(`/holidays`);
 
-            setHolidays(res.data);
+            setHolidays(res.data.holidays);
         } catch (err) {
             console.log(err);
         }
@@ -52,9 +52,9 @@ const ScheduleDetail = () => {
 
     const getHeadOfFaction = async function () {
         try {
-            const res = await api.get(`/api/persons/head-of/faction/5`);
+            const res = await api.get(`/persons/head-of/faction/5`);
 
-            setHeadOfFaction(res.data)
+            setHeadOfFaction(res.data.person)
         } catch (err) {
             console.log(err);
         }
@@ -120,7 +120,7 @@ const ScheduleDetail = () => {
                                             <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
-                                            <td style={{ width: '5%', textAlign: 'center' }} rowSpan="2">Actions</td>
+                                            <td style={{ width: '6%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                         </tr>
                                         <DailyColumns
                                             month={schedule ? schedule.month : moment().format('YYYY-MM')}
@@ -168,16 +168,21 @@ const ScheduleDetail = () => {
                                                         </a>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
-                                                        <a
-                                                            href="#"
-                                                            className="btn btn-primary btn-sm"
-                                                            onClick={() => {
-                                                                setPersonSchedule(row);
-                                                                setOpenOtModal(true);
-                                                            }}
-                                                        >
-                                                            วัน OT
-                                                        </a>
+                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                            <a
+                                                                href="#"
+                                                                className="btn btn-primary btn-sm"
+                                                                onClick={() => {
+                                                                    setPersonSchedule(row);
+                                                                    setOpenOtModal(true);
+                                                                }}
+                                                            >
+                                                                OT
+                                                            </a>
+                                                            <Link to={`/person-shifts/${row.id}/detail`} className="btn bg-maroon">
+                                                                <i className="fas fa-search"></i>
+                                                            </Link>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             );
@@ -209,10 +214,10 @@ const ScheduleDetail = () => {
 
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix text-center">
-                            <a href="" className="btn btn-success">
-                                <i class="fas fa-print"></i>
+                            <Link to={`/schedules/${id}/print`} className="btn btn-success">
+                                <i className="fas fa-print"></i>
                                 <span className="ml-1">พิมพ์ตารางเวร</span>
-                            </a>
+                            </Link>
                         </div>{/* <!-- /.card-footer --> */}
                     </div>{/* <!-- /.card --> */}
         

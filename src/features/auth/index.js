@@ -38,9 +38,9 @@ const {
 
 export const login = (data, history) => async (dispatch) => {
   try {
-    const res = await api.post('/login', data);
+    const res = await api.post('/auth/login', data);
 
-    dispatch(loginSuccess(res.data));
+    dispatch(loginSuccess(res.data.token));
 
     history.push('/');
   } catch (error) {

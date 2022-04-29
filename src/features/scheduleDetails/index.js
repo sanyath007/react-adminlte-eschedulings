@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchAll = createAsyncThunk('scheduleDetails/fetchAll', async (id) => {
   try {
-    const res = await api.get(`/api/schedule-details/${id}/scheduling`);
+    const res = await api.get(`/schedule-details/${id}/scheduling`);
     return res.data.details;
   } catch (error) {
     console.log(error);
@@ -20,7 +20,7 @@ export const update = createAsyncThunk('scheduleDetails/update', async ({ id, da
   const { scheduling_id, person_id, shifts } = data;
 
   try {
-    const res = await api.put(`/api/schedule-details/${id}`, { scheduling_id, person_id, shifts });
+    const res = await api.put(`/schedule-details/${id}`, { scheduling_id, person_id, shifts });
     return data;
   } catch (error) {
     console.log(error);
@@ -29,7 +29,7 @@ export const update = createAsyncThunk('scheduleDetails/update', async ({ id, da
 
 export const swap = createAsyncThunk('scheduleDetails/swap', async ({ id, data }) => {
   try {
-    const res = await api.put(`/api/schedule-details/${id}/swap`, { ...data });
+    const res = await api.put(`/schedule-details/${id}/swap`, { ...data });
     return data;
   } catch (error) {
     console.log(error);

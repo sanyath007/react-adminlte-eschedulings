@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchSchedules = createAsyncThunk('schedules/fetchSchedules', async (month) => {
   try {
-    const res = await api.get(`/api/schedulings?month=${month}`);
+    const res = await api.get(`/schedulings?month=${month}`);
     return res.data.schedulings;
   } catch (error) {
     console.log(error);

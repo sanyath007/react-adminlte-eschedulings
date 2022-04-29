@@ -3,7 +3,8 @@ import {
   ScheduleList,
   ScheduleDetail,
   ScheduleAdd,
-  ScheduleEdit
+  ScheduleEdit,
+  SchedulePrint
 } from './views/Schedule';
 import PersonShiftsDetail from './views/PersonShiftsDetail';
 import ShiftSwappingForm from './views/ShiftSwappingForm';
@@ -16,9 +17,10 @@ import NotFound from './views/NotFound';
 const routes = [
   { path: '/', exact: true, name: 'Dashboard', component: Dashboard },
   { path: '/schedules/list', exact: true, name: 'Schedules', component: ScheduleList },
-  { path: '/schedules/:id/detail', exact: true, name: 'Schedules', component: ScheduleDetail },
-  { path: '/schedules/:id/edit', exact: true, name: 'Schedules', component: ScheduleEdit },
   { path: '/schedules/add', exact: true, name: 'Schedules', component: ScheduleAdd },
+  { path: '/schedules/:id/edit', exact: true, name: 'Schedules', component: ScheduleEdit },
+  { path: '/schedules/:id/detail', exact: true, name: 'Schedule-detail', component: ScheduleDetail },
+  { path: '/schedules/:id/print', exact: true, name: 'Schedule-print', component: SchedulePrint },
   { path: '/person-shifts/:id/detail', exact: true, name: 'Person Shifts', component: PersonShiftsDetail },
   { path: '/person-shifts/:id/:date/:shift/swapping', exact: true, name: 'Shift Swapping Form', component: ShiftSwappingForm },
   { path: '/reports/chartjs', name: 'Charts', component: ChartJS },
