@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { CustomErrorComponent } from 'custom-error';
 import FileViewer from 'react-file-viewer';
 import { Document, Page, pdfjs } from 'react-pdf';
-import api from '../../../api';
+import axios from 'axios';
 import pdfjsWorker from "react-pdf/src/pdf.worker.entry";
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
@@ -32,9 +32,27 @@ const SchedulePrint = (props) => {
     }
 
     const getFile = async () => {
-        const res = await api.get('/files/1');
+        try {
+            const token = JSON.parse(localStorage.getItem('access_token'));
 
-        setFile(res.data);
+            axios({
+                url: `http://localhost/public_html/laravel54-eschedulings-api/public/files/1`, 
+                method: 'GET',
+                responseType: 'blob',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
+            })
+            .then(res => {
+                const url = window.URL.createObjectURL(new Blob([res.data]));
+                setFile(url);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     useEffect(() => {
@@ -47,13 +65,13 @@ const SchedulePrint = (props) => {
 
     return (
         <div className="container-fluid">
-            <FileViewer
+            {/* {file && <FileViewer
                 fileType="pdf"
                 filePath={file}
                 errorComponent={CustomErrorComponent}
                 onError={onError}
-            />
-            {/* <Document
+            />} */}
+            <Document
                 file={file}
                 options={{ workerSrc: "/pdf.worker.js" }}
                 onLoadSuccess={onDocumentLoadSuccess}
@@ -74,7 +92,7 @@ const SchedulePrint = (props) => {
                 >
                     Next
                 </button>
-            </div> */}
+            </div>
         </div>
     );
 }
