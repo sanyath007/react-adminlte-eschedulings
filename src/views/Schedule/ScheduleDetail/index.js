@@ -216,7 +216,7 @@ const ScheduleDetail = () => {
 
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix text-center">
-                            <Link to={`/schedules/${id}/print`} className="btn btn-success">
+                            <Link to={`/schedules/${id}/pdf`} className="btn btn-success">
                                 <i className="fas fa-print"></i>
                                 <span className="ml-1">พิมพ์ตารางเวร</span>
                             </Link>
