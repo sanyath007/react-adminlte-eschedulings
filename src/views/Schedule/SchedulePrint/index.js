@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CustomErrorComponent } from 'custom-error';
-import FileViewer from 'react-file-viewer';
 import { Document, Page, pdfjs } from 'react-pdf';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import pdfjsWorker from "react-pdf/src/pdf.worker.entry";
+import './styles.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
@@ -14,7 +14,7 @@ const SchedulePrint = (props) => {
     const [numPages, setNumPages] = useState(null);
     const [pageNumber, setPageNumber] = useState(1); //setting 1 to show fisrt page
 
-    function onDocumentLoadSuccess({ numPages }) {
+    function onDocumentLoadSuccess({ numPages, ...oth }) {
         setNumPages(numPages);
         setPageNumber(1);
     }
@@ -36,7 +36,7 @@ const SchedulePrint = (props) => {
             const token = JSON.parse(localStorage.getItem('access_token'));
 
             axios({
-                url: `http://localhost/public_html/laravel54-eschedulings-api/public/files/1`, 
+                url: `http://localhost/public_html/laravel54-eschedulings-api/public/files/${id}/print`, 
                 method: 'GET',
                 responseType: 'blob',
                 headers: {
@@ -46,6 +46,8 @@ const SchedulePrint = (props) => {
             .then(res => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 setFile(url);
+
+                // saveAs(url, 'test.pdf');
             })
             .catch(err => {
                 console.log(err);
@@ -59,18 +61,8 @@ const SchedulePrint = (props) => {
         getFile();
     }, []);
 
-    const onError = (e) => {
-        console.log(e, 'error in file-viewer');
-    }
-
     return (
-        <div className="container-fluid">
-            {/* {file && <FileViewer
-                fileType="pdf"
-                filePath={file}
-                errorComponent={CustomErrorComponent}
-                onError={onError}
-            />} */}
+        <div className="viewer">
             <Document
                 file={file}
                 options={{ workerSrc: "/pdf.worker.js" }}
@@ -78,6 +70,7 @@ const SchedulePrint = (props) => {
             >
                 <Page pageNumber={pageNumber} />
             </Document>
+
             <div>
                 <p>
                     Page {pageNumber || (numPages ? 1 : "--")} of {numPages || "--"}
