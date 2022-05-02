@@ -157,7 +157,11 @@ const ScheduleList = () => {
                                         return (
                                             <tr key={row.id}>
                                                 <td style={{ textAlign: 'center' }}>{ i+1 }</td>
-                                                <td>{ row.division.ward_name }</td>
+                                                <td>
+                                                    {row.division
+                                                        ? row.division.ward_name
+                                                        : row.depart.depart_name}
+                                                </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <MonthlyText monthText={row.month} />
                                                 </td>

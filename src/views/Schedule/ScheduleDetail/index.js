@@ -104,7 +104,9 @@ const ScheduleDetail = () => {
                                     <h2>ตารางปฏิบัติงานนอกเวลาราชการ</h2>
                                 </div>
                                 <div className="col-md-4">
-                                    หน่วยงาน : {schedule && schedule.division.ward_name}
+                                    หน่วยงาน : {schedule && schedule.division
+                                                            ? schedule.division.ward_name
+                                                            : schedule.depart.depart_name}
                                 </div>
                                 <div className="col-md-4">
                                     ประจำเดือน : {schedule && <MonthlyText monthText={schedule.month} /> }
