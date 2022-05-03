@@ -87,7 +87,8 @@ const scheduleDetailsSlice = createSlice({
       state.scheduleDetails = updatedData;
     },
     [swap.fulfilled]: (state, action) => {
-      state.status = 'succeeded'
+      state.status = 'succeeded';
+
       let updatedData = state.scheduleDetails.map(detail => {
         if (detail.id === action.payload.id) {
           return {
@@ -102,7 +103,8 @@ const scheduleDetailsSlice = createSlice({
       state.scheduleDetails = updatedData;
     },
     [off.fulfilled]: (state, action) => {
-      state.status = 'succeeded'
+      state.status = 'succeeded';
+
       let updatedData = state.scheduleDetails.map(detail => {
         if (detail.id === action.payload.id) {
           return {

@@ -25,6 +25,7 @@ const ScheduleDetail = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     const schedule = useSelector(state => getScheduleById(state, id));
+    const { scheduleDetails } = useSelector(state => state.scheduleDetails);
 
     useEffect(() => {
         dispatch(fetchAll(id));
@@ -131,7 +132,7 @@ const ScheduleDetail = () => {
                                     </thead>
                                     {/* TODO: Duplicated code */}
                                     <tbody>
-                                        {schedule && schedule.shifts.map(row => {
+                                        {scheduleDetails && scheduleDetails.map(row => {
                                             let otShifts = row.ot_shifts ? row.ot_shifts.split(',') : [];
 
                                             return (
@@ -203,13 +204,13 @@ const ScheduleDetail = () => {
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มงาน
                                     <p style={{ fontSize: '14px', color: 'grey' }}>
-                                        {schedule && schedule.controller.person_firstname+ ' ' +schedule.controller.person_lastname}
+                                        {schedule && schedule.controller.prefix.prefix_name+schedule.controller.person_firstname+ ' ' +schedule.controller.person_lastname}
                                     </p>
                                 </div>
                                 <div className="col-md-6">
                                     หัวหน้ากลุ่มภารกิจ
                                     <p style={{ fontSize: '14px', color: 'grey' }}>
-                                        {headOfFaction && headOfFaction.person_firstname+ ' ' +headOfFaction.person_lastname}
+                                        {headOfFaction && headOfFaction.prefix.prefix_name+headOfFaction.person_firstname+ ' ' +headOfFaction.person_lastname}
                                     </p>
                                 </div>
                             </div>
