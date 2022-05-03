@@ -36,6 +36,15 @@ export const swap = createAsyncThunk('scheduleDetails/swap', async ({ id, data }
   }
 });
 
+export const off = createAsyncThunk('scheduleDetails/off', async ({ id, data }) => {
+  try {
+    const res = await api.put(`/schedule-details/${id}/off`, { ...data });
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 const scheduleDetailsSlice = createSlice({
   name: 'scheduleDetails',
   initialState,
@@ -63,6 +72,21 @@ const scheduleDetailsSlice = createSlice({
       state.error = action.error.message
     },
     [update.fulfilled]: (state, action) => {
+      state.status = 'succeeded'
+      let updatedData = state.scheduleDetails.map(detail => {
+        if (detail.id === action.payload.id) {
+          return {
+            ...detail,
+            shifts: action.payload.shifts
+          }
+        }
+
+        return detail;
+      })
+
+      state.scheduleDetails = updatedData;
+    },
+    [swap.fulfilled]: (state, action) => {
       state.status = 'succeeded'
       let updatedData = state.scheduleDetails.map(detail => {
         if (detail.id === action.payload.id) {

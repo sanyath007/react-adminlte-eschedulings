@@ -52,7 +52,7 @@ const ScheduleDetail = () => {
 
     const getHeadOfFaction = async function () {
         try {
-            const res = await api.get(`/persons/head-of/faction/5`);
+            const res = await api.get(`/factions/5/head-of`);
 
             setHeadOfFaction(res.data.person)
         } catch (err) {
