@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
 import {
@@ -7,14 +7,21 @@ import {
   Row,
   Modal
 } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import { swap } from '../../features/scheduleDetails';
+import { off } from '../../features/scheduleDetails';
 
 function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
   const dispatch = useDispatch();
   const [showReason, setShowReason] = useState(false);
   const [reason, setReason] = useState('');
+  const { status } = useSelector((state) => state.scheduleDetails);
+
+  useEffect(() => {
+    setReason('');
+    setShowReason(false);
+  }, [isOpen]);
 
   /** Handle on off shift button clicked */
   const handleOffShift = function () {
@@ -34,9 +41,16 @@ function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
     /** Pass updating data up to parent */
     if (window.confirm(`คุณต้องการ Off เวรใช่หรือไม่ ?`)) {
       const { created_at, updated_at, person, ...oth } = data;
-      console.log(props.personShifts.id, { ...oth, reason });
 
-      // dispatch(swap(props.personShifts.id, { ...oth, reason }));
+      dispatch(off({ id: props.personShifts.id, data: { ...oth, reason } }));
+
+      if (status === 'succeeded') {
+        toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+
+        hideModal();
+      } else {
+        toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
+      }
     }
   };
 

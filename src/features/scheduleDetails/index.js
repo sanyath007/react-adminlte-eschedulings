@@ -101,7 +101,7 @@ const scheduleDetailsSlice = createSlice({
 
       state.scheduleDetails = updatedData;
     },
-    [swap.fulfilled]: (state, action) => {
+    [off.fulfilled]: (state, action) => {
       state.status = 'succeeded'
       let updatedData = state.scheduleDetails.map(detail => {
         if (detail.id === action.payload.id) {
