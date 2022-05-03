@@ -21,11 +21,15 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
     depart = props.depart ? props.depart : '';
     division = props.division ? props.division : '';
 
-    const res = await api.get(`${url}&fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
-    const { data, ...pager } = res.data.persons;
-
-    setPersons(data);
-    setPager(pager);
+    try {
+      const res = await api.get(`${url}&fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
+      const { data, ...pager } = res.data.persons;
+  
+      setPersons(data);
+      setPager(pager);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handlePaginationClick = (url) => {
@@ -34,7 +38,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
 
   useEffect(() => {
     fetchPersons();
-  }, [props.faction, props.depart]);
+  }, [props.faction, props.depart, isOpen]);
 
   return (
     <Modal
@@ -53,7 +57,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
                   <span className="input-group-text">คันหาชื่อ</span>
                 </div>
                 <BsForm.Control
-                  onChange={(e) => fetchPersons(e.target.value)}
+                  onChange={(e) => fetchPersons(undefined, e.target.value)}
                 ></BsForm.Control>
 
                 {/* <BsForm.Control
