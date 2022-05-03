@@ -7,9 +7,12 @@ import {
   Row,
   Modal
 } from 'react-bootstrap';
+import { useDispatch } from 'react-redux';
 import moment from 'moment';
 
-function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
+function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
+  const dispatch = useDispatch();
+
   /** Handle on off shift button clicked */
   const handleOffShift = function () {
     const newShiftsText = props.personShifts.shifts.split(',').map((shift, index) => {
@@ -27,7 +30,7 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
 
     /** Pass updating data up to parent */
     if (window.confirm(`คุณต้องการ Off เวรใช่หรือไม่ ?`)) {
-      props.onUpdateScheduleDetail(props.personShifts.id, data)
+      console.log(props.personShifts.id, data);
     }
   };
 
@@ -86,7 +89,7 @@ function ShiftModal({ isOpen, hideModal, onSelected, ...props }) {
 ShiftModal.propTypes = {
   isOpen: PropTypes.bool,
   hideModal: PropTypes.func,
-  onSelected: PropTypes.func,
+  onOffShift: PropTypes.func,
 };
 
 export default ShiftModal;

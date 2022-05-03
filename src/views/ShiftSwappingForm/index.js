@@ -25,11 +25,12 @@ const ShiftSwappingForm = () => {
             history.push('/schedules/list')
         } else {
             const schedule = schedules.find(schedule => schedule.id === parseInt(scheduleDetails.scheduling_id));
+            setSchedule(schedule);
+
+            /** ดึงรายการเจ้าหน้าที่จากตารางเวร */
             const persons = schedule.shifts
                                 .filter(shift => shift.person_id !== scheduleDetails.person_id)
                                 .map(shift => shift.person);
-
-            setSchedule(schedule);
             setPersonsOfSchedule(persons);
         }
     }, []);
