@@ -42,7 +42,7 @@ const ScheduleEdit = () => {
     const [shifts, setShifts] = useState([]);
     const [holidays, setHolidays] = useState([]);
     const [divisions, setDivisions] = useState([]);
-    const [divisionMembers, setDivisionMembers] = useState([]);
+    const [daprtMembers, setDaprtMembers] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [tableCol, setTableCol] = useState(31);
     const [personSelected, setPersonSelected] = useState(null);
@@ -65,11 +65,11 @@ const ScheduleEdit = () => {
             setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
 
             /** TODO: To filter departments and divisions of selected faction */
-            setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.division.depart_id));
+            setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.depart.depart_id));
             setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
     
             /** Get persons that are member of editting schedule's division */
-            getMemberOfDepart(schedule.division.depart_id);
+            getMemberOfDepart(schedule.depart.depart_id);
 
             if (schedule) {
                 setTableCol(moment(schedule.month).endOf('month').date());
@@ -108,9 +108,9 @@ const ScheduleEdit = () => {
 
     const getMemberOfDepart = async function (depart) {
         try {
-            const res = await api.get(`/api/schedulings/member-of/depart/${depart}`);
+            const res = await api.get(`/departs/member-of/depart/${depart}`);
 
-            setDivisionMembers(res.data);
+            setDaprtMembers(res.data);
         } catch (err) {
             console.log(err);
         }
@@ -118,7 +118,7 @@ const ScheduleEdit = () => {
 
     const getInitForm = async function (e) {
         try {
-            const res = await api.get('/api/schedulings/add/init-form');
+            const res = await api.get('/schedulings/add/init-form');
 
             setFactions(res.data.factions);
             setDeparts(res.data.departs);
@@ -233,8 +233,6 @@ const ScheduleEdit = () => {
         tmpPersonShifts = generateShiftDays(tableCol);
     };
 
-    console.log(personShifts);
-
     const onDeletePersonShifts = function (person, formik) {
         const ps = personShifts.filter(ps => {
             return ps.person.person_id !== person.person_id;
@@ -270,7 +268,7 @@ const ScheduleEdit = () => {
         };
 
         /** Update data to db */
-        let res = await api.put(`/api/schedulings/${id}`, data);
+        let res = await api.put(`/schedulings/${id}`, data);
 
         if (res.data.status === 1) {
             toast.success('แก้ไขข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
@@ -293,8 +291,8 @@ const ScheduleEdit = () => {
                     <Formik
                         enableReinitialize={schedule}
                         initialValues={{
-                            faction: schedule ? schedule.division.faction_id : '',
-                            depart: schedule ? schedule.division.depart_id : '',
+                            faction: schedule ? schedule.depart?.faction_id : '',
+                            depart: schedule ? schedule.division?.depart_id : '',
                             division: schedule ? schedule.division_id : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? schedule.year : '2565',
@@ -440,7 +438,7 @@ const ScheduleEdit = () => {
                                                         onChange={formik.handleChange}
                                                     >
                                                         <option value="">-- เลือกผู้ควบคุม --</option>
-                                                        {divisionMembers && divisionMembers.map(person => {
+                                                        {daprtMembers && daprtMembers.map(person => {
                                                             return (
                                                                 <option key={person.person_id} value={ person.person_id }>
                                                                     { person.prefix.prefix_name+person.person_firstname+ ' ' +person.person_lastname }

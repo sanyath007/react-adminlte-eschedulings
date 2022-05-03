@@ -21,7 +21,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
     depart = props.depart ? props.depart : '';
     division = props.division ? props.division : '';
 
-    let res = await api.get(`/api/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
+    let res = await api.get(`/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
 
     setPersons(res.data.items);
     setPager(res.data.pager);

@@ -43,7 +43,7 @@ const ScheduleList = () => {
     const onDelete = async function (e, id) {
         if (window.confirm(`คุณต้องการลบข้อมูลตารางเวร รหัส ${id} ใช่หรือไม่ ?`)) {
             /** Delete data from db */
-            let res = await api.delete(`/api/schedulings/${id}`);
+            let res = await api.delete(`/schedulings/${id}`);
             
             if (res.data.status === 1) {
                 toast.success('ลบข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
