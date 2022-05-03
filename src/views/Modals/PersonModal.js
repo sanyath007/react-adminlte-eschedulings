@@ -16,20 +16,12 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
   const [persons, setPersons] = useState([]);
   const [pager, setPager] = useState(null);
 
-  const fetchPersons = async (fname='', faction='', depart='', division='') => {
+  const fetchPersons = async (url='/persons?page=', fname='', faction='', depart='', division='') => {
     faction = props.faction ? props.faction : '5';
     depart = props.depart ? props.depart : '';
     division = props.division ? props.division : '';
 
-    const res = await api.get(`/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
-    const { data, ...pager } = res.data.persons;
-
-    setPersons(data);
-    setPager(pager);
-  };
-
-  const fetchPersonsAllWithPage = async (url) => {
-    const res = await api.get(url);
+    const res = await api.get(`${url}&fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
     const { data, ...pager } = res.data.persons;
 
     setPersons(data);
@@ -37,7 +29,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
   };
 
   const handlePaginationClick = (url) => {
-    fetchIpAllWithPage(url);
+    fetchPersons(url);
   };
 
   useEffect(() => {
@@ -133,7 +125,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
           <Col>
             <Pagination className="float-right mb-0">
               <Pagination.First
-                onClick={() => handlePaginationClick(pager?.first_page_url)}
+                onClick={() => handlePaginationClick(`${pager?.path}?page=1`)}
                 disabled={pager?.current_page === 1}
               />
               <Pagination.Prev
@@ -145,7 +137,7 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
                 disabled={pager?.current_page === pager?.last_page}
               />
               <Pagination.Last
-                onClick={() => handlePaginationClick(pager?.last_page_url)}
+                onClick={() => handlePaginationClick(`${pager?.path}?page=${pager.last_page}`)}
                 disabled={pager?.current_page === pager?.last_page}
               />
             </Pagination>
