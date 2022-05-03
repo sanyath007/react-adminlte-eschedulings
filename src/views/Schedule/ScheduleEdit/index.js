@@ -54,22 +54,24 @@ const ScheduleEdit = () => {
     const schedule = useSelector(state => getScheduleById(state, id));
 
     useEffect(() => {
+        /** Fetch form dropdown inputs data */
+        getInitForm();
+    }, []);
+
+    useEffect(() => {
         /** To redirect to /schedules/list if schedule is null */
         if (!schedule) {
             history.push('/schedules/list');
         } else {
-            /** Fetch form dropdown inputs data */
-            getInitForm();
-    
             /** Format person's shifts of editting schedule data to array */
             setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
 
             /** TODO: To filter departments and divisions of selected faction */
-            setDeparts(tmpDeparts.filter(dep => dep.depart_id == schedule.depart.depart_id));
-            setDivisions(tmpDivisions.filter(div => div.division_id == schedule.division_id));
+            setDeparts(tmpDeparts.filter(dep => dep.faction_id === schedule.depart.faction_id));
+            setDivisions(tmpDivisions.filter(div => div.depart_id === schedule.depart_id));
     
             /** Get persons that are member of editting schedule's division */
-            getMemberOfDepart(schedule.depart.depart_id);
+            getMemberOfDepart(schedule.depart_id);
 
             if (schedule) {
                 setTableCol(moment(schedule.month).endOf('month').date());
@@ -79,6 +81,31 @@ const ScheduleEdit = () => {
             }
         }
     }, [schedule]);
+
+    const getInitForm = async function (e) {
+        try {
+            const res = await api.get('/schedulings/add/init-form');
+
+            setFactions(res.data.factions);
+            setShifts(res.data.shifts);
+            setHolidays(res.data.holidays);
+
+            tmpDeparts = res.data.departs;
+            tmpDivisions = res.data.divisions;
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const onFactionChange = function (faction) {
+        setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
+    };
+
+    const onDepartChange = function (depart) {
+        setDivisions(tmpDivisions.filter(div => div.depart_id === depart));
+
+        getMemberOfDepart(depart);
+    };
 
     /** =========================== TODO: Duplicated Code =========================== */
     const generateShiftDays = function (days) {
@@ -96,16 +123,6 @@ const ScheduleEdit = () => {
     };
     /** =========================== TODO: Duplicated Code =========================== */
 
-    const onFactionChange = function (faction) {
-        setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
-    };
-
-    const onDepartChange = function (depart) {
-        setDivisions(tmpDivisions.filter(div => div.depart_id === depart));
-
-        getMemberOfDepart(depart);
-    };
-
     const getMemberOfDepart = async function (depart) {
         try {
             const res = await api.get(`/departs/${depart}/member-of`);
@@ -115,23 +132,6 @@ const ScheduleEdit = () => {
             console.log(err);
         }
     }
-
-    const getInitForm = async function (e) {
-        try {
-            const res = await api.get('/schedulings/add/init-form');
-
-            setFactions(res.data.factions);
-            setDeparts(res.data.departs);
-            setDivisions(res.data.divisions);
-            setShifts(res.data.shifts);
-            setHolidays(res.data.holidays);
-
-            tmpDeparts = res.data.departs;
-            tmpDivisions = res.data.divisions;
-        } catch (err) {
-            console.log(err);
-        }
-    };
 
     const setDatesOfMonth = function (date) {
         const daysOfMonth = moment(date).endOf('month').date();
@@ -292,7 +292,7 @@ const ScheduleEdit = () => {
                         enableReinitialize={schedule}
                         initialValues={{
                             faction: schedule ? schedule.depart?.faction_id : '',
-                            depart: schedule ? schedule.division?.depart_id : '',
+                            depart: schedule ? schedule.depart_id : '',
                             division: schedule ? schedule.division_id : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? schedule.year : '2565',
