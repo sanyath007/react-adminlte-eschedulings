@@ -108,7 +108,7 @@ const ScheduleEdit = () => {
 
     const getMemberOfDepart = async function (depart) {
         try {
-            const res = await api.get(`/departs/member-of/depart/${depart}`);
+            const res = await api.get(`/departs/${depart}/member-of`);
 
             setDaprtMembers(res.data);
         } catch (err) {
@@ -336,6 +336,7 @@ const ScheduleEdit = () => {
                                                         name="faction"
                                                         value={formik.values.faction}
                                                         onChange={(e) => {
+                                                            console.log(e);
                                                             formik.setFieldValue('faction', e.target.value);
                                                             onFactionChange(e.target.value);
                                                         }}
