@@ -102,7 +102,7 @@ const ScheduleDetail = () => {
                         <div className="card-body">
                             <div className="row my-2">
                                 <div className="col-md-12 text-center">
-                                    <h2>ตารางปฏิบัติงานนอกเวลาราชการ</h2>
+                                    <h2>ตารางปฏิบัติงานในและนอกเวลาราชการ</h2>
                                 </div>
                                 <div className="col-md-4">
                                     หน่วยงาน : {schedule && schedule.division
