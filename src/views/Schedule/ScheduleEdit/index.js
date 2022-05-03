@@ -64,7 +64,11 @@ const ScheduleEdit = () => {
             history.push('/schedules/list');
         } else {
             /** Format person's shifts of editting schedule data to array */
-            setPersonShifts(schedule.shifts.map(ps => ({ id: ps.id, person: ps.person, shifts: ps.shifts.split(',') })));
+            setPersonShifts(schedule.shifts.map(ps => {
+                const { shifts, ...oth } = ps;
+
+                return { ...oth, shifts: ps.shifts.split(',') }
+            }));
 
             /** TODO: To filter departments and divisions of selected faction */
             setDeparts(tmpDeparts.filter(dep => dep.faction_id === schedule.depart.faction_id));
@@ -206,7 +210,7 @@ const ScheduleEdit = () => {
         });
         /** =========================== Duplicated Code =========================== */
 
-        const total_shift = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
+        const total = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
         const newRow = [
             ...personShifts,
             {
@@ -216,7 +220,7 @@ const ScheduleEdit = () => {
                 m: tmpTotal.morn,
                 e: tmpTotal.even,
                 b: tmpTotal.bd,
-                total_shift
+                total
             }
         ];
         setPersonShifts(newRow);
@@ -291,7 +295,7 @@ const ScheduleEdit = () => {
                     <Formik
                         enableReinitialize={schedule}
                         initialValues={{
-                            faction: schedule ? schedule.depart?.faction_id : '',
+                            faction: schedule ? schedule.depart.faction_id : '',
                             depart: schedule ? schedule.depart_id : '',
                             division: schedule ? schedule.division_id : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
@@ -336,7 +340,6 @@ const ScheduleEdit = () => {
                                                         name="faction"
                                                         value={formik.values.faction}
                                                         onChange={(e) => {
-                                                            console.log(e);
                                                             formik.setFieldValue('faction', e.target.value);
                                                             onFactionChange(e.target.value);
                                                         }}

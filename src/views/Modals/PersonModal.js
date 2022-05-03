@@ -21,17 +21,19 @@ function PersonModal({ isOpen, hideModal, onSelected, ...props }) {
     depart = props.depart ? props.depart : '';
     division = props.division ? props.division : '';
 
-    let res = await api.get(`/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
+    const res = await api.get(`/persons?fname=${fname}&faction=${faction}&depart=${depart}&division=${division}`);
+    const { data, ...pager } = res.data.persons;
 
-    setPersons(res.data.items);
-    setPager(res.data.pager);
+    setPersons(data);
+    setPager(pager);
   };
 
-  const fetchIpAllWithPage = async (url) => {
-    let res = await api.get(url);
+  const fetchPersonsAllWithPage = async (url) => {
+    const res = await api.get(url);
+    const { data, ...pager } = res.data.persons;
 
-    setPersons(res.data.items);
-    setPager(res.data.pager);
+    setPersons(data);
+    setPager(pager);
   };
 
   const handlePaginationClick = (url) => {
