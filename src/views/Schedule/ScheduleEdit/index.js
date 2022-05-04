@@ -70,6 +70,7 @@ const ScheduleEdit = () => {
                 return { ...oth, shifts: ps.shifts.split(',') }
             }));
 
+            console.log(tmpDeparts);
             /** TODO: To filter departments and divisions of selected faction */
             setDeparts(tmpDeparts.filter(dep => dep.faction_id === schedule.depart.faction_id));
             setDivisions(tmpDivisions.filter(div => div.depart_id === schedule.depart_id));
@@ -295,15 +296,15 @@ const ScheduleEdit = () => {
                     <Formik
                         enableReinitialize={schedule}
                         initialValues={{
-                            faction: schedule ? schedule.depart.faction_id : '',
-                            depart: schedule ? schedule.depart_id : '',
-                            division: schedule ? schedule.division_id : '',
+                            faction: schedule ? `${schedule.depart.faction_id}` : '',
+                            depart: schedule ? `${schedule.depart_id}` : '',
+                            division: schedule ? `${schedule.division_id}` : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
-                            year: schedule ? schedule.year : '2565',
-                            controller: schedule ? schedule.controller_id : '',
-                            total_persons: schedule ? schedule.total_persons : 0,
-                            total_shifts: schedule ? schedule.total_shifts : 0,
-                            remark: schedule ? schedule.remark :''
+                            year: schedule ? `${schedule.year}` : '2565',
+                            controller: schedule ? `${schedule.controller_id}` : '',
+                            total_persons: schedule ? `${schedule.total_persons}` : 0,
+                            total_shifts: schedule ? `${schedule.total_shifts}` : 0,
+                            remark: schedule ? `${schedule.remark}` : ''
                         }}
                         validationSchema={scheduleSchema}
                         onSubmit={onSubmit}
