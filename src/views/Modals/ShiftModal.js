@@ -25,6 +25,7 @@ function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
 
   /** Handle on off shift button clicked */
   const handleOffShift = function () {
+    /** Remove shift from shift's personShift */
     const newShiftsText = props.personShifts.shifts.split(',').map((shift, index) => {
       if (parseInt(moment(props.shift.shiftDate).format('DD')) === (index+1)) {
         return shift.replace(props.shift.shiftText, '');
@@ -33,16 +34,21 @@ function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
       return shift;
     });
 
-    /** TODO: Calculate total_persons and total_shifts */
-
+    /** Create newPersonShift from props and newShiftsText */
     const { shifts, ...rest } = props.personShifts
-    const data = { ...rest, shifts: newShiftsText.join() };
+    const newPersonShifts = { ...rest, shifts: newShiftsText.join() };
 
-    /** Pass updating data up to parent */
+    /** Dispatch off action for updating data */
     if (window.confirm(`คุณต้องการ Off เวรใช่หรือไม่ ?`)) {
-      const { created_at, updated_at, person, ...oth } = data;
+      const { created_at, updated_at, person, ...oth } = newPersonShifts;
+      const data = {
+        ...oth,
+        reason,
+        shift_date: props.shift.shiftDate,
+        shift: props.shift.shiftText
+      };
 
-      dispatch(off({ id: props.personShifts.id, data: { ...oth, reason } }));
+      dispatch(off({ id: props.personShifts.id, data }));
 
       if (status === 'succeeded') {
         toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
