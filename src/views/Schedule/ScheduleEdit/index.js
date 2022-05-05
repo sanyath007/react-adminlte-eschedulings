@@ -298,13 +298,13 @@ const ScheduleEdit = () => {
                         initialValues={{
                             faction: schedule ? `${schedule.depart.faction_id}` : '',
                             depart: schedule ? `${schedule.depart_id}` : '',
-                            division: schedule ? `${schedule.division_id}` : '',
+                            division: (schedule && schedule.division_id)? `${schedule.division_id}` : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? `${schedule.year}` : '2565',
                             controller: schedule ? `${schedule.controller_id}` : '',
                             total_persons: schedule ? `${schedule.total_persons}` : 0,
                             total_shifts: schedule ? `${schedule.total_shifts}` : 0,
-                            remark: schedule ? `${schedule.remark}` : ''
+                            remark: (schedule && schedule.remark) ? `${schedule.remark}` : ''
                         }}
                         validationSchema={scheduleSchema}
                         onSubmit={onSubmit}

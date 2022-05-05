@@ -71,18 +71,18 @@ const ScheduleAdd = () => {
     /** =========================== TODO: Duplicated Code =========================== */
 
     const onFactionChange = function (faction) {
-        setDeparts(tmpDeparts.filter(dep => dep.faction_id === faction));
+        setDeparts(tmpDeparts.filter(dep => dep.faction_id === parseInt(faction)));
     };
 
     const onDepartChange = function (depart) {
-        setDivisions(tmpDivisions.filter(div => div.depart_id === depart));
+        setDivisions(tmpDivisions.filter(div => div.depart_id === parseInt(depart)));
 
         getMemberOfDepart(depart);
     };
 
     const getMemberOfDepart = async function (depart) {
         try {
-            const res = await api.get(`/api/schedulings/member-of/depart/${depart}`);
+            const res = await api.get(`/departs/${depart}/member-of`);
 
             setDivisionMembers(res.data);
         } catch (err) {
@@ -92,11 +92,12 @@ const ScheduleAdd = () => {
 
     const getInitForm = async function (e) {
         try {
-            const res = await api.get('/api/schedulings/add/init-form');
+            const res = await api.get('/schedulings/add/init-form');
 
             setFactions(res.data.factions);
             tmpDeparts = res.data.departs;
             tmpDivisions = res.data.divisions;
+
             setShifts(res.data.shifts);
             setHolidays(res.data.holidays);
         } catch (err) {
@@ -240,7 +241,7 @@ const ScheduleAdd = () => {
         };
 
         // Store data to db
-        let res = await api.post(`/api/schedulings`, data);
+        let res = await api.post(`/schedulings`, data);
         if (res.data.status === 1) {
             toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
         } else {

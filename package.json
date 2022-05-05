@@ -2,6 +2,13 @@
   "name": "react-adminlte-starter",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://192.168.20.4/viproom",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@fullcalendar/core": "^5.10.1",
     "@fullcalendar/daygrid": "^5.10.1",
@@ -38,12 +45,6 @@
     "thaidatepicker-react": "^0.1.5",
     "web-vitals": "^1.1.0",
     "yup": "^0.32.11"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
