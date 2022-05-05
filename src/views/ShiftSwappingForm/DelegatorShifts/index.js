@@ -12,9 +12,9 @@ const DelegatorShifts = ({ schedule, shiftsOfDelegator, onSelectedShift }) => {
 
     const getHolidays = async function () {
         try {
-            const res = await api.get(`/api/holidays`);
+            const res = await api.get(`/holidays`);
 
-            setHolidays(res.data);
+            setHolidays(res.data.holidays);
         } catch (err) {
             console.log(err);
         }
