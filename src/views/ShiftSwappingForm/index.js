@@ -40,7 +40,6 @@ const ShiftSwappingForm = () => {
                     .split(",")
                     .some((sh, index) => {
                         if (parseInt(moment(date).format('DD')) === (index+1)) {
-                            console.log(moment(date).format('YYYY-MM-DD'), sh);
                             const sumShift = sh.split('|').reduce((sum, curVal) => {
                                 if (curVal !== '') return sum += 1;
                                 
@@ -54,18 +53,23 @@ const ShiftSwappingForm = () => {
                     });
     };
 
+    
+    const isSameShift = function (shift) {
+        return  shift.shifts
+                    .split(",")
+                    .some((sh, index) => {
+                        return parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1;
+                    });
+    };
+
     const onSelectedDelegator = function (formik, personId) {
         formik.setFieldValue('delegator', personId);
 
         /** To Check if delegator have same shift on same day the request would be denied */
         const shift = schedule.shifts.find(shift => shift.person_id === personId);
 
-        if (
-            shift.shifts
-                .split(",")
-                .some((sh, index) => parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1)
-            || isOverLoaded(shift)
-        ) {
+        /** ถ้าผู้รับเวรมีเวรเหมือนกัน หรือ มีเวร 2 เวรแล้วจะไม่สามารถเลือกได้ */
+        if (isSameShift(shift) || isOverLoaded(shift)) {
             toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
             formik.setFieldValue('delegator', '');
         }
@@ -234,7 +238,7 @@ const ShiftSwappingForm = () => {
                                                         </span>
                                                         <span className='my-1 ml-2'>
                                                             <span className='mr-1'>ของวันที่</span>
-                                                            {date}
+                                                            {moment(date).format('DD/MM/YYYY')}
                                                         </span>
                                                     </div>
                                                     <div className='my-1'>
