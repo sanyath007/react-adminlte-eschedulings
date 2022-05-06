@@ -53,10 +53,6 @@ const ShiftSwappingForm = () => {
                     });
     };
 
-<<<<<<< HEAD
-=======
-    
->>>>>>> fde052afd2ac9dd8edee6a026eb21c7c2ff3ab2a
     const isSameShift = function (shift) {
         return  shift.shifts
                     .split(",")
