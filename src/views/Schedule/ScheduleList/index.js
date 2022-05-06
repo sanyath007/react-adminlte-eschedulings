@@ -12,15 +12,17 @@ import th from 'date-fns/locale/th'
 registerLocale("th", th);
 
 const ScheduleList = () => {
+    const pager = null;
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [month, setMonth] = useState(new Date());
-    const pager = null;
+    const [user, setUser] = useState(null);
 
     const dispatch = useDispatch();
     const schedules = useSelector(getAllSchedules);
     const scheduleStatus = useSelector(state => state.schedules.status);
     const scheduleError = useSelector(state => state.schedules.error);
+    const { auth } = useSelector(state => state.auth);
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -53,7 +55,17 @@ const ScheduleList = () => {
         }
     };
 
+    const getUser = async () => {
+        if (auth) {
+            const res = await api.get(`/users/${auth}`);
+
+            setUser(res.data.user);
+        }
+    };
+
     useEffect(() => {
+        getUser();
+
         getSchedules();
     }, [dispatch]);
 
@@ -153,7 +165,18 @@ const ScheduleList = () => {
                                 </thead>
                                 <tbody>
                                     {(scheduleStatus === 'loading') && <Spinner animation="border" />}
-                                    {schedules && schedules.map((row, i) => {
+                                    {schedules &&
+                                        schedules
+                                        .filter(schedule => {
+                                            /** If user is not admit, show specific user's depart list */
+                                            if (user.person_id !== '1300200009261') {
+                                                return schedule.depart_id === user.member_of.depart_id
+                                            }
+
+                                            /** If user is admin, show all */
+                                            return schedule;
+                                        })
+                                        .map((row, i) => {
                                         return (
                                             <tr key={row.id}>
                                                 <td style={{ textAlign: 'center' }}>{ i+1 }</td>
