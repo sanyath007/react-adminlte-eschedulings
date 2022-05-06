@@ -3,86 +3,108 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Col, Row } from 'react-bootstrap';
 import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import { getAllSchedules } from '../../features/schedules';
 import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
 import DelegatorShifts from './DelegatorShifts';
 
+const shiftSwappingSchema = Yup.object().shape({
+    reason: Yup.string().required('Reason!!!'),
+    delegator: Yup.string().required('Delegator!!!'),
+});
+
 const ShiftSwappingForm = () => {
+    const { id, date: dateToSwap, shift: shiftToSwap } = useParams();
+    const history = useHistory();
+    const dispatch = useDispatch();
+    /** =================== Global's states ===================  */
+    const schedules = useSelector(getAllSchedules);
+    const shiftsOfOwner = useSelector(state => getScheduleDetailsById(state, id));
+    /** =================== Component's states ===================  */
     const [schedule, setSchedule] = useState([]);
     const [personsOfSchedule, setPersonsOfSchedule] = useState([]);
     const [shiftsOfDelegator, setShiftsOfDelegator] = useState([]);
 
-    const { id, date, shift: shiftText } = useParams();
-    const history = useHistory();
-    const dispatch = useDispatch();
-    const scheduleDetails = useSelector(state => getScheduleDetailsById(state, id));
-    const schedules = useSelector(getAllSchedules);
-
     useEffect(() => {
-        if (!scheduleDetails) {
+        if (!shiftsOfOwner) {
             history.push('/schedules/list')
         } else {
-            const schedule = schedules.find(schedule => schedule.id === parseInt(scheduleDetails.scheduling_id));
-            setSchedule(schedule);
+            const _schedule = schedules.find(sch => sch.id === parseInt(shiftsOfOwner.scheduling_id));
+            setSchedule(_schedule);
 
-            /** ดึงรายการเจ้าหน้าที่จากตารางเวร */
-            const persons = schedule.shifts
-                                .filter(shift => shift.person_id !== scheduleDetails.person_id)
+            /** ดึงรายการเจ้าหน้าที่ที่มีในตารางเวร */
+            const persons = _schedule.shifts
+                                .filter(shift => shift.person_id !== shiftsOfOwner.person_id)
                                 .map(shift => shift.person);
             setPersonsOfSchedule(persons);
         }
     }, []);
 
-    const isOverLoaded = function (shift) {
-        return shift.shifts
-                    .split(",")
-                    .some((sh, index) => {
-                        if (parseInt(moment(date).format('DD')) === (index+1)) {
-                            const sumShift = sh.split('|').reduce((sum, curVal) => {
-                                if (curVal !== '') return sum += 1;
-                                
-                                return sum;
-                            }, 0);
+    const isOverLoaded = function (personShifts, compareDate) {
+        return personShifts.some((sh, index) => {
+            if (parseInt(moment(compareDate).format('DD')) === (index+1)) {
+                const sumShift = sh.split('|').reduce((sum, curVal) => {
+                    if (curVal !== '') return sum += 1;
+                    
+                    return sum;
+                }, 0);
 
-                            if (sumShift >= 2) return true;
-                        }
+                if (sumShift >= 2) return true;
+            }
 
-                        return false;
-                    });
+            return false;
+        });
     };
 
-    const isSameShift = function (shift) {
-        return  shift.shifts
-                    .split(",")
-                    .some((sh, index) => {
-                        return parseInt(moment(date).format('DD')) === (index+1) && sh.indexOf(shiftText) !== -1;
-                    });
+    const isSameShift = function (personShifts, compareDate, compareShift) {
+        return personShifts.some((sh, index) => {
+            return parseInt(moment(compareDate).format('DD')) === (index+1) && sh.indexOf(compareShift) !== -1;
+        });
     };
 
     const onSelectedDelegator = function (formik, personId) {
-        formik.setFieldValue('delegator', personId);
+        const delegatorSchedule = schedule.shifts.find(shift => shift.person_id === personId);
+        const delegatorShifts = delegatorSchedule.shifts.split(',');
 
-        /** To Check if delegator have same shift on same day the request would be denied */
-        const shift = schedule.shifts.find(shift => shift.person_id === personId);
+        /** ถ้าเป็นกรณีขายเวรกัน ให้ตรวจสอบก่อนว่างผู้รับว่างไหม */
+        if (formik.values.no_swap) {
+            if (isSameShift(delegatorShifts, dateToSwap, shiftToSwap) && isOverLoaded(delegatorShifts, dateToSwap)) {
+                toast.error('ไม่สามารถเลือกได้ เนื่องจากผู้รับมีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 2000, hideProgressBar: true });
+            }
+        } else {
+            formik.setFieldValue('delegator', personId);
 
-        /** ถ้าผู้รับเวรมีเวรเหมือนกัน หรือ มีเวร 2 เวรแล้วจะไม่สามารถเลือกได้ */
-        if (isSameShift(shift) || isOverLoaded(shift)) {
-            toast.error('ไม่สามารถเลือกได้ จนท.มีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 1000, hideProgressBar: true });
-
-            formik.setFieldValue('delegator', '');
+            setShiftsOfDelegator(delegatorSchedule);
         }
-
-        setShiftsOfDelegator(shift);
     };
 
     const handleOnSelectedShift = function (formik, date, shift) {
-        formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'))
-        formik.setFieldValue('swap_shift', shift)
+        // if (moment(date).isBefore(moment())) {
+        //     toast.error('ไม่สามารถเลือกผ่านมาแล้วได้ !!!', { autoClose: 2000, hideProgressBar: true });
+        // }
 
-        /** TODO: To Check if owner have same shift on same day the request would be denied */
-        
+        /** Check if owner have same shift on same day the request would be denied */
+        const ownerShifts = shiftsOfOwner.shifts.split(',');
+
+        /** ถ้าเป็นกรณีเปลี่ยน/สลับเวรกัน */
+        if (!formik.values.no_swap) {
+            if (isSameShift(ownerShifts, date, shift)) {
+                toast.error('ไม่สามารถเลือกได้ เนื่องจากผู้ขอเปลี่ยนมีเวรตรงกันในวันที่ขอเปลี่ยน !!!', { autoClose: 2000, hideProgressBar: true });
+
+                formik.setFieldValue('swap_date', '');
+                formik.setFieldValue('swap_shift', '');
+            } else if (isOverLoaded(ownerShifts, date)) {
+                toast.error('ไม่สามารถเลือกได้ เนื่องจากผู้ขอเปลี่ยนมีเวรเกินกำหนดในวันที่ขอเปลี่ยน !!!', { autoClose: 2000, hideProgressBar: true });
+
+                formik.setFieldValue('swap_date', '')
+                formik.setFieldValue('swap_shift', '')
+            } else {
+                formik.setFieldValue('swap_date', moment(date).format('YYYY-MM-DD'));
+                formik.setFieldValue('swap_shift', shift);
+            }
+        }
     };
 
     const insertShiftText = function (shift) {
@@ -155,34 +177,34 @@ const ShiftSwappingForm = () => {
 
     const onSubmit = async function (values, props) {
         /** Update owner's shifts */
-        const ownerShifts = updatePersonShifts(scheduleDetails, true, values);
+        const owner = updatePersonShifts(shiftsOfOwner, true, values);
 
         /** Update delegator's shifts */
-        const delegatorShifts = updatePersonShifts(shiftsOfDelegator, false, values);
+        const delegator = updatePersonShifts(shiftsOfDelegator, false, values);
 
         console.log({
             id,
             data: {
-                owner_shifts: ownerShifts.join(),
-                delegator_shifts: delegatorShifts.join(),
+                owner_shifts: owner.join(),
+                delegator_shifts: delegator.join(),
                 swap_detail_id: shiftsOfDelegator.id,
                 ...values
             }
         });
 
-        try {
+        // try {
             // await dispatch(swap({
             //     id,
             //     data: {
-            //         owner_shifts: ownerShifts.join(),
+            //         owner_shifts: shiftsOfOwner.join(),
             //         delegator_shifts: delegatorShifts.join(),
             //         swap_detail_id: shiftsOfDelegator.id,
             //         ...values
             //     }
             // })).unwrap();
-        } catch (err) {
-            console.log(err);
-        }
+        // } catch (err) {
+        //     console.log(err);
+        // }
     };
 
     return (
@@ -202,17 +224,19 @@ const ShiftSwappingForm = () => {
 
                             {/* Render swapping form component */}
                             <Formik
-                                enableReinitialize={scheduleDetails}
+                                enableReinitialize={shiftsOfOwner}
                                 initialValues={{
-                                    owner_date: date,
-                                    owner_shift: shiftText,
+                                    owner_date: dateToSwap,
+                                    owner_shift: shiftToSwap,
                                     reason: '',
+                                    selectedDelegator: '',
                                     delegator: '',
-                                    no_swap: true,
+                                    no_swap: false,
                                     swap_date: '',
                                     swap_shift: '',
                                 }}
                                 onSubmit={onSubmit}
+                                validationSchema={shiftSwappingSchema}
                             >
                                 {(formik) => {
                                     return (
@@ -221,24 +245,24 @@ const ShiftSwappingForm = () => {
                                                 <Col>
                                                     <span className='my-1'>
                                                         <span className='mr-1' style={{ fontWeight: 'bold' }}>ข้าพเจ้า</span> 
-                                                        {scheduleDetails && 
-                                                            scheduleDetails.person.prefix.prefix_name+scheduleDetails.person.person_firstname+ ' ' +scheduleDetails.person.person_lastname
+                                                        {shiftsOfOwner && 
+                                                            shiftsOfOwner.person.prefix.prefix_name+shiftsOfOwner.person.person_firstname+ ' ' +shiftsOfOwner.person.person_lastname
                                                         }
                                                     </span>
                                                     <span className='my-1 ml-2'>
                                                         <span className='mr-1' style={{ fontWeight: 'bold' }}>ตำแหน่ง</span>
-                                                        {scheduleDetails && 
-                                                            scheduleDetails.person.position.position_name
+                                                        {shiftsOfOwner && 
+                                                            shiftsOfOwner.person.position.position_name
                                                         }
                                                     </span>
                                                     <div>
                                                         <span className='my-1'>
                                                             ขออนุญาตเปลี่ยน <span className='mr-1'>เวร</span>
-                                                            {shiftText}
+                                                            {shiftToSwap}
                                                         </span>
                                                         <span className='my-1 ml-2'>
                                                             <span className='mr-1'>ของวันที่</span>
-                                                            {moment(date).format('DD/MM/YYYY')}
+                                                            {moment(dateToSwap).format('DD/MM/YYYY')}
                                                         </span>
                                                     </div>
                                                     <div className='my-1'>
@@ -276,7 +300,7 @@ const ShiftSwappingForm = () => {
                                                             </select>
                                                         </div>
 
-                                                        {/* {!formik.values.no_swap && ( */}
+                                                        {!formik.values.no_swap && (
                                                             <div className="form-group">
                                                                 <label htmlFor="delegate">โดยข้าพเจ้าจะขึ้นปฏิบัติงานแทนในวันที่</label>
 
@@ -313,7 +337,7 @@ const ShiftSwappingForm = () => {
                                                                 )}
 
                                                             </div>
-                                                        {/* )} */}
+                                                        )}
 
                                                     </div>
                                                 </Col>
@@ -341,4 +365,4 @@ const ShiftSwappingForm = () => {
     )
 }
 
-export default ShiftSwappingForm
+export default ShiftSwappingForm;
