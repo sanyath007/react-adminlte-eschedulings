@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import api from '../../../api';
 import DailyColumns from '../../../components/DailyColumns';
+import EmptyShiftsOfDay from '../EmptyShiftsOfDay';
+import ExistedShiftsOfDay from '../ExistedShiftsOfDay';
 
-const DelegatorShifts = ({ schedule, shiftsOfDelegator, onSelectedShift }) => {
+const DelegatorShifts = ({ schedule, shiftsOfDelegator, noSwap, onSelectedShift }) => {
     const [holidays, setHolidays] = useState([]);
 
     useEffect(() => {
@@ -18,39 +20,6 @@ const DelegatorShifts = ({ schedule, shiftsOfDelegator, onSelectedShift }) => {
         } catch (err) {
             console.log(err);
         }
-    };
-
-    const getEventBgColor = function (shift) {
-        let btnColor = '';
-        if (['ด','ด*','ด**','ด^'].includes(shift)) {
-            btnColor = 'btn-info';
-        } else if (['ช','ช*','ช**','ช^'].includes(shift)) {
-            btnColor = 'btn-success';
-        } else if (['บ','บ*','บ**','บ^'].includes(shift)) {
-            btnColor = 'btn-danger';
-        } else if (['B','B*','B**','B^'].includes(shift)) {
-            btnColor = 'btn-warning';
-        } else {
-            btnColor = 'btn-default';
-        }
-
-        return btnColor;
-    };
-
-    const renderShiftsOfDay = function (day, shift) {
-        return shift.split('|').map((sh, index) => {
-            return sh !== ''
-                    ? (
-                        <a
-                            href="#"
-                            key={sh+index}
-                            className={ `btn ${getEventBgColor(sh)} btn-sm mb-1` }
-                            onClick={() => handleSelectedShift(moment(`${schedule.month}-${day}`).toDate(), sh)}
-                        >
-                            {sh}
-                        </a>
-                    ) : null;
-        });
     };
 
     const handleSelectedShift = function (date, shift) {
@@ -73,7 +42,22 @@ const DelegatorShifts = ({ schedule, shiftsOfDelegator, onSelectedShift }) => {
                     {shiftsOfDelegator && shiftsOfDelegator.shifts.split(',').map((shift, index) => {
                         return (
                             <td key={index} style={{ textAlign: 'center', fontSize: '14px', padding: '0' }}>
-                                {renderShiftsOfDay(index+1, shift)}
+                                {!noSwap ? (
+                                    <ExistedShiftsOfDay
+                                        month={schedule.month}
+                                        day={index+1}
+                                        shiftsOfDay={shift.split('|')}
+                                        onSelectedShift={handleSelectedShift}
+                                    />
+                                ) : (
+                                    <EmptyShiftsOfDay
+                                        month={schedule.month}
+                                        day={index+1}
+                                        shiftsOfDay={shift.split('|')}
+                                        onSelectedShift={handleSelectedShift}
+                                    />
+                                )
+                                }
                             </td>
                         );
                     })}

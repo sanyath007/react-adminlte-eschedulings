@@ -53,7 +53,6 @@ const ShiftSwappingForm = () => {
                     });
     };
 
-    
     const isSameShift = function (shift) {
         return  shift.shifts
                     .split(",")
@@ -285,12 +284,14 @@ const ShiftSwappingForm = () => {
                                                                 {formik.values.delegator && (
                                                                     <div className="card">
                                                                         <div className="card-body">
-                                                                            
+
                                                                             <DelegatorShifts
                                                                                 schedule={schedule}
                                                                                 shiftsOfDelegator={shiftsOfDelegator}
+                                                                                noSwap={formik.values.no_swap}
                                                                                 onSelectedShift={(date, shift) => handleOnSelectedShift(formik, date, shift)}
                                                                             />
+
                                                                             <div className="row px-2">
                                                                                 <input
                                                                                     type="type"
