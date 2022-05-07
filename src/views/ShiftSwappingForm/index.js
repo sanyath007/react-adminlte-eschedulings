@@ -67,16 +67,17 @@ const ShiftSwappingForm = () => {
     };
 
     const onSelectedDelegator = function (formik, personId, fromOtherWard) {
+        /** ตรวจสอบว่าเป็นกรณีขึ้นเวรแทนจากวอร์ดอื่นหรือไม่ */
         if (!fromOtherWard) {
             const delegatorSchedule = schedule.shifts.find(shift => shift.person_id === personId);
             const delegatorShifts = delegatorSchedule.shifts.split(',');
 
-            /** ถ้าเป็นกรณีขายเวรกัน ให้ตรวจสอบก่อนว่างผู้รับว่างไหม */
-            if (formik.values.no_swap) {
-                /** ถ้าเป็นกรณีขายเวรกัน ให้ตรวจสอบก่อนว่างผู้รับว่างไหม */
-                if (isSameShift(delegatorShifts, dateToSwap, shiftToSwap) && isOverLoaded(delegatorShifts, dateToSwap)) {
-                    toast.error('ไม่สามารถเลือกได้ เนื่องจากผู้รับมีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 2000, hideProgressBar: true });
-                }
+            /** ถ้าเป็นกรณีไม่ขึ้นปฏิบัติงานแทน (ขายเวร) ตรวจสอบก่อนว่างผู้รับว่างหรือไม่ */
+            if (formik.values.no_swap && (isSameShift(delegatorShifts, dateToSwap, shiftToSwap) || isOverLoaded(delegatorShifts, dateToSwap))) {
+                toast.error('ไม่สามารถเลือกได้ เนื่องจากผู้รับมีเวรแล้ว หรือ มีเวรเกินกำหนดแล้ว !!!', { autoClose: 2000, hideProgressBar: true });
+
+                formik.setFieldValue('delegator', '');
+                formik.setFieldValue('selectedDelegator', '');
             } else {
                 formik.setFieldValue('delegator', personId);
                 formik.setFieldValue('fromOtherWard', false);
@@ -185,6 +186,7 @@ const ShiftSwappingForm = () => {
     };
 
     const onSubmit = async function (values, props) {
+        console.log(values);
         /** Update owner's shifts */
         const owner = updatePersonShifts(shiftsOfOwner, true, values);
 
@@ -239,6 +241,7 @@ const ShiftSwappingForm = () => {
                                     owner_shift: shiftToSwap,
                                     reason: '',
                                     delegator: '',
+                                    delegator_desc: '',
                                     selectedDelegator: '',
                                     fromOtherWard: false,
                                     no_swap: false,
@@ -290,64 +293,69 @@ const ShiftSwappingForm = () => {
                                                             ( <Field
                                                                 type="checkbox"
                                                                 name="no_swap"
-                                                                onChange={(e) => formik.setFieldValue('no_swap', e.target.checked)}
+                                                                onChange={(e) => {
+                                                                    formik.setFieldValue('no_swap', e.target.checked);
+                                                                    formik.setFieldValue('fromOtherWard', false);
+                                                                    formik.setFieldValue('delegator', '');
+                                                                    formik.setFieldValue('selectedDelegator', '');
+                                                                }}
                                                             /> โดยไม่ขึ้นปฏิบัติงานแทน )
                                                             
-                                                                {!formik.values.fromOtherWard ? (
-                                                                    <div className="input-group">
-                                                                        <select
-                                                                            name="delegator"
-                                                                            className="form-control"
-                                                                            value={formik.values.selectedDelegator}
-                                                                            onChange={(e) => {
-                                                                                onSelectedDelegator(formik, e.target.value, false);
+                                                            {!formik.values.fromOtherWard ? (
+                                                                <div className="input-group">
+                                                                    <select
+                                                                        name="delegator"
+                                                                        className="form-control"
+                                                                        value={formik.values.selectedDelegator}
+                                                                        onChange={(e) => {
+                                                                            formik.setFieldValue('selectedDelegator', e.target.value);
 
-                                                                                formik.setFieldValue('selectedDelegator', e.target.value);
-                                                                            }}
-                                                                        >
-                                                                            <option value="">-- เลือกผู้ปฏิบัติงานแทน --</option>
-                                                                            {personsOfSchedule && personsOfSchedule.map(person => {
-                                                                                return (
-                                                                                    <option key={person.person_id} value={person.person_id}>
-                                                                                        {person.prefix.prefix_name+person.person_firstname+ ' ' +person.person_lastname+ ' '}
-                                                                                        {person.position.position_name}
-                                                                                    </option>
-                                                                                );
-                                                                            })}
-                                                                        </select>
-                                                                        {formik.values.no_swap && (
-                                                                            <span class="input-group-append">
-                                                                                <a
-                                                                                    href="#"
-                                                                                    className="btn btn-danger"
-                                                                                    onClick={() => setOpenModal(true)}
-                                                                                >
-                                                                                    เลือกจากวอร์ดอื่น
-                                                                                </a>
-                                                                            </span>
-                                                                        )}
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className="input-group">
-                                                                        <input
-                                                                            type="text"
-                                                                            name="delegator_detail"
-                                                                            className="form-control"
-                                                                        />
-                                                                        <span class="input-group-append">
+                                                                            onSelectedDelegator(formik, e.target.value, false);
+                                                                        }}
+                                                                    >
+                                                                        <option value="">-- เลือกผู้ปฏิบัติงานแทน --</option>
+                                                                        {personsOfSchedule && personsOfSchedule.map(person => {
+                                                                            return (
+                                                                                <option key={person.person_id} value={person.person_id}>
+                                                                                    {person.prefix.prefix_name+person.person_firstname+ ' ' +person.person_lastname+ ' '}
+                                                                                    {person.position.position_name}
+                                                                                </option>
+                                                                            );
+                                                                        })}
+                                                                    </select>
+                                                                    {formik.values.no_swap && (
+                                                                        <span className="input-group-append">
                                                                             <a
                                                                                 href="#"
-                                                                                className="btn btn-secondary"
-                                                                                onClick={() => formik.setFieldValue('fromOtherWard', false)}
+                                                                                className="btn btn-danger"
+                                                                                onClick={() => setOpenModal(true)}
                                                                             >
-                                                                                เลือกวอร์ดเดียวกัน
+                                                                                เลือกจากวอร์ดอื่น
                                                                             </a>
                                                                         </span>
-                                                                    </div>
-                                                                )}
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="input-group">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="delegator_desc"
+                                                                        value={formik.values.delegator_desc}
+                                                                        onChange={formik.handleChange}
+                                                                        className="form-control"
+                                                                    />
+                                                                    <span className="input-group-append">
+                                                                        <a
+                                                                            href="#"
+                                                                            className="btn btn-secondary"
+                                                                            onClick={() => formik.setFieldValue('fromOtherWard', false)}
+                                                                        >
+                                                                            เลือกวอร์ดเดียวกัน
+                                                                        </a>
+                                                                    </span>
+                                                                </div>
+                                                            )}
 
-                                                                
-                                                            
                                                         </div>
 
                                                         <PersonModal
@@ -356,6 +364,9 @@ const ShiftSwappingForm = () => {
                                                             onSelected={(person) => {
                                                                 if (person) {
                                                                     onSelectedDelegator(formik, person.person_id, true);
+
+                                                                    console.log(person);
+                                                                    formik.setFieldValue("delegator_desc", `${person.person_firstname} ${person.person_lastname}`);
                                                                 }
                                                             }}
                                                             faction={5}
