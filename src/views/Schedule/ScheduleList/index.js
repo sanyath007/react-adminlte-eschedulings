@@ -201,15 +201,15 @@ const ScheduleList = () => {
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix">
                             <div className="row">
-                                {/* <div className="col-3 m-0 float-left">
-                                    <a href="#" className="btn btn-success btn-sm">Excel</a>
-                                </div> */}
+                                <div className="col-4 m-0 float-left">
+                                    {/* <a href="#" className="btn btn-success btn-sm">Excel</a> */}
+                                </div>
                                 
-                                <div className="col-6 m-0" style={{ textAlign: 'center' }}>
+                                <div className="col-4 m-0" style={{ textAlign: 'center' }}>
                                     <span>จำนวนทั้งหมด { pager && pager.total } ราย</span>
                                 </div>
                                 
-                                <div className="col-3 m-0">
+                                <div className="col-4 m-0">
                                     {pager && (
                                         <ul className="pagination pagination-md m-0 float-right">
                                             <li className="page-item" ng-className="{disabled: pager.current_page==1}">

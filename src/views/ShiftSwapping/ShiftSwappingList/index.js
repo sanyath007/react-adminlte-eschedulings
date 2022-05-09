@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import moment from 'moment';
 import api from '../../../api';
 import { calculateShiftsTotal } from '../../../utils';
@@ -7,7 +8,6 @@ import { calculateShiftsTotal } from '../../../utils';
 const ShiftSwappingList = () => {
     /** Global states */
     const { user } = useSelector(state => state.users);
-    console.log(user);
 
     /** Local states */
     const [swappings, setSwappings] = useState([]);
@@ -17,8 +17,10 @@ const ShiftSwappingList = () => {
         fetchSwaps();
     }, []);
     
-    const fetchSwaps = async () => {
-        const res = await api.get('/swappings');
+    const fetchSwaps = async (url='/swappings?page=') => {
+        const depart = user.person_id === '1300200009261' ? '' : user.member_of?.depart_id;
+
+        const res = await api.get(`${url}&depart=${depart}`);
 
         const { data, ...pager } = res.data.swappings
 
@@ -27,7 +29,7 @@ const ShiftSwappingList = () => {
     };
 
     const onPaginateLinkClick = (e, url) => {
-        console.log(e, url);
+        fetchSwaps(url);
     };
 
     const updateShifts = (personShifts, request, swap) => {
@@ -89,9 +91,15 @@ const ShiftSwappingList = () => {
     };
 
     const approve = async (id, data) => {
-        console.log(data);
         const res = await api.put(`/swappings/${id}/approve`, data);
-        console.log(res);
+
+        if (res.data.status === 1) {
+            toast.success('อนุมัติเวรเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+
+            fetchSwaps();
+        } else {
+            toast.error('พบข้อผิดพลาด ไม่สามารถอนุมัติเวรได้ !!!', { autoClose: 1000, hideProgressBar: true });
+        }
     };
 
     return (
@@ -161,14 +169,20 @@ const ShiftSwappingList = () => {
                                                     </div>
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
-                                                    <span className="btn bg-maroon btn-xs">
+                                                    <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
                                                         {swapping.status}
                                                     </span>
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
-                                                    <a href="#" className="btn btn-primary btn-sm" onClick={(e) => handleApprovement(e, swapping)}>
-                                                        อนุมัติ
-                                                    </a>
+                                                    {swapping.status == 'REQUESTED' ? (
+                                                        <a href="#" className="btn btn-primary btn-sm" onClick={(e) => handleApprovement(e, swapping)}>
+                                                            อนุมัติ
+                                                        </a>
+                                                    ) : (
+                                                        <a href="#" className="btn btn-danger btn-sm" onClick={(e) => console.log(e, swapping)}>
+                                                            ยกเลิก
+                                                        </a>
+                                                    )}
                                                 </td>
                                             </tr>
                                         );
@@ -180,7 +194,7 @@ const ShiftSwappingList = () => {
                         <div className="card-footer clearfix">
                             <div className="row">
                                 <div className="col-4 m-0 float-left">
-                                    <a href="#" className="btn btn-success btn-sm">Excel</a>
+                                    {/* <a href="#" className="btn btn-success btn-sm">Excel</a> */}
                                 </div>
                                 
                                 <div className="col-4 m-0" style={{ textAlign: 'center' }}>
@@ -191,7 +205,7 @@ const ShiftSwappingList = () => {
                                     {pager && (
                                         <ul className="pagination pagination-sm m-0 float-right">
                                             <li className={ `page-item ${pager.current_page == 1 ? 'disabled' : '' }`}>
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.first_page_url) }>
+                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.path+ '?page=1') }>
                                                     First
                                                 </a>
                                             </li>
@@ -206,7 +220,7 @@ const ShiftSwappingList = () => {
                                                 </a>
                                             </li>
                                             <li className={ `page-item ${pager.current_page == pager.last_page ? 'disabled' : '' }`}>
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.last_page_url) }>
+                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.path+ '?page=' +pager.last_page) }>
                                                     Last
                                                 </a>
                                             </li>
