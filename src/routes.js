@@ -8,8 +8,8 @@ import {
   SchedulePdf
 } from './views/Schedule';
 import PersonShiftsDetail from './views/PersonShiftsDetail';
-import ShiftSwappingForm from './views/ShiftSwappingForm';
-import ShiftSwappingList from './views/ShiftSwappings';
+import ShiftSwappingForm from './views/ShiftSwapping/ShiftSwappingForm';
+import ShiftSwappingList from './views/ShiftSwapping/ShiftSwappingList';
 import ChartJS from './views/Report/ChartJS';
 import Flot from './views/Report/Flot';
 import Inline from './views/Report/Inline';

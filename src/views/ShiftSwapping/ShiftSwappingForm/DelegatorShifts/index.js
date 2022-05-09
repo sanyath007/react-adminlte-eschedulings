@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import moment from 'moment';
-import api from '../../../api';
-import DailyColumns from '../../../components/DailyColumns';
+import api from '../../../../api';
+import DailyColumns from '../../../../components/DailyColumns';
 import EmptyShiftsOfDay from '../EmptyShiftsOfDay';
 import ExistedShiftsOfDay from '../ExistedShiftsOfDay';
 

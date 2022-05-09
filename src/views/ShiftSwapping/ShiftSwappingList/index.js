@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
-import api from '../../api';
-import { calculateShiftsTotal } from '../../utils';
+import api from '../../../api';
+import { calculateShiftsTotal } from '../../../utils';
 
 const ShiftSwappingList = () => {
     /** Global states */

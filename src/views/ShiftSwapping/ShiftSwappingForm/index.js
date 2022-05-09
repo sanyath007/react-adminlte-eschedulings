@@ -6,10 +6,10 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import moment from 'moment';
-import { getAllSchedules } from '../../features/schedules';
-import { getScheduleDetailsById, swap } from '../../features/scheduleDetails';
+import { getAllSchedules } from '../../../features/schedules';
+import { getScheduleDetailsById, swap } from '../../../features/scheduleDetails';
 import DelegatorShifts from './DelegatorShifts';
-import PersonModal from '../Modals/PersonModal';
+import PersonModal from '../../Modals/PersonModal';
 
 const shiftSwappingSchema = Yup.object().shape({
     reason: Yup.string().required('Reason!!!'),
