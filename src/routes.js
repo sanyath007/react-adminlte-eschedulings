@@ -9,6 +9,7 @@ import {
 } from './views/Schedule';
 import PersonShiftsDetail from './views/PersonShiftsDetail';
 import ShiftSwappingForm from './views/ShiftSwappingForm';
+import ShiftSwappingList from './views/ShiftSwappings';
 import ChartJS from './views/Report/ChartJS';
 import Flot from './views/Report/Flot';
 import Inline from './views/Report/Inline';
@@ -23,6 +24,7 @@ const routes = [
   { path: '/schedules/:id/detail', exact: true, name: 'Schedule-detail', component: ScheduleDetail },
   { path: '/schedules/:id/print', exact: true, name: 'Schedule-print', component: SchedulePrint },
   { path: '/schedules/:id/pdf', exact: true, name: 'Schedule-print', component: SchedulePdf },
+  { path: '/schedules/swap-list', exact: true, name: 'Schedule-print', component: ShiftSwappingList },
   { path: '/person-shifts/:id/detail', exact: true, name: 'Person Shifts', component: PersonShiftsDetail },
   { path: '/person-shifts/:id/:date/:shift/swapping', exact: true, name: 'Shift Swapping Form', component: ShiftSwappingForm },
   { path: '/reports/chartjs', name: 'Charts', component: ChartJS },

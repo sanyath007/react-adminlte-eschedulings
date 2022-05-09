@@ -27,7 +27,7 @@ const MainSidebar = () => {
           </div>
           <div className="info">
             <Link to="/profile">
-              {`${user.person_firstname} ${user.person_lastname}`}
+              {`${user?.person_firstname} ${user?.person_lastname}`}
             </Link>
           </div>
         </div>
