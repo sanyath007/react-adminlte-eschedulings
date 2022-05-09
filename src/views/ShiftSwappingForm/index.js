@@ -203,19 +203,19 @@ const ShiftSwappingForm = () => {
             }
         });
 
-        // try {
-            // await dispatch(swap({
-            //     id,
-            //     data: {
-            //         owner_shifts: shiftsOfOwner.join(),
-            //         delegator_shifts: delegatorShifts.join(),
-            //         swap_detail_id: shiftsOfDelegator.id,
-            //         ...values
-            //     }
-            // })).unwrap();
-        // } catch (err) {
-        //     console.log(err);
-        // }
+        try {
+            await dispatch(swap({
+                id,
+                data: {
+                    owner_shifts: owner.join(),
+                    delegator_shifts: delegator.join(),
+                    swap_detail_id: shiftsOfDelegator.id,
+                    ...values
+                }
+            })).unwrap();
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
