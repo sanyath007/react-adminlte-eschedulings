@@ -86,7 +86,7 @@ function ShiftModal({ isOpen, hideModal, onOffShift, ...props }) {
             </p>
             <p className='my-1'>
               <span className='mr-1'>ประจำวันที่</span>
-              <b>{props.shift && props.shift.shiftDate}</b>
+              <b>{props.shift && moment(props.shift.shiftDate).format('DD/MM/YYYY')}</b>
               <span className='mx-2'>เวร</span>
               <b>{props.shift && props.shift.shiftText}</b>
             </p>
