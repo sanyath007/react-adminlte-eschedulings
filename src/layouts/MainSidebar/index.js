@@ -62,7 +62,7 @@ const MainSidebar = () => {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link to="/schedules/swapp-list" className="nav-link">
+                  <Link to="/schedules/swap-list" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>อนุมัติเวร</p>
                   </Link>
