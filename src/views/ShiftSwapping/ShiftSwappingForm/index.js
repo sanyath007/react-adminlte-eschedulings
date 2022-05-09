@@ -191,21 +191,11 @@ const ShiftSwappingForm = () => {
 
         /** Update delegator's shifts */
         const delegator = updatePersonShifts(shiftsOfDelegator, false, values);
-
-        console.log({
-            id,
-            data: {
-                owner_shifts: owner.join(),
-                delegator_shifts: delegator.join(),
-                delegator_detail_id: shiftsOfDelegator.id,
-                ...values
-            }
-        });
-
         try {
             await dispatch(swap({
                 id,
                 data: {
+                    scheduling_id: shiftsOfOwner.scheduling_id,
                     owner_shifts: owner.join(),
                     delegator_shifts: delegator.join(),
                     delegator_detail_id: shiftsOfDelegator.id,
