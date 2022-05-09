@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import jwt from 'jwt-decode';
 import api from '../../api';
+import { fetchUser } from '../users';
 
 const initialAuth = localStorage.getItem('access_token')
   ? jwt(JSON.parse(localStorage.getItem('access_token')))?.sub
@@ -40,6 +41,10 @@ export const login = (data, history) => async (dispatch) => {
   try {
     const res = await api.post('/auth/login', data);
 
+    /** Get decode jwt token from responsed data */
+    const decoded = jwt(res.data.token);
+
+    dispatch(fetchUser({ id: decoded.sub }));
     dispatch(loginSuccess(res.data.token));
 
     history.push('/');
