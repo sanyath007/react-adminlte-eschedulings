@@ -186,7 +186,6 @@ const ShiftSwappingForm = () => {
     };
 
     const onSubmit = async function (values, props) {
-        console.log(values);
         /** Update owner's shifts */
         const owner = updatePersonShifts(shiftsOfOwner, true, values);
 
@@ -198,7 +197,7 @@ const ShiftSwappingForm = () => {
             data: {
                 owner_shifts: owner.join(),
                 delegator_shifts: delegator.join(),
-                swap_detail_id: shiftsOfDelegator.id,
+                delegator_detail_id: shiftsOfDelegator.id,
                 ...values
             }
         });
@@ -209,7 +208,7 @@ const ShiftSwappingForm = () => {
                 data: {
                     owner_shifts: owner.join(),
                     delegator_shifts: delegator.join(),
-                    swap_detail_id: shiftsOfDelegator.id,
+                    delegator_detail_id: shiftsOfDelegator.id,
                     ...values
                 }
             })).unwrap();

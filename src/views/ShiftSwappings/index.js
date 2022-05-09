@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import api from '../../api';
+import { calculateShiftsTotal } from '../../utils';
 
 const ShiftSwappingList = () => {
     /** Global states */
@@ -25,11 +26,73 @@ const ShiftSwappingList = () => {
         setPager(pager);
     };
 
-    const onPaginateLinkClick = () => {
-
+    const onPaginateLinkClick = (e, url) => {
+        console.log(e, url);
     };
 
-    console.log(swappings);
+    const updateShifts = (personShifts, request, swap) => {
+        const { shifts, id, ...other } = personShifts;
+
+        const updatedShifts = shifts.split(',').map((sh, index) => {
+            if (moment(request.date).date() === index + 1) {
+                sh = sh.replace('R', request.shift);
+            }
+
+            if (swap) {
+                if (moment(swap.date).date() === index + 1) {
+                    sh = sh.replace('D', swap.shift);
+                }
+            }
+
+            return sh;
+        });
+
+        const updatedTotal = calculateShiftsTotal(updatedShifts);
+
+        return {
+            ...other,
+            m: updatedTotal.morn,
+            e: updatedTotal.even,
+            n: updatedTotal.night,
+            b: updatedTotal.bd,
+            total: updatedTotal.night + updatedTotal.morn + updatedTotal.even + updatedTotal.bd,
+            shifts: updatedShifts 
+        };
+    };
+
+    const handleApprovement = (e, swapping) => {
+        e.preventDefault();
+
+        const { id, owner, delegator, ...other } = swapping;
+
+        /** อัพเดตเวรของผู้ขอ */
+        const ownerShifts = updateShifts(
+            owner,
+            { date: other.owner_date, shift: '' },
+            other.no_swap === 0
+                ? { date: other.swap_date, shift: other.swap_shift } 
+                : null
+        );
+
+        /** อัพเดตเวรของผู้รับ */
+        const delegatorShifts = updateShifts(
+            delegator,
+            { date: other.owner_date, shift: other.owner_shift },
+            other.no_swap === 0
+                ? { date: other.swap_date, shift: '' } 
+                : null
+        );
+
+        let data = { ...other, owner_shifts: ownerShifts, delegator_shifts: delegatorShifts };
+
+        approve(id, data);
+    };
+
+    const approve = async (id, data) => {
+        console.log(data);
+        const res = await api.put(`/swappings/${id}/approve`, data);
+        console.log(res);
+    };
 
     return (
         <div className="container-fluid">
@@ -83,9 +146,12 @@ const ShiftSwappingList = () => {
                                                         <span>
                                                             {`${swapping.delegator?.person?.person_firstname} ${swapping.delegator?.person?.person_lastname}`}
                                                         </span>
+                                                        <span className="ml-2">
+                                                            ขึ้นปฏิบัติแทน
+                                                        </span>
                                                         {swapping.no_swap === 0 ? (
                                                             <span className="mx-2">
-                                                                โดยจะขึ้นปฏิบัติแทน เวร {swapping.swap_shift} ในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')}
+                                                                และจะขึ้นปฏิบัติแทน เวร {swapping.swap_shift} ในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')}
                                                             </span>
                                                         ) : (
                                                             <span className="mx-2">
@@ -94,9 +160,13 @@ const ShiftSwappingList = () => {
                                                         )}
                                                     </div>
                                                 </td>
-                                                <td>{swapping.status}</td>
                                                 <td style={{ textAlign: 'center' }}>
-                                                    <a href="#" className="btn btn-primary btn-sm">
+                                                    <span className="btn bg-maroon btn-xs">
+                                                        {swapping.status}
+                                                    </span>
+                                                </td>
+                                                <td style={{ textAlign: 'center' }}>
+                                                    <a href="#" className="btn btn-primary btn-sm" onClick={(e) => handleApprovement(e, swapping)}>
                                                         อนุมัติ
                                                     </a>
                                                 </td>

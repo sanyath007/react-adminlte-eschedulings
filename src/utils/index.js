@@ -74,3 +74,30 @@ export const createDataSeries = function(data, dataProps, catType) {
 
   return { dataSeries, categories }
 };
+
+export const calculateShiftsTotal = (shifts) => {        
+  let total = {
+    night: 0,
+    morn: 0,
+    even: 0,
+    bd: 0
+  };
+
+  shifts.forEach((shift, day) => {
+      const arrShift = shift.split('|');
+
+      arrShift.forEach(el => {
+          if (['ด','ด*','ด**','ด^'].includes(el)) {
+              total.night += 1;
+          } else if (['ช','ช*','ช**','ช^'].includes(el)) {
+              total.morn += 1;
+          } else if (['บ','บ*','บ**','บ^'].includes(el)) {
+              total.even += 1;
+          } else if (['B','B*','B**','B^'].includes(el)) {
+              total.bd += 0.5;
+          }
+      });
+  });
+
+  return total;
+};
