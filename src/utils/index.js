@@ -101,3 +101,18 @@ export const calculateShiftsTotal = (shifts) => {
 
   return total;
 };
+
+export const calculateTotal = (schedulingDetails) => {
+    let night = 0, morn = 0, even = 0, bd = 0;
+
+    schedulingDetails.forEach(sd => {
+        const shiftsTotal = calculateShiftsTotal(sd.shifts);
+
+        night += shiftsTotal.night;
+        morn += shiftsTotal.morn;
+        even += shiftsTotal.even;
+        bd += shiftsTotal.bd;
+    });
+
+    return night + morn + even + bd;
+};

@@ -191,6 +191,7 @@ const ShiftSwappingForm = () => {
 
         /** Update delegator's shifts */
         const delegator = updatePersonShifts(shiftsOfDelegator, false, values);
+
         try {
             await dispatch(swap({
                 id,

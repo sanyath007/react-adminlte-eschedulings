@@ -7,6 +7,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import moment from 'moment';
 import api from '../../../api';
+import { calculateShiftsTotal, calculateTotal } from '../../../utils';
 import { getScheduleById } from '../../../features/schedules';
 import ShiftInput from '../../../components/FormInputs/ShiftInput';
 import DailyColumns from '../../../components/DailyColumns';
@@ -19,13 +20,6 @@ registerLocale("th", th);
 let tmpDeparts = [];
 let tmpDivisions = [];
 let tmpPersonShifts = [];
-
-const initialTotal = {
-    night: 0,
-    morn: 0,
-    even: 0,
-    bd: 0
-};
 
 const scheduleSchema = Yup.object().shape({
     depart: Yup.string().required('Depart!!!'),
@@ -145,35 +139,6 @@ const ScheduleEdit = () => {
         tmpPersonShifts = generateShiftDays(daysOfMonth);
     };
 
-    const calculateTotal = (personShifts) => {
-        let total = {
-            night: 0,
-            morn: 0,
-            even: 0,
-            bd: 0
-        };
-
-        personShifts.forEach(ps => {
-            ps.shifts.forEach((shift, day) => {
-                let arrShift = shift.split('|');
-    
-                arrShift.forEach(el => {
-                    if (['ด','ด*','ด**','ด^'].includes(el)) {
-                        total.night += 1;
-                    } else if (['ช','ช*','ช**','ช^'].includes(el)) {
-                        total.morn += 1;
-                    } else if (['บ','บ*','บ**','บ^'].includes(el)) {
-                        total.even += 1;
-                    } else if (['B','B*','B**','B^'].includes(el)) {
-                        total.bd += 0.5;
-                    }
-                });
-            });
-        });
-
-        return total.night + total.morn + total.even + total.bd;
-    };
-
     const onAddPersonShifts = function (e, formik) {
         if (!personSelected) {
             toast.error('กรุณาเลือกบุคลากรก่อน !!!', { autoClose: 1000, hideProgressBar: true });
@@ -191,46 +156,26 @@ const ScheduleEdit = () => {
             shifts.push(`${tmpPersonShifts[date][date+ '_1']}|${tmpPersonShifts[date][date+ '_2']}|${tmpPersonShifts[date][date+ '_3']}`);
         });
 
-        /** =========================== TODO: Duplicated Code =========================== */
-        let tmpTotal = { ...initialTotal };
-
-        shifts.forEach((shift, day) => {
-            let arrShift = shift.split('|');
-
-            arrShift.forEach(el => {
-                if (['ด','ด*','ด**','ด^'].includes(el)) {
-                    tmpTotal.night += 1;
-                } else if (['ช','ช*','ช**','ช^'].includes(el)) {
-                    tmpTotal.morn += 1;
-                } else if (['บ','บ*','บ**','บ^'].includes(el)) {
-                    tmpTotal.even += 1;
-                } else if (['B','B*','B**','B^'].includes(el)) {
-                    tmpTotal.bd += 0.5;
-                }
-            });
-        });
-        /** =========================== Duplicated Code =========================== */
-
-        const total = tmpTotal.night + tmpTotal.morn + tmpTotal.even + tmpTotal.bd;
-        const newRow = [
+        const shiftsTotal = calculateShiftsTotal(shifts);
+        const newDetails = [
             ...personShifts,
             {
                 person: personSelected,
                 shifts,
-                n: tmpTotal.night,
-                m: tmpTotal.morn,
-                e: tmpTotal.even,
-                b: tmpTotal.bd,
-                total
+                n: shiftsTotal.night,
+                m: shiftsTotal.morn,
+                e: shiftsTotal.even,
+                b: shiftsTotal.bd,
+                total: shiftsTotal.night + shiftsTotal.morn + shiftsTotal.even + shiftsTotal.bd
             }
         ];
-        setPersonShifts(newRow);
+        setPersonShifts(newDetails);
 
-        /** Calculate total person */
+        /** Calculate total persons */
         formik.setFieldValue('total_persons', personShifts.length + 1);
 
         // TODO: Calculate total shifts
-        formik.setFieldValue('total_shifts', calculateTotal(newRow));
+        formik.setFieldValue('total_shifts', calculateTotal(newDetails));
 
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
