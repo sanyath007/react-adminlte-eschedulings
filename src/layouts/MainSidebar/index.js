@@ -56,12 +56,18 @@ const MainSidebar = () => {
                     <p>รายการตารางเวร</p>
                   </Link>
                 </li>
-                {/* <li className="nav-item">
-                  <Link to="/charts/flot" className="nav-link">
+                <li className="nav-item">
+                  <Link to="/schedules/swapp-list" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
-                    <p>Flot</p>
+                    <p>อนุมัติเวร</p>
                   </Link>
-                </li> */}
+                </li>
+                <li className="nav-item">
+                  <Link to="/schedules/off-list" className="nav-link">
+                    <i className="far fa-circle nav-icon"></i>
+                    <p>Off เวร</p>
+                  </Link>
+                </li>
               </ul>
             </li>
             <li className="nav-item has-treeview">
@@ -83,12 +89,6 @@ const MainSidebar = () => {
                   <Link to="/charts/flot" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>Flot</p>
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/charts/inline" className="nav-link">
-                    <i className="far fa-circle nav-icon"></i>
-                    <p>Inline</p>
                   </Link>
                 </li>
               </ul>
