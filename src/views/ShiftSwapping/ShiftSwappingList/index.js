@@ -127,7 +127,9 @@ const ShiftSwappingList = () => {
                                 <thead>
                                     <tr>
                                         <th style={{ width: '4%', textAlign: 'center' }}>#</th>
+                                        <th style={{ width: '15%', textAlign: 'center' }}>ผู้ขอ</th>
                                         <th style={{ textAlign: 'center' }}>รายการขออนุมัติ</th>
+                                        <th style={{ width: '15%', textAlign: 'center' }}>ผู้รับมอบ</th>
                                         <th style={{ width: '8%', textAlign: 'center' }}>สถานะ</th>
                                         <th style={{ width: '8%', textAlign: 'center' }}>Actions</th>
                                     </tr>
@@ -138,35 +140,31 @@ const ShiftSwappingList = () => {
                                             <tr key={swapping.id}>
                                                 <td style={{ textAlign: 'center' }}>{index+1}</td>
                                                 <td>
+                                                    {`${swapping.owner?.person?.person_firstname} ${swapping.owner?.person?.person_lastname}`}
+                                                </td>
+                                                <td>
                                                     <div>
                                                         <span>
-                                                            {`${swapping.owner?.person?.person_firstname} ${swapping.owner?.person?.person_lastname}`}
+                                                            วันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')} / เวร {swapping.owner_shift}
                                                         </span>
-                                                        <span className="mx-2">
-                                                            ซึ่งปฏิบัติ เวร {swapping.owner_shift} ในวันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')}
-                                                        </span>
-                                                        <span>
-                                                            เนื่องจาก {swapping.reason}
-                                                        </span>
-                                                    </div>
-                                                    <div>
-                                                        <span className="mr-2">จึงมอบหมายให้</span>
-                                                        <span>
-                                                            {`${swapping.delegator?.person?.person_firstname} ${swapping.delegator?.person?.person_lastname}`}
-                                                        </span>
-                                                        <span className="ml-2">
-                                                            ขึ้นปฏิบัติแทน
-                                                        </span>
-                                                        {swapping.no_swap === 0 ? (
-                                                            <span className="mx-2">
-                                                                และจะขึ้นปฏิบัติแทน เวร {swapping.swap_shift} ในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')}
+                                                        <p className="m-0">
+                                                            <span>
+                                                                เนื่องจาก {swapping.reason}
                                                             </span>
-                                                        ) : (
-                                                            <span className="mx-2">
-                                                                โดยไม่ขึ้นปฏิบัติแทน
-                                                            </span>
-                                                        )}
+                                                            {swapping.no_swap === 0 ? (
+                                                                <span className="mx-2">
+                                                                    โดยจะขึ้นปฏิบัติแทนในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')} / เวร {swapping.swap_shift}
+                                                                </span>
+                                                            ) : (
+                                                                <span className="mx-2">
+                                                                    โดยไม่ขึ้นปฏิบัติแทน
+                                                                </span>
+                                                            )}
+                                                        </p>
                                                     </div>
+                                                </td>
+                                                <td>
+                                                    {`${swapping.delegator?.person?.person_firstname} ${swapping.delegator?.person?.person_lastname}`}
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
@@ -174,15 +172,21 @@ const ShiftSwappingList = () => {
                                                     </span>
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
-                                                    {swapping.status == 'REQUESTED' ? (
-                                                        <a href="#" className="btn btn-primary btn-sm" onClick={(e) => handleApprovement(e, swapping)}>
-                                                            อนุมัติ
+                                                    <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                        <a href="#" className="btn btn-success" onClick={(e) => console.log(e, swapping)}>
+                                                            <i class="fas fa-print"></i>
                                                         </a>
-                                                    ) : (
-                                                        <a href="#" className="btn btn-danger btn-sm" onClick={(e) => console.log(e, swapping)}>
-                                                            ยกเลิก
-                                                        </a>
-                                                    )}
+
+                                                        {swapping.status == 'REQUESTED' ? (
+                                                            <a href="#" className="btn btn-primary" onClick={(e) => handleApprovement(e, swapping)}>
+                                                                อนุมัติ
+                                                            </a>
+                                                        ) : (
+                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, swapping)}>
+                                                                ยกเลิก
+                                                            </a>
+                                                        )}
+                                                    </div>
                                                 </td>
                                             </tr>
                                         );
