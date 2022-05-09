@@ -16,13 +16,16 @@ const ScheduleList = () => {
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [month, setMonth] = useState(new Date());
-    const [user, setUser] = useState(null);
 
     const dispatch = useDispatch();
     const schedules = useSelector(getAllSchedules);
     const scheduleStatus = useSelector(state => state.schedules.status);
     const scheduleError = useSelector(state => state.schedules.error);
-    const { auth } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.users);
+
+    useEffect(() => {
+        getSchedules();
+    }, [dispatch]);
 
     const onDepartChange = function (e) {
         console.log(e);
@@ -54,20 +57,6 @@ const ScheduleList = () => {
             }
         }
     };
-
-    const getUser = async () => {
-        if (auth) {
-            const res = await api.get(`/users/${auth}`);
-
-            setUser(res.data.user);
-        }
-    };
-
-    useEffect(() => {
-        getUser();
-
-        getSchedules();
-    }, [dispatch]);
 
     return (
         <div className="container-fluid">

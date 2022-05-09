@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const MainSidebar = () => {
+  const { user } = useSelector(state => state.users);
+
   return (
     <aside className="main-sidebar sidebar-dark-primary elevation-4">
       {/* Brand Logo */}
@@ -23,7 +26,9 @@ const MainSidebar = () => {
             <img src={`${process.env.PUBLIC_URL}/img/user2-160x160.jpg`} className="img-circle" alt="User Image" />
           </div>
           <div className="info">
-            <Link to="/profile">Alexander Pierce</Link>
+            <Link to="/profile">
+              {`${user.person_firstname} ${user.person_lastname}`}
+            </Link>
           </div>
         </div>
 
