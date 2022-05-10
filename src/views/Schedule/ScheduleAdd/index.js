@@ -505,7 +505,7 @@ const ScheduleAdd = () => {
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <div className="form-group">
-                                                        <label htmlFor="inputEmail3" className="col-form-label">หมายเหตุ</label>
+                                                        <label htmlFor="" className="col-form-label">หมายเหตุ</label>
                                                         <Field
                                                             as="textarea"
                                                             name="remark"
@@ -516,7 +516,7 @@ const ScheduleAdd = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-3"></div>
-                                                <div className="col-md-3 pt-3">
+                                                <div className="col-md-3">
                                                     <div
                                                         className="row"
                                                         style={{
@@ -551,7 +551,7 @@ const ScheduleAdd = () => {
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
-                                                        <label htmlFor="inputEmail3" className="col-sm-6 col-form-label">เวรทั้งหมด</label>
+                                                        <label htmlFor="" className="col-sm-6 col-form-label">เวรทั้งหมด</label>
                                                         <div className="col-sm-6">
                                                             <Field
                                                                 name="total_shifts"
@@ -562,7 +562,7 @@ const ScheduleAdd = () => {
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
-                                                        <label htmlFor="inputEmail3" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
+                                                        <label htmlFor="" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
                                                         <div className="col-sm-6">
                                                             <Field
                                                                 name="total_persons"

@@ -555,7 +555,7 @@ const ScheduleEdit = () => {
                                             <div className="row m-0">
                                                 <div className="col-md-6">
                                                     <div className="form-group">
-                                                        <label htmlFor="inputEmail3" className="col-form-label">หมายเหตุ</label>
+                                                        <label htmlFor="" className="col-form-label">หมายเหตุ</label>
                                                         <Field
                                                             as="textarea"
                                                             name="remark"
@@ -566,7 +566,7 @@ const ScheduleEdit = () => {
                                                     </div>
                                                 </div>
                                                 <div className="col-md-3"></div>
-                                                <div className="col-md-3 pt-3">
+                                                <div className="col-md-3">
                                                     <div
                                                         className="row"
                                                         style={{
