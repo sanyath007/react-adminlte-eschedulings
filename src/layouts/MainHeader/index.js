@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import LoggedInMenuItem from './LoggedInMenuItem';
 
 const MainHeader = () => {
-  const { auth } = useSelector(state => state.auth);
+  const { user } = useSelector(state => state.users);
 
   return (
     <nav className="main-header navbar navbar-expand navbar-white navbar-light">
@@ -36,7 +36,8 @@ const MainHeader = () => {
           </a>
         </li> */}
 
-        {auth && <LoggedInMenuItem user={auth} />}
+        {user && <LoggedInMenuItem user={user} />}
+
       </ul>
     </nav>
   );
