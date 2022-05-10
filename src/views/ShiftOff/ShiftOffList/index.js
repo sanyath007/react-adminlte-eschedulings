@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import api from '../../../api';
+import MonthlyText from '../../../components/MonthlyText';
 
-const ShiftOff = () => {
+const ShiftOffList = () => {
     const [offs, setOffs] = useState([]);
     const [pager, setPager] = useState([]);
 
@@ -9,9 +11,16 @@ const ShiftOff = () => {
         fetchOffs();
     }, []);
 
-    const fetchOffs = async () => {
-        const res = await api.get(`/shift-offs`);
-        console.log(res);
+    const fetchOffs = async (url='/shift-offs?page=') => {
+        const res = await api.get(`${url}`);
+        const { data, ...pager } = res.data.offs;
+
+        setOffs(data);
+        setPager(pager);
+    };
+
+    const onPaginateLinkClick = (e, url) => {
+        fetchOffs(url);
     };
 
     return (
@@ -39,65 +48,48 @@ const ShiftOff = () => {
                                 <thead>
                                     <tr>
                                         <th style={{ width: '4%', textAlign: 'center' }}>#</th>
-                                        <th style={{ width: '15%', textAlign: 'center' }}>ผู้ขอ</th>
-                                        <th style={{ textAlign: 'center' }}>รายการขออนุมัติ</th>
-                                        <th style={{ width: '15%', textAlign: 'center' }}>ผู้รับมอบ</th>
+                                        <th style={{ width: '15%', textAlign: 'center' }}>ผู้ปฏิบัติงาน</th>
+                                        <th style={{ textAlign: 'center' }}>รายละเอียด</th>
                                         <th style={{ width: '8%', textAlign: 'center' }}>สถานะ</th>
                                         <th style={{ width: '8%', textAlign: 'center' }}>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {swappings && swappings.map((swapping, index) => {
+                                    {offs && offs.map((off, index) => {
+                                        const { detail, schedule, ...other } = off;
+
                                         return (
-                                            <tr key={swapping.id}>
+                                            <tr key={off.id}>
                                                 <td style={{ textAlign: 'center' }}>{index+1}</td>
                                                 <td>
-                                                    {`${swapping.owner?.person?.person_firstname} ${swapping.owner?.person?.person_lastname}`}
+                                                    {`${detail?.person?.person_firstname} ${detail?.person?.person_lastname}`}
                                                 </td>
                                                 <td>
                                                     <div>
                                                         <span>
-                                                            วันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')} / เวร {swapping.owner_shift}
+                                                            วันที่ {moment(off.shift_date).format('DD/MM/YYYY')} / เวร {off.shift}
+                                                        </span>
+                                                        <span className="ml-2">
+                                                            ประจำเดือน <MonthlyText monthText={schedule.month} />
                                                         </span>
                                                         <p className="m-0">
-                                                            <span>
-                                                                เนื่องจาก {swapping.reason}
-                                                            </span>
-                                                            {swapping.no_swap === 0 ? (
-                                                                <span className="mx-2">
-                                                                    โดยจะขึ้นปฏิบัติแทนในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')} / เวร {swapping.swap_shift}
-                                                                </span>
-                                                            ) : (
-                                                                <span className="mx-2">
-                                                                    โดยไม่ขึ้นปฏิบัติแทน
-                                                                </span>
-                                                            )}
+                                                            เนื่องจาก {off.reason}
                                                         </p>
                                                     </div>
                                                 </td>
-                                                <td>
-                                                    {`${swapping.delegator?.person?.person_firstname} ${swapping.delegator?.person?.person_lastname}`}
-                                                </td>
                                                 <td style={{ textAlign: 'center' }}>
-                                                    <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
-                                                        {swapping.status}
+                                                    <span className={`btn btn-xs ${off.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
+                                                        {off.status}
                                                     </span>
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                        <a href="#" className="btn btn-success" onClick={(e) => console.log(e, swapping)}>
+                                                        {/* <a href="#" className="btn btn-success" onClick={(e) => console.log(e, off)}>
                                                             <i className="fas fa-print"></i>
+                                                        </a> */}
+                                                        <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, off)}>
+                                                            ยกเลิก
                                                         </a>
-
-                                                        {swapping.status == 'REQUESTED' ? (
-                                                            <a href="#" className="btn btn-primary" onClick={(e) => handleApprovement(e, swapping)}>
-                                                                อนุมัติ
-                                                            </a>
-                                                        ) : (
-                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, swapping)}>
-                                                                ยกเลิก
-                                                            </a>
-                                                        )}
                                                     </div>
                                                 </td>
                                             </tr>
@@ -156,4 +148,4 @@ const ShiftOff = () => {
     );
 };
 
-export default ShiftOff;
+export default ShiftOffList;

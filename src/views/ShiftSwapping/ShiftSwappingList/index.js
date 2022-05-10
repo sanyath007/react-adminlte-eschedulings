@@ -112,7 +112,7 @@ const ShiftSwappingList = () => {
                         <div className="card-header">
                             <h3 className="card-title">
                                 <i className="fas fa-hospital-user mr-1"></i>
-                                รายการอนุมัติเวร
+                                รายการเปลี่ยนเวร
                             </h3>
                         </div>
                         <div className="card-body pb-1">
