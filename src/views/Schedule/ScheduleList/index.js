@@ -12,19 +12,18 @@ import th from 'date-fns/locale/th'
 registerLocale("th", th);
 
 const ScheduleList = () => {
-    const pager = null;
+    /** Global states */
+    const dispatch = useDispatch();
+    const { user } = useSelector(state => state.users);
+    const { schedules, pager } = useSelector(getAllSchedules);
+    const scheduleStatus = useSelector(state => state.schedules.status);
+    /** Local states */
     const [departs, setDeparts] = useState([]);
     const [divisions, setDivisions] = useState([]);
     const [month, setMonth] = useState(new Date());
 
-    const dispatch = useDispatch();
-    const schedules = useSelector(getAllSchedules);
-    const scheduleStatus = useSelector(state => state.schedules.status);
-    const scheduleError = useSelector(state => state.schedules.error);
-    const { user } = useSelector(state => state.users);
-
     useEffect(() => {
-        getSchedules();
+        dispatch(fetchSchedules({ url: '', month: moment(month).format('YYYY-MM') }));
     }, [dispatch]);
 
     const onDepartChange = function (e) {
@@ -36,13 +35,11 @@ const ScheduleList = () => {
     };
 
     const getSchedules = async function (date) {
-        const month = date ? moment(date).format('YYYY-MM') : '';
-
-        dispatch(fetchSchedules(month));
+        dispatch(fetchSchedules({ url: '', month: date ? moment(date).format('YYYY-MM') : moment(month).format('YYYY-MM') }));
     };
 
     const onPaginateLinkClick = function (e, pageUrl) {
-        console.log(e, pageUrl);
+        dispatch(fetchSchedules({ url: pageUrl, month: moment(month).format('YYYY-MM') }));
     };
 
     const onDelete = async function (e, id) {
@@ -217,23 +214,23 @@ const ScheduleList = () => {
                                 <div className="col-4 m-0">
                                     {pager && (
                                         <ul className="pagination pagination-md m-0 float-right">
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==1}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.first_page_url) }>
+                                            <li className={`page-item ${pager.current_page == 1 ? 'disabled' : ''}`}>
+                                                <a className="page-link" href="#" onClick={(e) => onPaginateLinkClick(e, pager.path+ '?page=1')}>
                                                     First
                                                 </a>
                                             </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==1}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.prev_page_url) }>
+                                            <li className={`page-item ${pager.current_page == 1 ? 'disabled' : ''}`}>
+                                                <a className="page-link" href="#" onClick={(e) => onPaginateLinkClick(e, pager.prev_page_url)}>
                                                     Prev
                                                 </a>
                                             </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==pager.last_page}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.next_page_url) }>
+                                            <li className={`page-item ${pager.current_page == pager.last_page ? 'disabled' : ''}`}>
+                                                <a className="page-link" href="#" onClick={(e) => onPaginateLinkClick(e, pager.next_page_url)}>
                                                     Next
                                                 </a>
                                             </li>
-                                            <li className="page-item" ng-className="{disabled: pager.current_page==pager.last_page}">
-                                                <a className="page-link" href="#" onClick={ (e) => onPaginateLinkClick(e, pager.last_page_url) }>
+                                            <li className={`page-item ${pager.current_page == pager.last_page ? 'disabled' : ''}`}>
+                                                <a className="page-link" href="#" onClick={(e) => onPaginateLinkClick(e, pager.path+ '?page=' +pager.last_page)}>
                                                     Last
                                                 </a>
                                             </li>

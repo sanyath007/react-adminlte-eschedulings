@@ -3,13 +3,16 @@ import api from '../../api';
 
 const initialState = {
   schedules: [],
+  pager: null,
   status: 'idle',
   error: null
 };
 
-export const fetchSchedules = createAsyncThunk('schedules/fetchSchedules', async (month) => {
+export const fetchSchedules = createAsyncThunk('schedules/fetchSchedules', async ({ url, month }) => {
   try {
-    const res = await api.get(`/schedulings?month=${month}`);
+    const endpoint = url === '' ? '/schedulings?page=' : url;
+    const res = await api.get(`${endpoint}&month=${month}`);
+
     return res.data.schedulings;
   } catch (error) {
     console.log(error);
@@ -37,7 +40,10 @@ const schedulesSlice = createSlice({
       })
       .addCase(fetchSchedules.fulfilled, (state, action) => {
         state.status = 'succeeded'
-        state.schedules = action.payload
+
+        const { data, ...pager } = action.payload;
+        state.schedules = data;
+        state.pager = pager;
       })
       .addCase(fetchSchedules.rejected, (state, action) => {
         state.status = 'failed'
@@ -51,7 +57,7 @@ export default schedulesSlice.reducer;
 // Actions
 export const { storeSchedule, updateSchedule, deleteSchedule } = schedulesSlice.actions;
 
-export const getAllSchedules = state => state.schedules.schedules;
+export const getAllSchedules = state => state.schedules;
 
 export const getScheduleById = (state, id) => {
   return state.schedules.schedules.find(schedule => schedule.id === parseInt(id))
