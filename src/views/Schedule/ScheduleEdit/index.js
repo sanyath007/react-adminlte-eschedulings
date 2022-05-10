@@ -29,8 +29,6 @@ const scheduleSchema = Yup.object().shape({
 });
 
 const ScheduleEdit = () => {
-    const dispatch = useDispatch();
-    const history = useHistory();
     const [factions, setFactions] = useState([]);
     const [departs, setDeparts] = useState([]);
     const [shifts, setShifts] = useState([]);
@@ -46,6 +44,8 @@ const ScheduleEdit = () => {
     // const [removedList, setRemovedList] = useState([]);
 
     const { id } = useParams();
+    const dispatch = useDispatch();
+    const history = useHistory();
     const schedule = useSelector(state => getScheduleById(state, id));
 
     useEffect(() => {
@@ -178,7 +178,12 @@ const ScheduleEdit = () => {
         formik.setFieldValue('total_persons', personShifts.length + 1);
 
         // TODO: Calculate total shifts
-        formik.setFieldValue('total_shifts', calculateTotal(newDetails));
+        const total = calculateTotal(newDetails);
+        formik.setFieldValue('total_m', total.morn);
+        formik.setFieldValue('total_e', total.even);
+        formik.setFieldValue('total_n', total.night);
+        formik.setFieldValue('total_bd', total.bd);
+        formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
 
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
@@ -204,7 +209,12 @@ const ScheduleEdit = () => {
         formik.setFieldValue('total_persons', ps.length);
 
         // TODO: Calculate total shifts
-        formik.setFieldValue('total_shifts', calculateTotal(ps));
+        const total = calculateTotal(ps);
+        formik.setFieldValue('total_m', total.morn);
+        formik.setFieldValue('total_e', total.even);
+        formik.setFieldValue('total_n', total.night);
+        formik.setFieldValue('total_bd', total.bd);
+        formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
     };
 
     const onSubmit = async function (values, props) {
@@ -214,7 +224,17 @@ const ScheduleEdit = () => {
         }
 
         // Merge form input's values with personShifts array
-        const { depart, division, month, year, controller, total_persons, total_shifts, remark } = values;
+        const {
+            depart,
+            division,
+            month,
+            year,
+            controller,
+            total_shifts,
+            total_persons,
+            remark
+        } = values;
+
         let data = {
             depart,
             division,
@@ -222,8 +242,12 @@ const ScheduleEdit = () => {
             year,
             controller,
             person_shifts: personShifts,
-            total_persons,
+            total_m: values.total_m,
+            total_e: values.total_e,
+            total_n: values.total_n,
+            total_bd: values.total_bd,
             total_shifts,
+            total_persons,
             remark,
             // removedList // รหัส scheduling_detail ที่ถูกลบจากรายชื่อ
         };
@@ -258,8 +282,12 @@ const ScheduleEdit = () => {
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? `${schedule.year}` : '2565',
                             controller: schedule ? `${schedule.controller_id}` : '',
-                            total_persons: schedule ? `${schedule.total_persons}` : 0,
+                            total_m: schedule ? `${schedule.total_m}` : 0,
+                            total_e: schedule ? `${schedule.total_e}` : 0,
+                            total_n: schedule ? `${schedule.total_n}` : 0,
+                            total_bd: schedule ? `${schedule.total_bd}` : 0,
                             total_shifts: schedule ? `${schedule.total_shifts}` : 0,
+                            total_persons: schedule ? `${schedule.total_persons}` : 0,
                             remark: (schedule && schedule.remark) ? `${schedule.remark}` : ''
                         }}
                         validationSchema={scheduleSchema}
@@ -523,7 +551,7 @@ const ScheduleEdit = () => {
                                             </div>
                                             
                                             {/* Summary */}
-                                            <div className="row">
+                                            <div className="row m-0">
                                                 <div className="col-md-6">
                                                     <div className="form-group">
                                                         <label htmlFor="inputEmail3" className="col-form-label">หมายเหตุ</label>
@@ -532,25 +560,47 @@ const ScheduleEdit = () => {
                                                             name="remark"
                                                             value={formik.values.remark}
                                                             className={ `form-control` }
-                                                            rows={3}
+                                                            rows={6}
                                                         />
                                                     </div>
                                                 </div>
                                                 <div className="col-md-3"></div>
                                                 <div className="col-md-3 pt-3">
-                                                    <div className="form-group row">
-                                                        <label htmlFor="inputEmail3" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
-                                                        <div className="col-sm-6">
-                                                            <Field
-                                                                name="total_persons"
-                                                                value={formik.values.total_persons}
-                                                                className={ `form-control text-center` }
-                                                                readOnly
-                                                            />
+                                                    <div
+                                                        className="row"
+                                                        style={{
+                                                            textAlign: 'center',
+                                                            justifyContent: 'flex-end',
+                                                            paddingRight: '0.5rem'
+                                                        }}
+                                                    >
+                                                        <div className="form-group">
+                                                            <label htmlFor="">ช</label>
+                                                            <div className="form-control" style={{ width: '51px'}}>
+                                                                {formik.values.total_m}
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="">บ</label>
+                                                            <div className="form-control" style={{ width: '51px'}}>
+                                                                {formik.values.total_e}
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="">ด</label>
+                                                            <div className="form-control" style={{ width: '51px'}}>
+                                                                {formik.values.total_n}
+                                                            </div>
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="">BD</label>
+                                                            <div className="form-control" style={{ width: '51px'}}>
+                                                                {formik.values.total_bd}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div className="form-group row">
-                                                        <label htmlFor="inputEmail3" className="col-sm-6 col-form-label">เวรทั้งหมด</label>
+                                                        <label htmlFor="" className="col-sm-6 col-form-label">เวรทั้งหมด</label>
                                                         <div className="col-sm-6">
                                                             <Field
                                                                 name="total_shifts"
@@ -560,13 +610,28 @@ const ScheduleEdit = () => {
                                                             />
                                                         </div>
                                                     </div>
+                                                    <div className="form-group row">
+                                                        <label htmlFor="" className="col-sm-6 col-form-label">บุคลากรทั้งหมด</label>
+                                                        <div className="col-sm-6">
+                                                            <Field
+                                                                name="total_persons"
+                                                                value={formik.values.total_persons}
+                                                                className={ `form-control text-center` }
+                                                                readOnly
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </div>{/* /.row */}
 
                                         </div>{/* <!-- /.card-body --> */}
                                         <div className="card-footer clearfix">
-                                            <button type="reset" className="btn btn-danger float-right">ยกเลิก</button>
-                                            <button type="submit" className="btn btn-primary float-right mr-2">บันทึก</button>
+                                            <button type="reset" className="btn btn-danger float-right">
+                                                ยกเลิก
+                                            </button>
+                                            <button type="submit" className="btn btn-primary float-right mr-2">
+                                                บันทึก
+                                            </button>
                                         </div>{/* <!-- /.card-footer --> */}
                                     </Form>
                                 </div>

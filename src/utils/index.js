@@ -114,5 +114,5 @@ export const calculateTotal = (schedulingDetails) => {
         bd += shiftsTotal.bd;
     });
 
-    return night + morn + even + bd;
+    return { night, morn, even, bd };
 };
