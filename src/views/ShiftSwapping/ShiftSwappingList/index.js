@@ -18,7 +18,7 @@ const ShiftSwappingList = () => {
     }, []);
     
     const fetchSwaps = async (url='/swappings?page=') => {
-        const depart = user.person_id === '1300200009261' ? '' : user.member_of?.depart_id;
+        const depart = user?.person_id === '1300200009261' ? '' : user?.member_of?.depart_id;
 
         const res = await api.get(`${url}&depart=${depart}`);
 
@@ -174,7 +174,7 @@ const ShiftSwappingList = () => {
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="btn-group btn-group-sm" role="group" aria-label="...">
                                                         <a href="#" className="btn btn-success" onClick={(e) => console.log(e, swapping)}>
-                                                            <i class="fas fa-print"></i>
+                                                            <i className="fas fa-print"></i>
                                                         </a>
 
                                                         {swapping.status == 'REQUESTED' ? (
