@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import moment from 'moment';
 import api from '../../../api';
 import { calculateShiftsTotal } from '../../../utils';
+import MonthlyText from '../../../components/MonthlyText';
 
 const ShiftSwappingList = () => {
     /** Global states */
@@ -136,16 +137,21 @@ const ShiftSwappingList = () => {
                                 </thead>
                                 <tbody>
                                     {swappings && swappings.map((swapping, index) => {
+                                        const { schedule, owner, delegator } = swapping;
+
                                         return (
                                             <tr key={swapping.id}>
                                                 <td style={{ textAlign: 'center' }}>{index+1}</td>
                                                 <td>
-                                                    {`${swapping.owner?.person?.person_firstname} ${swapping.owner?.person?.person_lastname}`}
+                                                    {`${owner?.person?.person_firstname} ${owner?.person?.person_lastname}`}
                                                 </td>
                                                 <td>
                                                     <div>
                                                         <span>
                                                             วันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')} / เวร {swapping.owner_shift}
+                                                        </span>
+                                                        <span className="ml-2">
+                                                            ประจำเดือน <MonthlyText monthText={schedule.month} />
                                                         </span>
                                                         <p className="m-0">
                                                             <span>
@@ -164,7 +170,7 @@ const ShiftSwappingList = () => {
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    {`${swapping.delegator?.person?.person_firstname} ${swapping.delegator?.person?.person_lastname}`}
+                                                    {`${delegator?.person?.person_firstname} ${delegator?.person?.person_lastname}`}
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
