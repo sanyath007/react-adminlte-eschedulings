@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react';
+import { calculateShiftsTotal } from '../../../utils'
 
 const initialTotal = {
     night: 0,
@@ -10,32 +11,12 @@ const initialTotal = {
 const TotalShiftsRow = ({ shifts, person }) => {
     const [total, setTotal] = useState(initialTotal);
 
-    const calculateTotal = () => {
-        /** =========================== TODO: Duplicated Code =========================== */
-        let tmpTotal = { ...initialTotal };
-
-        shifts.forEach((shift, day) => {
-            let arrShift = shift.split('|');
-
-            arrShift.forEach(el => {
-                if (['ด','ด*','ด**','ด^'].includes(el)) {
-                    tmpTotal.night += 1;
-                } else if (['ช','ช*','ช**','ช^'].includes(el)) {
-                    tmpTotal.morn += 1;
-                } else if (['บ','บ*','บ**','บ^'].includes(el)) {
-                    tmpTotal.even += 1;
-                } else if (['B','B*','B**','B^'].includes(el)) {
-                    tmpTotal.bd += 0.5;
-                }
-            });
-        });
-        /** =========================== Duplicated Code =========================== */
-
-        setTotal(tmpTotal);
-    };
-
     useEffect(() => {
-        calculateTotal();
+        if (shifts) {
+            let shiftsTotal = calculateShiftsTotal(shifts);
+
+            setTotal(shiftsTotal);
+        }
     }, [shifts, person]);
 
     return (
