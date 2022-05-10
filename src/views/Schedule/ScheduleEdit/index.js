@@ -172,10 +172,8 @@ const ScheduleEdit = () => {
                 total: shiftsTotal.night + shiftsTotal.morn + shiftsTotal.even + shiftsTotal.bd
             }
         ];
-        setPersonShifts(newDetails);
 
-        /** Calculate total persons */
-        formik.setFieldValue('total_persons', personShifts.length + 1);
+        setPersonShifts(newDetails);
 
         // TODO: Calculate total shifts
         const total = calculateTotal(newDetails);
@@ -184,6 +182,9 @@ const ScheduleEdit = () => {
         formik.setFieldValue('total_n', total.night);
         formik.setFieldValue('total_bd', total.bd);
         formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
+
+        /** Calculate total persons */
+        formik.setFieldValue('total_persons', personShifts.length + 1);
 
         /** Clear all inputs value of action row  */
         setPersonSelected(null);
@@ -205,9 +206,6 @@ const ScheduleEdit = () => {
 
         setPersonShifts(ps);
 
-        /** Calculate total person */
-        formik.setFieldValue('total_persons', ps.length);
-
         // TODO: Calculate total shifts
         const total = calculateTotal(ps);
         formik.setFieldValue('total_m', total.morn);
@@ -215,6 +213,9 @@ const ScheduleEdit = () => {
         formik.setFieldValue('total_n', total.night);
         formik.setFieldValue('total_bd', total.bd);
         formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
+
+        /** Calculate total person */
+        formik.setFieldValue('total_persons', ps.length);
     };
 
     const onSubmit = async function (values, props) {

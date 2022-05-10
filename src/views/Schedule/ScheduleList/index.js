@@ -171,8 +171,13 @@ const ScheduleList = () => {
                                                 <td style={{ textAlign: 'center' }}>{ i+1 }</td>
                                                 <td>
                                                     {row.division
-                                                        ? row.division.ward_name
-                                                        : row.depart.depart_name}
+                                                        ? row.division?.ward_name
+                                                        : row.depart?.depart_name}
+                                                    <span className="badge badge-danger ml-2">
+                                                        {row.title
+                                                            ? row.title
+                                                            : null}
+                                                    </span>
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <MonthlyText monthText={row.month} />
