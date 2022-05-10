@@ -43,6 +43,7 @@ const ScheduleEdit = () => {
     const [personShifts, setPersonShifts] = useState([]);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
     const [shiftOfDay, setShiftOfDay] = useState('');
+    // const [removedList, setRemovedList] = useState([]);
 
     const { id } = useParams();
     const schedule = useSelector(state => getScheduleById(state, id));
@@ -50,6 +51,9 @@ const ScheduleEdit = () => {
     useEffect(() => {
         /** Fetch form dropdown inputs data */
         getInitForm();
+
+        /** Reset removeList to empty array on component mounted */
+        // setRemovedList([]);
     }, []);
 
     useEffect(() => {
@@ -64,7 +68,6 @@ const ScheduleEdit = () => {
                 return { ...oth, shifts: ps.shifts.split(',') }
             }));
 
-            console.log(tmpDeparts);
             /** TODO: To filter departments and divisions of selected faction */
             setDeparts(tmpDeparts.filter(dep => dep.faction_id === schedule.depart.faction_id));
             setDivisions(tmpDivisions.filter(div => div.depart_id === schedule.depart_id));
@@ -185,6 +188,13 @@ const ScheduleEdit = () => {
 
     const onDeletePersonShifts = function (person, formik) {
         const ps = personShifts.filter(ps => {
+            /** Add scheduling_detail_id to removed array */
+            // if (ps.person.person_id === person.person_id) {
+            //     const newRemovedList = [ ...removedList, ps.id ];
+
+            //     setRemovedList([...new Set(newRemovedList)]);
+            // }
+
             return ps.person.person_id !== person.person_id;
         });
 
@@ -214,7 +224,8 @@ const ScheduleEdit = () => {
             person_shifts: personShifts,
             total_persons,
             total_shifts,
-            remark
+            remark,
+            // removedList // รหัส scheduling_detail ที่ถูกลบจากรายชื่อ
         };
 
         /** Update data to db */
@@ -521,7 +532,7 @@ const ScheduleEdit = () => {
                                                             name="remark"
                                                             value={formik.values.remark}
                                                             className={ `form-control` }
-                                                            rows={5}
+                                                            rows={3}
                                                         />
                                                     </div>
                                                 </div>

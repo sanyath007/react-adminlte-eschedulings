@@ -98,7 +98,7 @@ const MainSidebar = () => {
                 </li>
               </ul>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link to="/profile" className="nav-link">
                 <i className="nav-icon fas fa-user"></i>
                 <p>
@@ -106,7 +106,7 @@ const MainSidebar = () => {
                   <span className="right badge badge-danger">New</span>
                 </p>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </section>

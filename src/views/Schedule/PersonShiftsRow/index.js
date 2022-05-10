@@ -21,9 +21,11 @@ const PersonShiftsRow = ({ row, onDelete }) => {
                     <TotalShiftsRow shifts={row.shifts} person={row.person.person_id} />
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                    <a href="#" className="btn btn-danger btn-sm" onClick={() => onDelete(row.person)}>
-                        <i className="far fa-trash-alt"></i>
-                    </a>
+                    {!row.id && (
+                        <a href="#" className="btn btn-danger btn-sm" onClick={() => onDelete(row.person)}>
+                            <i className="far fa-trash-alt"></i>
+                        </a>
+                    )}
                 </td>
             </tr>
     );
