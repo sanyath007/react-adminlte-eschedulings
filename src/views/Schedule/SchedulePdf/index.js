@@ -4,7 +4,7 @@ import './styles.css';
 
 const SchedulePdf = () => {
     const { id } = useParams();
-    const file = `${process.env.REACT_APP_FILE_URL}/${id}/print`;
+    const file = `${process.env.REACT_APP_FILE_URL}/${id}/print2`;
 
     return (
         <>
