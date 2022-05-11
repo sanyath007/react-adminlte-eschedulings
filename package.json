@@ -2,7 +2,7 @@
   "name": "react-adminlte-starter",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://192.168.20.4/eschedulings",
+  "homepage": "http://192.168.20.4/e-schedulings",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
