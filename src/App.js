@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="e-schedulings">
       <Switch>
         <Route exact path="/signin" name="Sign In Page" render={props => <Signin {...props} />} />
         <Route exact path="/signup" name="Sign Up Page" render={props => <Signup {...props} />} />
