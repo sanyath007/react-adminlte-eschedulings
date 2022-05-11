@@ -233,7 +233,7 @@ const ScheduleAdd = () => {
                         initialValues={{
                             depart: '',
                             division: '',
-                            month: '',
+                            month: new Date(),
                             year: '2565',
                             controller: '',
                             total_m: 0,
@@ -409,6 +409,7 @@ const ScheduleAdd = () => {
                                                         <DailyColumns
                                                             month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
                                                             holidays={holidays}
+                                                            cols={tableCol}
                                                         />
                                                     </thead>
                                                     <tbody>

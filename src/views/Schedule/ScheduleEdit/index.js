@@ -458,6 +458,7 @@ const ScheduleEdit = () => {
                                                         <DailyColumns
                                                             month={formik.values.month === '' ? moment().format('YYYY-MM') : moment(formik.values.month).format('YYYY-MM')}
                                                             holidays={holidays}
+                                                            cols={tableCol}
                                                         />
                                                     </thead>
                                                     {/* TODO: Duplicated code */}

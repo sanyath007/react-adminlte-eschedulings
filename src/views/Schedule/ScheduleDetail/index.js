@@ -128,6 +128,7 @@ const ScheduleDetail = () => {
                                         <DailyColumns
                                             month={schedule ? schedule.month : moment().format('YYYY-MM')}
                                             holidays={holidays}
+                                            cols={daysOfMonth}
                                         />
                                     </thead>
                                     {/* TODO: Duplicated code */}
