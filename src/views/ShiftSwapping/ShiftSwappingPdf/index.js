@@ -2,9 +2,9 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import './styles.css';
 
-const SchedulePdf = () => {
+const ShiftSwappingPdf = () => {
     const { id } = useParams();
-    const file = `${process.env.REACT_APP_FILE_URL}/${id}/print`;
+    const file = `${process.env.REACT_APP_FILE_URL}/${id}/swap`;
 
     return (
         <>
@@ -19,4 +19,4 @@ const SchedulePdf = () => {
     )
 }
 
-export default SchedulePdf
+export default ShiftSwappingPdf
