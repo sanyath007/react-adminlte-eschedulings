@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import api from '../../../api';
@@ -179,9 +180,9 @@ const ShiftSwappingList = () => {
                                                 </td>
                                                 <td style={{ textAlign: 'center' }}>
                                                     <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                        <a href="#" className="btn btn-success" onClick={(e) => console.log(e, swapping)}>
+                                                        <Link to={`/swappings/${swapping.id}/pdf`} className="btn btn-success">
                                                             <i className="fas fa-print"></i>
-                                                        </a>
+                                                        </Link>
 
                                                         {swapping.status == 'REQUESTED' ? (
                                                             <a href="#" className="btn btn-primary" onClick={(e) => handleApprovement(e, swapping)}>
