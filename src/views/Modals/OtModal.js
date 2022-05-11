@@ -9,6 +9,7 @@ import {
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import api from '../../api';
+import { calculateShiftsTotal } from '../../utils';
 import DailyColumns from '../../components/DailyColumns';
 import ShiftsOfDay from '../../components/ShiftsOfDay';
 import './styles.css';
@@ -48,7 +49,7 @@ function OtModal({
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
       const count = countOT(personOT);
       const working = totalShift - count;
-      const { morn, even, night, bd } = calculateTotal(personOT);
+      const { morn, even, night, bd } = calculateShiftsTotal(personOT.shifts);
       const data = {
         ot_shifts: personOT.shifts,
         working,
@@ -69,33 +70,6 @@ function OtModal({
         toast.error('พบข้อผิดพลาด ไม่สามารถบันทึกข้อมูลได้ !!!', { autoClose: 1000, hideProgressBar: true });
       }
     }
-  };
-
-  const calculateTotal = (personOT) => {
-    let total = {
-      night: 0,
-      morn: 0,
-      even: 0,
-      bd: 0
-    };
-
-    personOT.shifts.forEach((shift, day) => {
-      let arrShift = shift.split('|');
-
-      arrShift.forEach(el => {
-        if (['ด','ด*','ด**','ด^'].includes(el)) {
-          total.night += 1;
-        } else if (['ช','ช*','ช**','ช^'].includes(el)) {
-          total.morn += 1;
-        } else if (['บ','บ*','บ**','บ^'].includes(el)) {
-          total.even += 1;
-        } else if (['B','B*','B**','B^'].includes(el)) {
-          total.bd += 0.5;
-        }
-      });
-    });
-
-    return total;
   };
 
   const handleOnSetOT = (scheduleDetail, date, shift, isOt) => {
@@ -217,6 +191,7 @@ function OtModal({
                   <DailyColumns
                     month={month ? month : moment().format('YYYY-MM')}
                     holidays={holidays}
+                    cols={daysOfMonth}
                   />
                 </thead>
                 {/* TODO: Duplicated code */}
