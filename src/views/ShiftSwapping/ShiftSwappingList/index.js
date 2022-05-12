@@ -141,10 +141,13 @@ const ShiftSwappingList = () => {
                                         const { schedule, owner, delegator } = swapping;
 
                                         return (
-                                            <tr key={swapping.id}>
+                                            <tr key={index+swapping.id}>
                                                 <td style={{ textAlign: 'center' }}>{index+1}</td>
                                                 <td>
                                                     {`${owner?.person?.person_firstname} ${owner?.person?.person_lastname}`}
+                                                    <p className="m-0">
+                                                        {schedule.depart.depart_name}
+                                                    </p>
                                                 </td>
                                                 <td>
                                                     <div>
