@@ -21,7 +21,7 @@ const ShiftSwappingForm = () => {
     const history = useHistory();
     const dispatch = useDispatch();
     /** =================== Global's states ===================  */
-    const schedules = useSelector(getAllSchedules);
+    const { schedules } = useSelector(getAllSchedules);
     const shiftsOfOwner = useSelector(state => getScheduleDetailsById(state, id));
     /** =================== Component's states ===================  */
     const [schedule, setSchedule] = useState([]);

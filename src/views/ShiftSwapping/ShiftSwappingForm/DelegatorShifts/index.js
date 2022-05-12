@@ -4,13 +4,21 @@ import api from '../../../../api';
 import DailyColumns from '../../../../components/DailyColumns';
 import EmptyShiftsOfDay from '../EmptyShiftsOfDay';
 import ExistedShiftsOfDay from '../ExistedShiftsOfDay';
+import { lastDayOfMonth } from '../../../../utils';
 
 const DelegatorShifts = ({ schedule, shiftsOfDelegator, noSwap, onSelectedShift }) => {
     const [holidays, setHolidays] = useState([]);
+    const [daysOfMonth, setDaysOfMonth] = useState(31);
 
     useEffect(() => {
         getHolidays();
     }, []);
+
+    useEffect(() => {
+        if (schedule) {
+            setDaysOfMonth(lastDayOfMonth(schedule.month));
+        }
+    }, [schedule]);
 
     const getHolidays = async function () {
         try {
@@ -30,11 +38,12 @@ const DelegatorShifts = ({ schedule, shiftsOfDelegator, noSwap, onSelectedShift 
         <table className="table table-bordered table-striped mb-1">
             <thead>
                 <tr>
-                    <td style={{ textAlign: 'center' }} colSpan={ 31 }>วันที่</td>
+                    <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
                 </tr>
                 <DailyColumns
                     month={schedule ? schedule.month : moment().format('YYYY-MM')}
                     holidays={holidays}
+                    cols={daysOfMonth}
                 />
             </thead>
             <tbody>
