@@ -20,6 +20,7 @@ function OtModal({
   schedule,
   month,
   holidays,
+  workingDays,
   ...props
 }) {
   const [daysOfMonth, setDaysOfMonth] = useState(31);
@@ -185,7 +186,9 @@ function OtModal({
                   <tr>
                     <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
                     <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
-                    <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">ทำการ</td>
+                    <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">
+                      ทำการ {workingDays} วัน
+                    </td>
                     <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
                   </tr>
                   <DailyColumns
@@ -246,7 +249,8 @@ OtModal.propTypes = {
   hideModal: PropTypes.func,
   schedule: PropTypes.object,
   month: PropTypes.string,
-  holidays: PropTypes.array
+  holidays: PropTypes.array,
+  workingDays: PropTypes.number,
 };
 
 export default OtModal;

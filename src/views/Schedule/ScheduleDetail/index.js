@@ -20,6 +20,7 @@ const ScheduleDetail = () => {
     const [openShiftModal, setOpenShiftModal] = useState(false);
     const [personSchedule, setPersonSchedule] = useState(null);
     const [shift, setshift] = useState('');
+    const [workingDays, setWorkingDays] = useState(0);
 
     const { id } = useParams();
     const history = useHistory();
@@ -28,24 +29,30 @@ const ScheduleDetail = () => {
     const { scheduleDetails } = useSelector(state => state.scheduleDetails);
 
     useEffect(() => {
+        /** To redirect to /schedules/list if schedule is null */
+        if (!schedule) {
+            history.push('/schedules/list');
+        }
+
         dispatch(fetchAll(id));
 
         getHolidays();
         getHeadOfFaction();
-
-        /** To redirect to /schedules/list if schedule is null */
-        if (!schedule) {
-            history.push('/schedules/list');
-        } else {
-            setDaysOfMonth(moment(schedule.month).endOf('month').date());
-        }
     }, []);
 
     const getHolidays = async function () {
         try {
             const res = await api.get(`/holidays`);
 
+            const holidayOfMonth = res.data.holidays.filter(hd => {
+                return moment(hd.holiday_date).format('YYYY-MM') == moment(schedule.month).format('YYYY-MM');
+            });
+    
+            const days = moment(schedule.month).endOf('month').date();
+
             setHolidays(res.data.holidays);
+            setDaysOfMonth(days);
+            setWorkingDays(days - holidayOfMonth.length);
         } catch (err) {
             console.log(err);
         }
@@ -79,6 +86,7 @@ const ScheduleDetail = () => {
                         schedule={personSchedule}
                         month={schedule ? schedule.month : moment().format('YYYY-MM')}
                         holidays={holidays}
+                        workingDays={workingDays}
                     />
 
                     <ShiftModal
@@ -121,7 +129,9 @@ const ScheduleDetail = () => {
                                         <tr>
                                             <td style={{ textAlign: 'center' }} rowSpan="2">ชื่อ-สกุล</td>
                                             <td style={{ textAlign: 'center' }} colSpan={ daysOfMonth }>วันที่</td>
-                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">วันทำการ</td>
+                                            <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">
+                                                วันทำการ { workingDays } วัน
+                                            </td>
                                             <td style={{ width: '3%', textAlign: 'center' }} rowSpan="2">OT</td>
                                             <td style={{ width: '6%', textAlign: 'center' }} rowSpan="2">Actions</td>
                                         </tr>
