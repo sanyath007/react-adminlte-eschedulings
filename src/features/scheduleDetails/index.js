@@ -58,6 +58,24 @@ const scheduleDetailsSlice = createSlice({
     deleteScheduleDetail: (state, action) => {
       state.scheduleDetails = action.payload;
     },
+    updateOT: (state, action) => {
+      console.log(action.payload);
+      let updatedData = state.scheduleDetails.map(detail => {
+        if (detail.id === action.payload.id) {
+          return {
+            ...detail,
+            ot: action.payload.ot,
+            working: action.payload.working,
+            ot_shifts: action.payload.ot_shifts,
+          }
+        }
+
+        return detail;
+      });
+      console.log(updatedData);
+
+      state.scheduleDetails = updatedData;
+    }
   },
   extraReducers: {
     [fetchAll.pending]: (state, action) => {
@@ -124,7 +142,7 @@ const scheduleDetailsSlice = createSlice({
 export default scheduleDetailsSlice.reducer;
 
 // Actions
-export const { storeSchedule, updateSchedule, deleteSchedule } = scheduleDetailsSlice.actions;
+export const { storeSchedule, updateSchedule, deleteSchedule, updateOT } = scheduleDetailsSlice.actions;
 
 export const getAllScheduleDetails = state => state.scheduleDetails.scheduleDetails;
 

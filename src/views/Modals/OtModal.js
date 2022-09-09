@@ -8,10 +8,12 @@ import {
 } from 'react-bootstrap';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 import api from '../../api';
 import { calculateShiftsTotal } from '../../utils';
 import DailyColumns from '../../components/DailyColumns';
 import ShiftsOfDay from '../../components/ShiftsOfDay';
+import { updateOT } from '../../features/scheduleDetails';
 import './styles.css';
 
 function OtModal({
@@ -23,6 +25,7 @@ function OtModal({
   workingDays,
   ...props
 }) {
+  const dispatch = useDispatch();
   const [daysOfMonth, setDaysOfMonth] = useState(31);
   const [ot, setOt] = useState([]);
   const [otShifts, setOtShifts] = useState([]);
@@ -61,10 +64,11 @@ function OtModal({
         b: bd
       };
 
-      let res = await api.put(`/api/schedule-details/${id}/ot`, data);
+      let res = await api.put(`/schedule-details/${id}/ot`, data);
 
       if (res.data.status === 1) {
         toast.success('บันทึกข้อมูลเรียบร้อย !!!', { autoClose: 1000, hideProgressBar: true });
+        dispatch(updateOT(res.data.detail));
 
         hideModal();
       } else {
