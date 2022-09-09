@@ -71,7 +71,6 @@ const scheduleDetailsSlice = createSlice({
 
         return detail;
       });
-      console.log(updatedData);
 
       state.scheduleDetails = updatedData;
     }

@@ -153,22 +153,51 @@ function OtModal({
   };
 
   const renderWorking = (shifts, personOT) => {
-    let totalShift = 0;
-    shifts.split(',').forEach((sh, index) => {
-      /** TODO: Duplicated code in countOT function */
-      sh.split('|').forEach(s => {
-        if (s !== '') {
-          if (s === 'B') {
-            totalShift += 0.5;
+    let totalShift = {
+      night: 0,
+      morn: 0,
+      even: 0,
+      bd: 0,
+      total: 0
+    };
+
+    /** Calculate total of each ot shifts */
+    const { morn, even, night, bd } = (personOT)
+                                        ? calculateShiftsTotal(personOT.shifts)
+                                        : { morn: 0, even: 0, night: 0, bd: 0 };
+
+    /** Calculate summary of each all shifts */
+    shifts.split(',').forEach((shift, index) => {
+      shift.split('|').forEach(sh => {
+        if (sh !== '') {
+          if (sh === 'B') {
+            totalShift.total += 0.5;
           } else {
-            totalShift += 1;
+            if (['ด','ด*','ด**','ด^'].includes(sh)) {
+              totalShift.night += 1;
+            } else if (['ช','ช*','ช**','ช^','Vac'].includes(sh)) {
+              totalShift.morn += 1;
+            } else if (['บ','บ*','บ**','บ^'].includes(sh)) {
+              totalShift.even += 1;
+            } else if (['B','B*','B**','B^'].includes(sh)) {
+              totalShift.bd += 0.5;
+            }
+
+            totalShift.total += 1;
           }
         }
       });
-      /** TODO: Duplicated code in countOT function */
     });
 
-    return <span>{totalShift - countOT(personOT)}</span>;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+        <span>ช={totalShift.morn - morn}</span>
+        <span>บ={totalShift.even - even}</span>
+        <span>ด={totalShift.night - night}</span>
+        <span>B={totalShift.bd - bd}</span>
+        <span>รวม={totalShift.total - countOT(personOT)}</span>
+      </div>
+    );
   };
 
   const renderOT = (personOT) => {
