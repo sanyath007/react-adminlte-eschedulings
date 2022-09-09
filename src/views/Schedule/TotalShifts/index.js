@@ -17,7 +17,7 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
             for (let i = 1; i <= 3; i++) {
                 if (['ด','ด*','ด**','ด^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.night += 1;
-                } else if (['ช','ช*','ช**','ช^'].includes(shift[`${day}_${i}`])) {
+                } else if (['ช','ช*','ช**','ช^','Vac'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.morn += 1;
                 } else if (['บ','บ*','บ**','บ^'].includes(shift[`${day}_${i}`])) {
                     tmpTotal.even += 1;

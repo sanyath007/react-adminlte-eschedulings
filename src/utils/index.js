@@ -89,7 +89,7 @@ export const calculateShiftsTotal = (shifts) => {
       arrShift.forEach(el => {
           if (['ด','ด*','ด**','ด^'].includes(el)) {
               total.night += 1;
-          } else if (['ช','ช*','ช**','ช^'].includes(el)) {
+          } else if (['ช','ช*','ช**','ช^','Vac'].includes(el)) {
               total.morn += 1;
           } else if (['บ','บ*','บ**','บ^'].includes(el)) {
               total.even += 1;
