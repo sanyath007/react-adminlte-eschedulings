@@ -59,7 +59,6 @@ const scheduleDetailsSlice = createSlice({
       state.scheduleDetails = action.payload;
     },
     updateOT: (state, action) => {
-      console.log(action.payload);
       let updatedData = state.scheduleDetails.map(detail => {
         if (detail.id === action.payload.id) {
           return {

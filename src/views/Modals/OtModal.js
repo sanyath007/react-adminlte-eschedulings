@@ -56,12 +56,12 @@ function OtModal({
       const { morn, even, night, bd } = calculateShiftsTotal(personOT.shifts);
       const data = {
         ot_shifts: personOT.shifts,
-        working,
         ot: count,
         m: morn,
         e: even,
         n: night,
-        b: bd
+        b: bd,
+        working
       };
 
       let res = await api.put(`/schedule-details/${id}/ot`, data);
@@ -77,11 +77,12 @@ function OtModal({
     }
   };
 
-  const handleOnSetOT = (scheduleDetail, date, shift, isOt) => {
+  const handleSetOT = (scheduleDetail, date, shift, isOt) => {
     const { id, person_id, ...other } = scheduleDetail;
     const personOt = ot.find(o => o.id === id);
 
     if (personOt) {
+      console.log('If personOt is not null...');
       const newPersonOt = personOt.shifts.map((sh, i) => {
         if (i+1 === date) {
           if (sh !== '') {
@@ -111,6 +112,7 @@ function OtModal({
 
       setOt(newOt);
     } else {
+      console.log('If personOt is null...');
       let newShifts = scheduleDetail.shifts.split(',').map((sh, i) => {
         if (i+1 === date) {
           return isOt ? shift : '';
@@ -219,7 +221,7 @@ function OtModal({
                               shifts={ shift }
                               otShift={otShifts.length > 0 ? otShifts[index] : ''}
                               onSetOT={(sh, isOt) => {
-                                handleOnSetOT(schedule, index+1, sh, isOt)
+                                handleSetOT(schedule, index+1, sh, isOt)
                               }}
                             />
                           </td>
