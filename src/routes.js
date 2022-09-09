@@ -25,7 +25,7 @@ const routes = [
   { path: '/schedules/:id/edit', exact: true, name: 'Schedules', component: ScheduleEdit },
   { path: '/schedules/:id/detail', exact: true, name: 'Schedule-detail', component: ScheduleDetail },
   { path: '/schedules/:id/print', exact: true, name: 'Schedule-print', component: SchedulePrint },
-  { path: '/schedules/:id/pdf', exact: true, name: 'Schedule-print', component: SchedulePdf },
+  { path: '/schedules/:id/:type/pdf', exact: true, name: 'Schedule-print', component: SchedulePdf },
   { path: '/schedules/off-list', exact: true, name: 'Off-List', component: ShiftOffList },
   { path: '/schedules/swap-list', exact: true, name: 'Swapping-List', component: ShiftSwappingList },
   { path: '/swappings/:id/pdf', exact: true, name: 'Swapping-print', component: ShiftSwappingPdf },

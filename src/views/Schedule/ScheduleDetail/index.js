@@ -228,9 +228,21 @@ const ScheduleDetail = () => {
 
                         </div>{/* <!-- /.card-body --> */}
                         <div className="card-footer clearfix text-center">
-                            <Link to={`/schedules/${id}/pdf`} className="btn btn-success">
+                            <Link to={`/schedules/${id}/pdf`} className="btn btn-success mr-2">
                                 <i className="fas fa-print"></i>
-                                <span className="ml-1">พิมพ์ตารางเวร</span>
+                                <span className="ml-1">พิมพ์ตารางขอขึ้น</span>
+                            </Link>
+                            <Link to={`/schedules/${id}/pdf`} className="btn bg-maroon mr-2">
+                                <i className="fas fa-print"></i>
+                                <span className="ml-1">พิมพ์หลักฐานเบิก (OT)</span>
+                            </Link>
+                            <Link to={`/schedules/${id}/pdf`} className="btn bg-purple mr-2">
+                                <i className="fas fa-print"></i>
+                                <span className="ml-1">พิมพ์หลักฐานเบิก (บ่าย-ดึก)</span>
+                            </Link>
+                            <Link to={`/schedules/${id}/pdf`} className="btn bg-navy">
+                                <i className="fas fa-print"></i>
+                                <span className="ml-1">พิมพ์ใบลงชื่อปฏิบัติงาน</span>
                             </Link>
                         </div>{/* <!-- /.card-footer --> */}
                     </div>{/* <!-- /.card --> */}
