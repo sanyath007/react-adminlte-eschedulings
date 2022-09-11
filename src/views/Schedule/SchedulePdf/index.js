@@ -16,17 +16,17 @@ const SchedulePdf = () => {
         } else if (type == 4) {
             setFile(`${process.env.REACT_APP_FILE_URL}/${id}/print4`);
         }
-    }, type);
+    }, [type]);
 
     return (
         <>
-            <object data={file} type="application/pdf">
+            {file !== '' && <object data={file} type="application/pdf">
                 <iframe
                     id="print-file"
                     title="pdf document"
                     src={`https://docs.google.com/viewer?url=${file}&embedded=true`}
                 />
-            </object>
+            </object>}
         </>
     )
 }
