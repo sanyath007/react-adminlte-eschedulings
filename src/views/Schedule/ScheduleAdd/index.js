@@ -235,6 +235,7 @@ const ScheduleAdd = () => {
                             division: '',
                             month: new Date(),
                             year: '2565',
+                            schedule_type_id: '',
                             controller: '',
                             total_m: 0,
                             total_e: 0,
@@ -342,7 +343,7 @@ const ScheduleAdd = () => {
                                                         ) : null
                                                     }
                                                 </div>
-                                                <div className="form-group col-md-4">
+                                                <div className="form-group col-md-2">
                                                     <label>ประจำเดือน :</label>
                                                     <DatePicker
                                                         selected={formik.values.month}
@@ -361,7 +362,7 @@ const ScheduleAdd = () => {
                                                         : null
                                                     }
                                                 </div>
-                                                <div className="form-group col-md-4">
+                                                <div className="form-group col-md-2">
                                                     <label>ปีงบประมาณ :</label>
                                                     <Field
                                                         name=""
@@ -369,6 +370,26 @@ const ScheduleAdd = () => {
                                                         className={ `form-control` }
                                                         readOnly
                                                     />
+                                                </div>
+                                                <div className="form-group col-md-4">
+                                                    <label>ประเภท :</label>
+                                                    <select
+                                                        className={ `form-control ${formik.errors.schedule_type_id && formik.touched.schedule_type_id ? 'is-invalid' : ''}` }
+                                                        id="schedule_type_id"
+                                                        name="schedule_type_id"
+                                                        value={formik.values.schedule_type_id}
+                                                        onChange={(e) => {
+                                                            formik.setFieldValue('schedule_type_id', e.target.value);
+                                                        }}
+                                                    >
+                                                        <option value="">-- เลือกประเภท --</option>
+                                                        <option value="1">ตารางเวรพยาบาล</option>
+                                                        <option value="2">ตารางเวรผู้ช่วยพยาบาล/ผู้ช่วยเหลือคนไข้</option>
+                                                    </select>
+                                                    {formik.errors.schedule_type_id && formik.touched.schedule_type_id 
+                                                        ? (<div className="invalid-feedback">{formik.errors.schedule_type_id}</div>) 
+                                                        : null
+                                                    }
                                                 </div>
                                                 <div className="form-group col-md-4">
                                                     <label>ผู้ควบคุม/หน.กลุ่มงาน/หน.งาน :</label>

@@ -282,6 +282,7 @@ const ScheduleEdit = () => {
                             division: (schedule && schedule.division_id)? `${schedule.division_id}` : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? `${schedule.year}` : '2565',
+                            schedule_type_id: schedule ? `${schedule.Schedule_type_id}` : '',
                             controller: schedule ? `${schedule.controller_id}` : '',
                             total_m: schedule ? `${schedule.total_m}` : 0,
                             total_e: schedule ? `${schedule.total_e}` : 0,
@@ -390,7 +391,7 @@ const ScheduleEdit = () => {
                                                         ) : null
                                                     }
                                                 </div>
-                                                <div className="form-group col-md-4">
+                                                <div className="form-group col-md-2">
                                                     <label>ประจำเดือน :</label>
                                                     <DatePicker
                                                         selected={formik.values.month}
@@ -409,7 +410,7 @@ const ScheduleEdit = () => {
                                                         : null
                                                     }
                                                 </div>
-                                                <div className="form-group col-md-4">
+                                                <div className="form-group col-md-2">
                                                     <label>ปีงบประมาณ :</label>
                                                     <Field
                                                         name=""
@@ -417,6 +418,26 @@ const ScheduleEdit = () => {
                                                         className={ `form-control` }
                                                         readOnly
                                                     />
+                                                </div>
+                                                <div className="form-group col-md-4">
+                                                    <label>ประเภท :</label>
+                                                    <select
+                                                        id="schedule_type_id"
+                                                        name="schedule_type_id"
+                                                        className={ `form-control ${formik.errors.schedule_type_id && formik.touched.schedule_type_id ? 'is-invalid' : ''}` }
+                                                        value={formik.values.schedule_type_id}
+                                                        onChange={(e) => {
+                                                            formik.setFieldValue('schedule_type_id', e.target.value);
+                                                        }}
+                                                    >
+                                                        <option value="">-- เลือกประเภท --</option>
+                                                        <option value="1">ตารางเวรพยาบาล</option>
+                                                        <option value="2">ตารางเวรผู้ช่วยพยาบาล/ผู้ช่วยเหลือคนไข้</option>
+                                                    </select>
+                                                    {formik.errors.schedule_type_id && formik.touched.schedule_type_id 
+                                                        ? (<div className="invalid-feedback">{formik.errors.schedule_type_id}</div>) 
+                                                        : null
+                                                    }
                                                 </div>
                                                 <div className="form-group col-md-4">
                                                     <label>ผู้ควบคุม/หน.กลุ่มงาน/หน.งาน :</label>
