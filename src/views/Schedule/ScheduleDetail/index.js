@@ -178,7 +178,7 @@ const ScheduleDetail = () => {
                                                             href="#"
                                                             className="btn btn-outline-danger btn-sm"
                                                         >
-                                                            {row.ot ? row.ot : 'OT'}
+                                                            {row.working > 0  ? row.ot : 'OT'}
                                                         </a>
                                                     </td>
                                                     <td style={{ textAlign: 'center' }}>
