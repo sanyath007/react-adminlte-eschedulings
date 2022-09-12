@@ -51,11 +51,13 @@ function OtModal({
 
   const handleSubmitOT = async (id, totalShift, personOT) => {
     if (window.confirm(`คุณต้องการบันทึกการระบุวัน OT ใช่หรือไม่ ?`)) {
-      const count = countOT(personOT);
+      const count = personOT ? countOT(personOT) : 0;
       const working = totalShift - count;
-      const { morn, even, night, bd } = calculateShiftsTotal(personOT.shifts);
+      const { morn, even, night, bd } = personOT
+                                          ? calculateShiftsTotal(personOT.shifts)
+                                          : { morn: 0, even: 0, night: 0, bd: 0 };
       const data = {
-        ot_shifts: personOT.shifts,
+        ot_shifts: personOT ? personOT.shifts : '',
         ot: count,
         m: morn,
         e: even,
