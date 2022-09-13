@@ -282,7 +282,7 @@ const ScheduleEdit = () => {
                             division: (schedule && schedule.division_id)? `${schedule.division_id}` : '',
                             month: schedule ? moment(schedule.month).toDate() : '',
                             year: schedule ? `${schedule.year}` : '2565',
-                            schedule_type_id: schedule ? `${schedule.Schedule_type_id}` : '',
+                            schedule_type_id: schedule ? `${schedule.schedule_type_id}` : '',
                             controller: schedule ? `${schedule.controller_id}` : '',
                             total_m: schedule ? `${schedule.total_m}` : 0,
                             total_e: schedule ? `${schedule.total_e}` : 0,
