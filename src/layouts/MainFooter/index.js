@@ -3,7 +3,7 @@ import React from 'react'
 const MainFooter = () => {
   return (
     <footer className="main-footer">
-      <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+      <strong>Copyright &copy;</strong> All rights reserved by นายสัญญา ธรรมวงษ์ ตำแหน่งนักจัดการงานทั่วไปปฏิบัติการ
       All rights reserved.
       <div className="float-right d-none d-sm-inline-block">
         <b>Version</b> 3.0.0
