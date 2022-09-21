@@ -41,7 +41,7 @@ const ScheduleEdit = () => {
     const [personShifts, setPersonShifts] = useState([]);
     const [toggleShiftVal, setToggleShiftVal] = useState(false);
     const [shiftOfDay, setShiftOfDay] = useState('');
-    // const [removedList, setRemovedList] = useState([]);
+    const [removedList, setRemovedList] = useState([]);
 
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -192,30 +192,29 @@ const ScheduleEdit = () => {
         tmpPersonShifts = generateShiftDays(tableCol);
     };
 
-    const onDeletePersonShifts = function (person, formik) {
-        const ps = personShifts.filter(ps => {
+    const onDeletePersonShifts = function (id, formik) {
+        if (id) {
             /** Add scheduling_detail_id to removed array */
-            // if (ps.person.person_id === person.person_id) {
-            //     const newRemovedList = [ ...removedList, ps.id ];
+            if (!removedList.includes(id)) {
+                const newRemovedList = [ ...removedList, id ];
+                setRemovedList(newRemovedList);
+            }
 
-            //     setRemovedList([...new Set(newRemovedList)]);
-            // }
+            /** Filter person's shifts that have been deleted from personShifts */
+            const ps = personShifts.filter(ps => ps.id !== id);
+            setPersonShifts(ps);
 
-            return ps.person.person_id !== person.person_id;
-        });
+            // TODO: Calculate total shifts
+            const total = calculateTotal(ps);
+            formik.setFieldValue('total_m', total.morn);
+            formik.setFieldValue('total_e', total.even);
+            formik.setFieldValue('total_n', total.night);
+            formik.setFieldValue('total_bd', total.bd);
+            formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
 
-        setPersonShifts(ps);
-
-        // TODO: Calculate total shifts
-        const total = calculateTotal(ps);
-        formik.setFieldValue('total_m', total.morn);
-        formik.setFieldValue('total_e', total.even);
-        formik.setFieldValue('total_n', total.night);
-        formik.setFieldValue('total_bd', total.bd);
-        formik.setFieldValue('total_shifts', total.morn+total.even+total.night+total.bd);
-
-        /** Calculate total person */
-        formik.setFieldValue('total_persons', ps.length);
+            /** Calculate total person */
+            formik.setFieldValue('total_persons', ps.length);
+        }
     };
 
     const onSubmit = async function (values, props) {
@@ -563,8 +562,9 @@ const ScheduleEdit = () => {
                                                         {personShifts && personShifts.map(ps => {
                                                             return (
                                                                 <PersonShiftsRow
-                                                                    key={ps.person.person_id} row={ps}
-                                                                    onDelete={(person) => onDeletePersonShifts(person, formik)}
+                                                                    key={ps.person.person_id}
+                                                                    row={ps}
+                                                                    onDelete={(id) => onDeletePersonShifts(id, formik)}
                                                                 />
                                                             );
                                                         })}
