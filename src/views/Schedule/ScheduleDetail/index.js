@@ -143,13 +143,14 @@ const ScheduleDetail = () => {
                                     </thead>
                                     {/* TODO: Duplicated code */}
                                     <tbody>
-                                        {scheduleDetails && scheduleDetails.map(row => {
+                                        {scheduleDetails && scheduleDetails.map((row, index) => {
                                             let otShifts = row.ot_shifts ? row.ot_shifts.split(',') : [];
 
                                             return (
                                                 <tr key={row.id}>
                                                     <td>
-                                                        { row.person.prefix.prefix_name+row.person.person_firstname+ ' ' +row.person.person_lastname }
+                                                        <span>{index+1}.</span>
+                                                        <span>{ row.person.prefix.prefix_name+row.person.person_firstname+ ' ' +row.person.person_lastname }</span>
                                                         <p style={{ color: 'grey', margin: '0px' }}>
                                                             {row.person.position.position_name}
                                                         </p>
