@@ -583,7 +583,7 @@ const ScheduleEdit = () => {
                                                             name="remark"
                                                             value={formik.values.remark}
                                                             className={ `form-control` }
-                                                            rows={6}
+                                                            rows={5}
                                                         />
                                                     </div>
                                                 </div>
