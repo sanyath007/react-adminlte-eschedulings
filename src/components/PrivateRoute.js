@@ -1,33 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import jwt from 'jwt-decode';
 import { fetchUser } from '../features/users';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const dispatch = useDispatch();
   const now = new Date();
-  const exp = localStorage.getItem('access_token')
-    ? jwt(JSON.parse(localStorage.getItem('access_token')))?.exp
-    : null;
+  const dispatch = useDispatch();
+  const { auth } = useSelector(state => state.auth);
+  const [isExpired, setIsExpired] = useState(false);
 
-  /** Check token expiration */
-  let isExpired = false;
-  isExpired = exp * 1000 < now.getTime();
+  const token = localStorage.getItem('access_token') ? JSON.parse(localStorage.getItem('access_token')) : null;
+  const decoded = token ? jwt(token) : null;
 
-  /** if token expired have to clear localStorage and auth data in store */
-  if (isExpired) {
-    toast.error("Your access token has expired.", { autoClose: 1000, hideProgressBar: true });
+  useEffect(() => {
+    /** Check token expiration */
+    setIsExpired(decoded ? decoded?.exp * 1000 < now.getTime() : true);
 
-    localStorage.removeItem('access_token');
-  } else {
-    const decoded = jwt(JSON.parse(localStorage.getItem('access_token')));
+    /** if token expired have to clear localStorage and auth data in store */
+    if (isExpired) {
+      toast.error("Your access token has expired.", { autoClose: 1000, hideProgressBar: true });
 
-    if (decoded) {
-      dispatch(fetchUser({ id: decoded.sub }));
+      localStorage.removeItem('access_token');
+    } else {
+      if (decoded) {
+        dispatch(fetchUser({ id: decoded?.sub }));
+      }
     }
-  }
+  }, [auth]);
 
   return (
       <Route
