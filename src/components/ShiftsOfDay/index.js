@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import uuid from 'react-uuid';
 import ShiftText from '../ShiftText';
 import ShiftButton from '../ShiftButton';
 

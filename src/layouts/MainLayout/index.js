@@ -14,8 +14,8 @@ const MainLayout = () => {
   useEffect(() => {
     /** Set body class and style */
     if (location.pathname === '/') {
-      removeBodyClass('login-page');
-      addBodyClass('sidebar-mini');
+      removeBodyClass(['login-page']);
+      addBodyClass(['hold-transition','sidebar-mini','layout-fixed']);
 
       document.body.style.minHeight = null;
       document.body.style.height = "auto";

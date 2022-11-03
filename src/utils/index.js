@@ -20,8 +20,8 @@ export const mapHWardToWard = (ward) => {
   }
 };
 
-export const addBodyClass = className => document.body.classList.add(className);
-export const removeBodyClass = className => document.body.classList.remove(className);
+export const addBodyClass = className => document.body.classList.add(...className);
+export const removeBodyClass = className => document.body.classList.remove(...className);
 
 export const lastDayOfMonth = function(strDate) {
   if(!strDate) return 31;

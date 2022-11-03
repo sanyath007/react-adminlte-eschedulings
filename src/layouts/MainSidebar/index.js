@@ -1,9 +1,26 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const MainSidebar = () => {
   const { user } = useSelector(state => state.users);
+
+  const handleMenuClicked = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const navLink = e.currentTarget;
+    const treeView = navLink.nextElementSibling;
+    const parent = navLink.parentElement;
+
+    if (parent.classList.contains('menu-is-opening') || parent.classList.contains('menu-open')) {
+      parent.classList.remove('menu-is-opening', 'menu-open')
+      treeView.style.display = "none";
+    } else {
+      parent.classList.add('menu-is-opening', 'menu-open')
+      treeView.style.display = "block";
+    }
+  };
 
   return (
     <aside className="main-sidebar sidebar-dark-primary elevation-4">
@@ -41,13 +58,13 @@ const MainSidebar = () => {
             data-accordion="false"
           >
             <li className="nav-item">
-              <Link to="/" className="nav-link active">
+              <NavLink to="/" className="nav-link">
                 <i className="nav-icon fas fa-tachometer-alt"></i>
                 <p>Dashboard</p>
-              </Link>
+              </NavLink>
             </li>
-            <li className="nav-item has-treeview">
-              <a href="#" className="nav-link">
+            <li className="nav-item">
+              <a href="#" className="nav-link" onClick={handleMenuClicked}>
                 <i className="nav-icon far fa-calendar-alt"></i>
                 <p>
                   ตารางเวร
@@ -56,27 +73,27 @@ const MainSidebar = () => {
               </a>
               <ul className="nav nav-treeview">
                 <li className="nav-item">
-                  <Link to="/schedules/list" className="nav-link">
+                  <NavLink to="/schedules/list" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>รายการตารางเวร</p>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li className="nav-item">
-                  <Link to="/schedules/swap-list" className="nav-link">
+                  <NavLink to="/schedules/swap-list" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>เปลี่ยนเวร</p>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li className="nav-item">
-                  <Link to="/schedules/off-list" className="nav-link">
+                  <NavLink to="/schedules/off-list" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>Off เวร</p>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </li>
-            <li className="nav-item has-treeview">
-              <a href="#" className="nav-link">
+            <li className="nav-item">
+              <a href="#" className="nav-link" onClick={handleMenuClicked}>
                 <i className="nav-icon fas fa-chart-pie"></i>
                 <p>
                   รายงาน
@@ -85,28 +102,19 @@ const MainSidebar = () => {
               </a>
               <ul className="nav nav-treeview">
                 <li className="nav-item">
-                  <Link to="/charts/chartjs" className="nav-link">
+                  <NavLink to="/reports/chartjs" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>ChartJS</p>
-                  </Link>
+                  </NavLink>
                 </li>
                 <li className="nav-item">
-                  <Link to="/charts/flot" className="nav-link">
+                  <NavLink to="/reports/flot" className="nav-link">
                     <i className="far fa-circle nav-icon"></i>
                     <p>Flot</p>
-                  </Link>
+                  </NavLink>
                 </li>
               </ul>
             </li>
-            {/* <li className="nav-item">
-              <Link to="/profile" className="nav-link">
-                <i className="nav-icon fas fa-user"></i>
-                <p>
-                  Profile
-                  <span className="right badge badge-danger">New</span>
-                </p>
-              </Link>
-            </li> */}
           </ul>
         </nav>
       </section>

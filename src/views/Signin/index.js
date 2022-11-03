@@ -27,8 +27,8 @@ const Signin = () => {
   useEffect(() => {
     /** Set body class and style */
     if (url === '/signin') {
-      removeBodyClass('sidebar-mini');
-      addBodyClass('login-page');
+      removeBodyClass(['sidebar-mini','layout-fixed']);
+      addBodyClass(['hold-transition','login-page']);
 
       document.body.style.height = null;
     }

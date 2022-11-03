@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid'; // Plugins
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -24,16 +24,16 @@ const ShiftsCalendar = (props) => {
         console.log('Month change!!', arg);
     };
 
-    const renderEventContent = function (eventInfo) {
-        console.log(eventInfo);
+    // const renderEventContent = function (eventInfo) {
+    //     console.log(eventInfo);
 
-        return (
-            <>
-                <b>{eventInfo.timeText}</b>
-                <i>{eventInfo.event.title}</i>
-            </>
-        );
-    };
+    //     return (
+    //         <>
+    //             <b>{eventInfo.timeText}</b>
+    //             <i>{eventInfo.event.title}</i>
+    //         </>
+    //     );
+    // };
 
     return (
         <FullCalendar

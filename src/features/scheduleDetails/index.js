@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api';
 
 const initialState = {
@@ -21,7 +21,7 @@ export const update = createAsyncThunk('scheduleDetails/update', async ({ id, da
 
   try {
     const res = await api.put(`/schedule-details/${id}`, { scheduling_id, person_id, shifts });
-    return data;
+    return res.data.detail;
   } catch (error) {
     console.log(error);
   }
