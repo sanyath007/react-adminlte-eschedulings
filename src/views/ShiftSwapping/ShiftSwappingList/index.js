@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import moment from 'moment';
@@ -20,11 +20,12 @@ const ShiftSwappingList = () => {
     }, []);
     
     const fetchSwaps = async (url='/swappings?page=') => {
-        const depart = user?.person_id === '1300200009261' ? '' : user?.member_of?.depart_id;
+        const depart = user?.person_id === '1300200009261'
+                        ? ''
+                        : user?.member_of?.depart_id;
 
         const res = await api.get(`${url}&depart=${depart}`);
-
-        const { data, ...pager } = res.data.swappings
+        const { data, ...pager } = res.data.swappings;
 
         setSwappings(data);
         setPager(pager);
@@ -140,66 +141,76 @@ const ShiftSwappingList = () => {
                                     {swappings && swappings.map((swapping, index) => {
                                         const { schedule, owner, delegator } = swapping;
 
-                                        return (
-                                            <tr key={index+swapping.id}>
-                                                <td style={{ textAlign: 'center' }}>{index+1}</td>
-                                                <td>
-                                                    {`${owner?.person?.person_firstname} ${owner?.person?.person_lastname}`}
-                                                    <p className="m-0">
-                                                        {schedule.depart.depart_name}
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <span>
-                                                            วันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')} / เวร {swapping.owner_shift}
-                                                        </span>
-                                                        <span className="ml-2">
-                                                            ประจำเดือน <MonthlyText monthText={schedule.month} />
-                                                        </span>
+                                        if (schedule) {
+                                            return (
+                                                <tr key={index+swapping.id}>
+                                                    <td style={{ textAlign: 'center' }}>{index+1}</td>
+                                                    <td>
+                                                        {`${owner?.person?.person_firstname} ${owner?.person?.person_lastname}`}
                                                         <p className="m-0">
-                                                            <span>
-                                                                เนื่องจาก {swapping.reason}
-                                                            </span>
-                                                            {swapping.no_swap === 0 ? (
-                                                                <span className="mx-2">
-                                                                    โดยจะขึ้นปฏิบัติแทนในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')} / เวร {swapping.swap_shift}
-                                                                </span>
-                                                            ) : (
-                                                                <span className="mx-2">
-                                                                    โดยไม่ขึ้นปฏิบัติแทน
-                                                                </span>
-                                                            )}
+                                                            {schedule.depart.depart_name}
                                                         </p>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    {`${delegator?.person?.person_firstname} ${delegator?.person?.person_lastname}`}
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
-                                                        {swapping.status}
-                                                    </span>
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                        <Link to={`/swappings/${swapping.id}/pdf`} className="btn btn-success">
-                                                            <i className="fas fa-print"></i>
-                                                        </Link>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <span>
+                                                                วันที่ {moment(swapping.owner_date).format('DD/MM/YYYY')} / เวร {swapping.owner_shift}
+                                                            </span>
+                                                            <span className="ml-2">
+                                                                ประจำเดือน <MonthlyText monthText={schedule.month} />
+                                                            </span>
+                                                            <p className="m-0">
+                                                                <span>
+                                                                    เนื่องจาก {swapping.reason}
+                                                                </span>
+                                                                {swapping.no_swap === 0 ? (
+                                                                    <span className="mx-2">
+                                                                        โดยจะขึ้นปฏิบัติแทนในวันที่ {moment(swapping.swap_date).format('DD/MM/YYYY')} / เวร {swapping.swap_shift}
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="mx-2">
+                                                                        โดยไม่ขึ้นปฏิบัติแทน
+                                                                    </span>
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {`${delegator?.person?.person_firstname} ${delegator?.person?.person_lastname}`}
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <span className={`btn btn-xs ${swapping.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
+                                                            {swapping.status}
+                                                        </span>
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                            <Link to={`/swappings/${swapping.id}/pdf`} className="btn btn-success">
+                                                                <i className="fas fa-print"></i>
+                                                            </Link>
 
-                                                        {swapping.status == 'REQUESTED' ? (
-                                                            <a href="#" className="btn btn-primary" onClick={(e) => handleApprovement(e, swapping)}>
-                                                                อนุมัติ
-                                                            </a>
-                                                        ) : (
-                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, swapping)}>
-                                                                ยกเลิก
-                                                            </a>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
+                                                            {swapping.status == 'REQUESTED' ? (
+                                                                <a href="#" className="btn btn-primary" onClick={(e) => handleApprovement(e, swapping)}>
+                                                                    อนุมัติ
+                                                                </a>
+                                                            ) : (
+                                                                <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, swapping)}>
+                                                                    ยกเลิก
+                                                                </a>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        } else {
+                                            return (
+                                                <tr>
+                                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                                        -- ไม่พบข้อมูล --
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }
                                     })}
                                 </tbody>
                             </table>
@@ -210,11 +221,11 @@ const ShiftSwappingList = () => {
                                 <div className="col-4 m-0 float-left">
                                     {/* <a href="#" className="btn btn-success btn-sm">Excel</a> */}
                                 </div>
-                                
+
                                 <div className="col-4 m-0" style={{ textAlign: 'center' }}>
                                     <span>จำนวนทั้งหมด { pager && pager?.total } ราย</span>
                                 </div>
-                                
+
                                 <div className="col-4 m-0">
                                     {pager && (
                                         <ul className="pagination pagination-sm m-0 float-right">
@@ -246,7 +257,7 @@ const ShiftSwappingList = () => {
                         {/* <!-- /.card-footer --> */}
                     </div>
                     {/* <!-- /.card --> */}
-        
+
                 </section>
             </div>
             {/* <!-- Main row --> */}

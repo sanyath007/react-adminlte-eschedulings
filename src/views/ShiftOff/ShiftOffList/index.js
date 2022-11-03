@@ -58,42 +58,52 @@ const ShiftOffList = () => {
                                     {offs && offs.map((off, index) => {
                                         const { detail, schedule, ...other } = off;
 
-                                        return (
-                                            <tr key={off.id}>
-                                                <td style={{ textAlign: 'center' }}>{index+1}</td>
-                                                <td>
-                                                    {`${detail?.person?.person_firstname} ${detail?.person?.person_lastname}`}
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <span>
-                                                            วันที่ {moment(off.shift_date).format('DD/MM/YYYY')} / เวร {off.shift}
+                                        if (detail && schedule) {
+                                            return (
+                                                <tr key={off.id}>
+                                                    <td style={{ textAlign: 'center' }}>{index+1}</td>
+                                                    <td>
+                                                        {`${detail?.person?.person_firstname} ${detail?.person?.person_lastname}`}
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <span>
+                                                                วันที่ {moment(off.shift_date).format('DD/MM/YYYY')} / เวร {off.shift}
+                                                            </span>
+                                                            <span className="ml-2">
+                                                                ประจำเดือน <MonthlyText monthText={schedule.month} />
+                                                            </span>
+                                                            <p className="m-0">
+                                                                เนื่องจาก {off.reason}
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <span className={`btn btn-xs ${off.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
+                                                            {off.status}
                                                         </span>
-                                                        <span className="ml-2">
-                                                            ประจำเดือน <MonthlyText monthText={schedule.month} />
-                                                        </span>
-                                                        <p className="m-0">
-                                                            เนื่องจาก {off.reason}
-                                                        </p>
-                                                    </div>
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <span className={`btn btn-xs ${off.status == 'REQUESTED' ? 'bg-maroon' : 'bg-green'}`}>
-                                                        {off.status}
-                                                    </span>
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    <div className="btn-group btn-group-sm" role="group" aria-label="...">
-                                                        {/* <a href="#" className="btn btn-success" onClick={(e) => console.log(e, off)}>
-                                                            <i className="fas fa-print"></i>
-                                                        </a> */}
-                                                        <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, off)}>
-                                                            ยกเลิก
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <div className="btn-group btn-group-sm" role="group" aria-label="...">
+                                                            {/* <a href="#" className="btn btn-success" onClick={(e) => console.log(e, off)}>
+                                                                <i className="fas fa-print"></i>
+                                                            </a> */}
+                                                            <a href="#" className="btn btn-danger" onClick={(e) => console.log(e, off)}>
+                                                                ยกเลิก
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        } else {
+                                            return (
+                                                <tr>
+                                                    <td colSpan="6" style={{ textAlign: 'center' }}>
+                                                        -- ไม่พบข้อมูล --
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }
                                     })}
                                 </tbody>
                             </table>
