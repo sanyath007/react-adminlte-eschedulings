@@ -40,6 +40,9 @@ const TotalShifts = ({ shifts, shiftOfDay }) => {
             <span>ช={total.morn}</span>
             <span>บ={total.even}</span>
             <span>B={total.bd}</span>
+            <span style={{ textAlign: "center" }}>
+                {total.night + total.morn + total.even + total.bd}
+            </span>
         </div>
     );
 };
